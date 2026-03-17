@@ -56,6 +56,14 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/StoreManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/StoreScreen.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
         },
         {
@@ -74,7 +82,9 @@
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/MacHelmApp.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/MainView.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/MenuBarMenu.swift.o",
-        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/NixRunner.swift.o"
+        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/NixRunner.swift.o",
+        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/StoreManager.swift.o",
+        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/StoreScreen.swift.o"
       ],
       "otherArguments" : [
         "-target",
@@ -168,6 +178,14 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/StoreManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/StoreScreen.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/Modules/MacHelm.swiftmodule"
         }
       ],
@@ -180,7 +198,9 @@
         "/Users/danielrajakumar/code/MacHelm/app/Sources/MacHelmApp.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/MainView.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/MenuBarMenu.swift",
-        "/Users/danielrajakumar/code/MacHelm/app/Sources/NixRunner.swift"
+        "/Users/danielrajakumar/code/MacHelm/app/Sources/NixRunner.swift",
+        "/Users/danielrajakumar/code/MacHelm/app/Sources/StoreManager.swift",
+        "/Users/danielrajakumar/code/MacHelm/app/Sources/StoreScreen.swift"
       ],
       "tempsPath" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build",
       "wholeModuleOptimization" : false
@@ -205,6 +225,8 @@
       "/Users/danielrajakumar/code/MacHelm/app/Sources/MainView.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/MenuBarMenu.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/NixRunner.swift",
+      "/Users/danielrajakumar/code/MacHelm/app/Sources/StoreManager.swift",
+      "/Users/danielrajakumar/code/MacHelm/app/Sources/StoreScreen.swift",
       "-I",
       "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/Modules",
       "-target",
@@ -334,6 +356,14 @@
         {
           "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/NixRunner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/StoreManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/StoreScreen.swift"
         }
       ],
       "outputFilePath" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/sources"
@@ -376,6 +406,14 @@
         {
           "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/NixRunner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/StoreManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/StoreScreen.swift.o"
         }
       ],
       "outputFilePath" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.product/Objects.LinkFileList"

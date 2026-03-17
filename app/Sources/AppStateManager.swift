@@ -12,6 +12,7 @@ class AppStateManager: ObservableObject {
     @Published var deletedApps: [DeletedApp] = []
     @Published var processingRemovals: Set<String> = []
     @Published var processingRestores: Set<String> = []
+    @Published var processingInstalls: Set<String> = []
     
     private let deletedKey = "MacHelmDeletedApps"
     
@@ -79,6 +80,25 @@ class AppStateManager: ObservableObject {
                 deletedApps.remove(at: index)
                 saveState()
                 NotificationCenter.default.post(name: NSNotification.Name("ReloadApps"), object: nil)
+            }
+        }
+    }
+    
+    func installHomebrewCask(token: String) {
+        print("InstallCask called for token: \(token)")
+        processingInstalls.insert(token)
+        
+        let cmd = "/opt/homebrew/bin/brew install --cask \(token) || /usr/local/bin/brew install --cask \(token)"
+        print("Running install command: \(cmd)")
+        
+        runCommandInBackground(command: cmd) { [weak self] status in
+            DispatchQueue.main.async {
+                print("Install command finished with status: \(status)")
+                self?.processingInstalls.remove(token)
+                if status == 0 {
+                    print("App installed successfully via Store")
+                    NotificationCenter.default.post(name: NSNotification.Name("ReloadApps"), object: nil)
+                }
             }
         }
     }
