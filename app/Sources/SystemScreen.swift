@@ -3,8 +3,14 @@ import SwiftUI
 struct SystemScreen: View {
     @State private var snapshot = UserConfigExporter.loadSnapshot()
 
-    private let snapshotURL = UserConfigExporter.snapshotFileURL()
-    private let dataDirectoryURL = UserConfigExporter.dataDirectoryURL()
+    private let userDataDirectoryURL = UserConfigExporter.userDirectoryURL()
+    private let dataFiles = [
+        "metadata.json",
+        "apps.json",
+        "deleted-apps.json",
+        "homebrew-casks.json",
+        "scan-paths.json"
+    ]
 
     var body: some View {
         ScrollView {
@@ -25,14 +31,14 @@ struct SystemScreen: View {
                         .font(.title2)
                         .fontWeight(.semibold)
 
-                    Text(dataDirectoryURL.path)
+                    Text(userDataDirectoryURL.path)
                         .font(.system(.body, design: .monospaced))
                         .textSelection(.enabled)
                         .foregroundColor(.secondary)
 
                     HStack(spacing: 12) {
                         Button("Reveal Data Folder") {
-                            NSWorkspace.shared.activateFileViewerSelecting([dataDirectoryURL])
+                            NSWorkspace.shared.activateFileViewerSelecting([userDataDirectoryURL])
                         }
                         .buttonStyle(.borderedProminent)
 
@@ -49,6 +55,19 @@ struct SystemScreen: View {
                 )
                 .padding(.horizontal, 32)
 
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Data Files")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+
+                    ForEach(dataFiles, id: \.self) { fileName in
+                        Text(fileName)
+                            .font(.system(.body, design: .monospaced))
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(.horizontal, 32)
+
                 if let snapshot {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 240), spacing: 16)], spacing: 16) {
                         SummaryCard(title: "User", value: snapshot.username, subtitle: snapshot.hostName, icon: "person.crop.circle")
@@ -63,9 +82,6 @@ struct SystemScreen: View {
                             .font(.title2)
                             .fontWeight(.semibold)
                         Text(snapshot.generatedAt)
-                            .foregroundColor(.secondary)
-                        Text(snapshotURL.lastPathComponent)
-                            .font(.system(.body, design: .monospaced))
                             .foregroundColor(.secondary)
                     }
                     .padding(.horizontal, 32)
