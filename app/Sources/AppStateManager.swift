@@ -13,12 +13,43 @@ class AppStateManager: ObservableObject {
     @Published var processingRemovals: Set<String> = []
     @Published var processingRestores: Set<String> = []
     @Published var processingInstalls: Set<String> = []
+    @Published var installedTokens: Set<String> = []
     
     private let deletedKey = "MacHelmDeletedApps"
     
     init() {
         loadState()
+        loadInstalledTokens()
     }
+    
+    private func loadInstalledTokens() {
+        // Use brew list --cask to get installed cask tokens
+        let cmd = "/opt/homebrew/bin/brew list --cask || /usr/local/bin/brew list --cask"
+        runCommandInBackground(command: cmd) { [weak self] status in
+            DispatchQueue.main.async {
+                guard status == 0 else { return }
+                // The command output is captured in the pipe; we need to read it from the previous runCommandInBackground's output handling.
+                // Since runCommandInBackground already prints output, we will re-run a synchronous version here for simplicity.
+                let task = Process()
+                task.launchPath = "/bin/bash"
+                task.arguments = ["-c", cmd]
+                let pipe = Pipe()
+                task.standardOutput = pipe
+                task.standardError = pipe
+                do {
+                    try task.run()
+                    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                    if let output = String(data: data, encoding: .utf8) {
+                        let tokens = output.split(separator: "\n").map { String($0) }
+                        self?.installedTokens = Set(tokens)
+                    }
+                } catch {
+                    print("Failed to load installed tokens: \(error)")
+                }
+            }
+        }
+    }
+
     
     func deleteApp(app: NixApp) {
         let capturedSource = app.installSource
@@ -84,25 +115,40 @@ class AppStateManager: ObservableObject {
         }
     }
     
-    func installHomebrewCask(token: String) {
-        print("InstallCask called for token: \(token)")
-        processingInstalls.insert(token)
-        
-        let cmd = "/opt/homebrew/bin/brew install --cask \(token) || /usr/local/bin/brew install --cask \(token)"
-        print("Running install command: \(cmd)")
-        
+    func uninstallHomebrewCask(token: String) {
+        print("UninstallCask called for token: \(token)")
+        processingRemovals.insert(token)
+        let cmd = "/opt/homebrew/bin/brew uninstall --cask \(token) || /usr/local/bin/brew uninstall --cask \(token)"
+        print("Running uninstall command: \(cmd)")
         runCommandInBackground(command: cmd) { [weak self] status in
             DispatchQueue.main.async {
-                print("Install command finished with status: \(status)")
-                self?.processingInstalls.remove(token)
+                print("Uninstall command finished with status: \(status)")
+                self?.processingRemovals.remove(token)
                 if status == 0 {
-                    print("App installed successfully via Store")
+                    self?.installedTokens.remove(token)
                     NotificationCenter.default.post(name: NSNotification.Name("ReloadApps"), object: nil)
                 }
             }
         }
     }
     
+    func installHomebrewCask(token: String) {
+        print("InstallCask called for token: \(token)")
+        processingInstalls.insert(token)
+        let cmd = "/opt/homebrew/bin/brew install --cask \(token) || /usr/local/bin/brew install --cask \(token)"
+        print("Running install command: \(cmd)")
+        runCommandInBackground(command: cmd) { [weak self] status in
+            DispatchQueue.main.async {
+                print("Install command finished with status: \(status)")
+                self?.processingInstalls.remove(token)
+                if status == 0 {
+                    self?.installedTokens.insert(token)
+                    NotificationCenter.default.post(name: NSNotification.Name("ReloadApps"), object: nil)
+                }
+            }
+        }
+    }
+
     func isDeleted(appPath: String) -> Bool {
         return deletedApps.contains { $0.path == appPath }
     }

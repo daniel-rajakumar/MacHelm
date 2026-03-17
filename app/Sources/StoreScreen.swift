@@ -3,19 +3,6 @@ import SwiftUI
 struct StoreScreen: View {
     @StateObject private var storeManager = StoreManager()
     @StateObject private var stateManager = AppStateManager()
-    @State private var searchText = ""
-    
-    var filteredCasks: [BrewCask] {
-        if searchText.isEmpty {
-            return storeManager.casks
-        } else {
-            return storeManager.casks.filter { cask in
-                cask.name.contains(where: { $0.localizedCaseInsensitiveContains(searchText) }) ||
-                cask.token.localizedCaseInsensitiveContains(searchText) ||
-                (cask.desc?.localizedCaseInsensitiveContains(searchText) ?? false)
-            }
-        }
-    }
     
     var body: some View {
         NavigationStack {
@@ -49,11 +36,11 @@ struct StoreScreen: View {
                         .padding()
                     Spacer()
                 } else {
-                    List(filteredCasks) { cask in
+                    List(storeManager.filteredCasks) { cask in
                         StoreAppRow(cask: cask, stateManager: stateManager)
                     }
                     .listStyle(.plain)
-                    .searchable(text: $searchText, prompt: "Search Homebrew (e.g., spotify, vscode...)")
+                    .searchable(text: $storeManager.searchText, prompt: "Search Homebrew (e.g., spotify, vscode...)")
                 }
             }
         }
@@ -71,12 +58,34 @@ struct StoreAppRow: View {
     
     var body: some View {
         HStack(spacing: 16) {
-            Image(systemName: "square.grid.2x2.fill")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 48, height: 48)
-                .foregroundColor(.accentColor)
-                .opacity(0.8)
+            if let url = cask.iconURL {
+                AsyncImage(url: url) { phase in
+                    if let image = phase.image {
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 48, height: 48)
+                            .cornerRadius(8)
+                    } else if phase.error != nil {
+                        Image(systemName: "square.grid.2x2.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 48, height: 48)
+                            .foregroundColor(.accentColor)
+                            .opacity(0.8)
+                    } else {
+                        ProgressView()
+                            .frame(width: 48, height: 48)
+                    }
+                }
+            } else {
+                Image(systemName: "square.grid.2x2.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 48, height: 48)
+                    .foregroundColor(.accentColor)
+                    .opacity(0.8)
+            }
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(cask.name.first ?? cask.token)
@@ -116,12 +125,30 @@ struct StoreAppRow: View {
                 }
                 .padding(.trailing, 8)
             } else {
-                Button("Install") {
-                    withAnimation {
-                        stateManager.installHomebrewCask(token: cask.token)
+                if stateManager.installedTokens.contains(cask.token) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                        Text("Installed")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
                     }
+                    .padding(.trailing, 8)
+                    // Optionally allow removal
+                    Button("Remove") {
+                        withAnimation {
+                            stateManager.uninstallHomebrewCask(token: cask.token)
+                        }
+                    }
+                    .buttonStyle(.bordered)
+                } else {
+                    Button("Install") {
+                        withAnimation {
+                            stateManager.installHomebrewCask(token: cask.token)
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
-                .buttonStyle(.borderedProminent)
             }
         }
         .padding(.vertical, 8)
