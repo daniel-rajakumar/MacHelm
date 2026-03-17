@@ -2,6 +2,13 @@
   "": {
     "swift-dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/master.swiftdeps"
   },
+  "/Users/danielrajakumar/code/MacHelm/app/Sources/AppStateManager.swift": {
+    "dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppStateManager.d",
+    "object": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppStateManager.swift.o",
+    "swiftmodule": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppStateManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppStateManager.swiftdeps",
+    "diagnostics": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppStateManager.dia"
+  },
   "/Users/danielrajakumar/code/MacHelm/app/Sources/AppsScreen.swift": {
     "dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppsScreen.d",
     "object": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppsScreen.swift.o",

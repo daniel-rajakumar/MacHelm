@@ -7,32 +7,56 @@ struct NixApp: Identifiable {
     let icon: NSImage?
     
     var installSource: String {
-        if path.contains("Nix Apps") || path.contains("Nix-Karabiner") {
-            return "Nix-Darwin"
-        } else if path.contains("Home Manager Apps") {
-            return "Home Manager"
-        } else if path.hasPrefix("/System/Applications") {
-            return "macOS System"
-        } else if path.hasPrefix("/Applications") {
-            return "System-wide Application"
-        } else {
-            return "User Application"
+        // 1. Nix check: based on directory path
+        let isNix = path.contains("Nix Apps") || path.contains("Nix-Karabiner") || path.contains("Home Manager Apps")
+        if isNix {
+            return "Nix"
         }
+        
+        let fileManager = FileManager.default
+        
+        // 2. Mac App Store check: presence of _MASReceipt
+        let isMacStore = fileManager.fileExists(atPath: path + "/Contents/_MASReceipt/receipt")
+        if isMacStore {
+            return "Mac Store"
+        }
+        
+        // 3. Homebrew check: Check if symlink or if cask directory exists
+        var isHomebrew = false
+        if let destination = try? fileManager.destinationOfSymbolicLink(atPath: path),
+           destination.contains("homebrew") || destination.contains("Caskroom") {
+            isHomebrew = true
+        } else {
+            // Rough format match for cask name e.g., "Google Chrome" -> "google-chrome"
+            let appNameFormatted = name.lowercased().replacingOccurrences(of: " ", with: "-")
+            let caskroom1 = "/opt/homebrew/Caskroom/" + appNameFormatted
+            let caskroom2 = "/usr/local/Caskroom/" + appNameFormatted
+            if fileManager.fileExists(atPath: caskroom1) || fileManager.fileExists(atPath: caskroom2) {
+                isHomebrew = true
+            }
+        }
+        
+        if isHomebrew {
+            return "Homebrew"
+        }
+        
+        return "Others"
     }
 }
 
 struct AppsScreen: View {
     enum FilterCategory: String, CaseIterable, Identifiable {
         case all = "All"
-        case nixDarwin = "Nix-Darwin"
-        case homeManager = "Home Manager"
-        case systemWide = "System-wide Application"
-        case macOSSystem = "macOS System"
-        case user = "User Application"
+        case nix = "Nix"
+        case homebrew = "Homebrew"
+        case macStore = "Mac Store"
+        case others = "Others"
+        case deleted = "Deleted Apps"
         
         var id: String { self.rawValue }
     }
 
+    @StateObject private var stateManager = AppStateManager()
     @State private var apps: [NixApp] = []
     @State private var isLoading = true
     @State private var watchers: [DirectoryWatcher] = []
@@ -50,10 +74,17 @@ struct AppsScreen: View {
     ]
     
     var filteredApps: [NixApp] {
-        if selectedFilter == .all {
-            return apps
+        if selectedFilter == .deleted {
+            return [] // UI handled separately now
         }
-        return apps.filter { $0.installSource == selectedFilter.rawValue }
+        
+        // For all other categories, filter out deleted apps
+        let undeletedApps = apps.filter { !stateManager.isDeleted(appPath: $0.path) }
+        
+        if selectedFilter == .all {
+            return undeletedApps
+        }
+        return undeletedApps.filter { $0.installSource == selectedFilter.rawValue }
     }
     
     var body: some View {
@@ -109,22 +140,51 @@ struct AppsScreen: View {
                     .padding(.horizontal, 32)
                     .padding(.bottom, 16)
                     
-                    if filteredApps.isEmpty {
-                        Spacer()
-                        HStack {
+                    if selectedFilter == .deleted {
+                        if stateManager.deletedApps.isEmpty {
                             Spacer()
-                            Text("No apps found for this category.")
-                                .foregroundColor(.secondary)
+                            HStack {
+                                Spacer()
+                                Text("No deleted apps.")
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                            }
                             Spacer()
+                        } else {
+                            List(stateManager.deletedApps) { deletedApp in
+                                DeletedAppListRow(app: deletedApp, stateManager: stateManager)
+                            }
+                            .listStyle(.plain)
                         }
-                        Spacer()
                     } else {
-                        List(filteredApps) { app in
-                            AppListRow(app: app)
+                        if filteredApps.isEmpty {
+                            Spacer()
+                            HStack {
+                                Spacer()
+                                Text("No apps found for this category.")
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                            }
+                            Spacer()
+                        } else {
+                            List(filteredApps) { app in
+                                AppListRow(app: app, stateManager: stateManager)
+                            }
+                            .listStyle(.plain)
                         }
-                        .listStyle(.plain)
                     }
                 }
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .automatic) {
+                Button(action: {
+                    loadApps()
+                }) {
+                    Label("Refresh", systemImage: "arrow.clockwise")
+                }
+                .keyboardShortcut("r", modifiers: .command)
+                .help("Refresh App List")
             }
         }
         .onAppear {
@@ -133,6 +193,9 @@ struct AppsScreen: View {
         }
         .onDisappear {
             stopWatchers()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ReloadApps"))) { _ in
+            loadApps()
         }
     }
     
@@ -184,6 +247,8 @@ struct AppsScreen: View {
 
 struct AppListRow: View {
     let app: NixApp
+    @ObservedObject var stateManager: AppStateManager
+    
     @State private var isHovered = false
     
     var body: some View {
@@ -216,11 +281,33 @@ struct AppListRow: View {
             
             Spacer()
             
+            if stateManager.processingRemovals.contains(app.path) {
+                HStack(spacing: 4) {
+                    ProgressView()
+                        .scaleEffect(0.5)
+                        .frame(width: 16, height: 16)
+                    Text("Removing...")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.trailing, 8)
+            } else if isHovered {
+                Button("Remove") {
+                    withAnimation {
+                        stateManager.deleteApp(app: app)
+                    }
+                }
+                .buttonStyle(.bordered)
+                .tint(.red)
+            }
+            
             Button("Launch") {
                 NSWorkspace.shared.open(URL(fileURLWithPath: app.path))
             }
-            .buttonStyle(.bordered)
-            .opacity(isHovered ? 1.0 : 0.0)
+            .buttonStyle(.borderedProminent)
+            .disabled(stateManager.processingRemovals.contains(app.path))
+            .opacity(isHovered ? 1.0 : 0.4)
+            .padding(.leading, 8)
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
@@ -237,20 +324,92 @@ struct AppListRow: View {
     
     private func getIconForSource(_ source: String) -> String {
         switch source {
-        case "Nix-Darwin", "Home Manager": return "cube.box.fill"
-        case "macOS System": return "apple.logo"
-        case "System-wide Application": return "macwindow"
-        default: return "person.crop.circle"
+        case "Nix": return "cube.box.fill"
+        case "Homebrew": return "mug.fill"
+        case "Mac Store": return "bag.fill"
+        default: return "app.badge"
         }
     }
     
     private func getColorForSource(_ source: String) -> Color {
         switch source {
-        case "Nix-Darwin": return .blue
-        case "Home Manager": return .purple
-        case "macOS System": return .secondary
-        case "System-wide Application": return .orange
-        default: return .green
+        case "Nix": return .blue
+        case "Homebrew": return .orange
+        case "Mac Store": return .indigo
+        default: return .secondary
+        }
+    }
+}
+
+struct DeletedAppListRow: View {
+    let app: DeletedApp
+    @ObservedObject var stateManager: AppStateManager
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: "trash.slash.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 48, height: 48)
+                .foregroundColor(.secondary)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(app.name)
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+                
+                HStack(spacing: 6) {
+                    Image(systemName: getIconForSource(app.installSource))
+                        .foregroundColor(getColorForSource(app.installSource))
+                        .opacity(0.5)
+                    Text(app.installSource)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+            }
+            
+            Spacer()
+            
+            if stateManager.processingRestores.contains(app.path) {
+                HStack(spacing: 4) {
+                    ProgressView()
+                        .scaleEffect(0.5)
+                        .frame(width: 16, height: 16)
+                    Text("Restoring...")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.trailing, 8)
+            } else {
+                Button("Restore") {
+                    withAnimation {
+                        stateManager.restoreApp(deletedApp: app)
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.green)
+            }
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 16)
+        .contentShape(Rectangle())
+    }
+    
+    private func getIconForSource(_ source: String) -> String {
+        switch source {
+        case "Nix": return "cube.box.fill"
+        case "Homebrew": return "mug.fill"
+        case "Mac Store": return "bag.fill"
+        default: return "app.badge"
+        }
+    }
+    
+    private func getColorForSource(_ source: String) -> Color {
+        switch source {
+        case "Nix": return .blue
+        case "Homebrew": return .orange
+        case "Mac Store": return .indigo
+        default: return .secondary
         }
     }
 }
