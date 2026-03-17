@@ -5,26 +5,32 @@ struct NixApp: Identifiable {
     let name: String
     let path: String
     let icon: NSImage?
-    
     var installSource: String {
+        let fileManager = FileManager.default
+        
+        // 0. Resolve symlink if needed for accurate source detection
+        var actualPath = path
+        if let destination = try? fileManager.destinationOfSymbolicLink(atPath: path) {
+            // Resolve relative paths if any, and make absolute
+            let url = URL(fileURLWithPath: path)
+            actualPath = URL(fileURLWithPath: destination, relativeTo: url).path
+        }
+
         // 1. Nix check: based on directory path
-        let isNix = path.contains("Nix Apps") || path.contains("Nix-Karabiner") || path.contains("Home Manager Apps")
+        let isNix = actualPath.contains("Nix Apps") || actualPath.contains("Nix-Karabiner") || actualPath.contains("Home Manager Apps") || actualPath.contains("/nix/store")
         if isNix {
             return "Nix"
         }
         
-        let fileManager = FileManager.default
-        
         // 2. Mac App Store check: presence of _MASReceipt
-        let isMacStore = fileManager.fileExists(atPath: path + "/Contents/_MASReceipt/receipt")
+        let isMacStore = fileManager.fileExists(atPath: actualPath + "/Contents/_MASReceipt/receipt")
         if isMacStore {
             return "Mac Store"
         }
         
         // 3. Homebrew check: Check if symlink or if cask directory exists
         var isHomebrew = false
-        if let destination = try? fileManager.destinationOfSymbolicLink(atPath: path),
-           destination.contains("homebrew") || destination.contains("Caskroom") {
+        if actualPath.contains("homebrew") || actualPath.contains("Caskroom") {
             isHomebrew = true
         } else {
             // Rough format match for cask name e.g., "Google Chrome" -> "google-chrome"
@@ -41,7 +47,7 @@ struct NixApp: Identifiable {
         }
         
         // 4. System check
-        if path.hasPrefix("/System/Applications") || path.contains("/Applications/Utilities") {
+        if actualPath.hasPrefix("/System/Applications") || actualPath.contains("/Applications/Utilities") {
             return "System"
         }
         
