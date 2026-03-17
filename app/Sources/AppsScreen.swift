@@ -302,6 +302,12 @@ struct AppsScreen: View {
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ReloadApps"))) { _ in
             loadApps()
         }
+        .onChange(of: stateManager.deletedApps) { _, _ in
+            exportUserSnapshot()
+        }
+        .onChange(of: stateManager.installedTokens) { _, _ in
+            exportUserSnapshot()
+        }
     }
     
     func setupWatchers() {
@@ -345,8 +351,18 @@ struct AppsScreen: View {
             DispatchQueue.main.async {
                 self.apps = finalApps
                 self.isLoading = false
+                self.exportUserSnapshot()
             }
         }
+    }
+
+    func exportUserSnapshot() {
+        UserConfigExporter.writeSnapshot(
+            apps: apps,
+            deletedApps: stateManager.deletedApps,
+            installedTokens: stateManager.installedTokens,
+            scanPaths: scanPaths
+        )
     }
 }
 

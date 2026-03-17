@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-struct DeletedApp: Codable, Identifiable {
+struct DeletedApp: Codable, Identifiable, Equatable {
     var id: String { path }
     let name: String
     let path: String
@@ -37,8 +37,6 @@ class AppStateManager: ObservableObject {
     @Published var processingUpgrades: Set<String> = []
     @Published var installedTokens: Set<String> = []
     @Published var outdatedTokens: Set<String> = []
-    
-    private let deletedKey = "MacHelmDeletedApps"
     
     init() {
         loadState()
@@ -580,16 +578,11 @@ class AppStateManager: ObservableObject {
     }
     
     private func saveState() {
-        if let data = try? JSONEncoder().encode(deletedApps) {
-            UserDefaults.standard.set(data, forKey: deletedKey)
-        }
+        UserConfigExporter.saveDeletedApps(deletedApps)
     }
     
     private func loadState() {
-        if let data = UserDefaults.standard.data(forKey: deletedKey),
-           let decoded = try? JSONDecoder().decode([DeletedApp].self, from: data) {
-            deletedApps = decoded
-        }
+        deletedApps = UserConfigExporter.loadDeletedApps()
     }
     
     private func runCommandInBackground(command: String, completion: ((Int32) -> Void)? = nil) {

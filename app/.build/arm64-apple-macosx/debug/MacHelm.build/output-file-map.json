@@ -71,5 +71,19 @@
     "swiftmodule": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/StoreScreen~partial.swiftmodule",
     "swift-dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/StoreScreen.swiftdeps",
     "diagnostics": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/StoreScreen.dia"
+  },
+  "/Users/danielrajakumar/code/MacHelm/app/Sources/SystemScreen.swift": {
+    "dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemScreen.d",
+    "object": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemScreen.swift.o",
+    "swiftmodule": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemScreen~partial.swiftmodule",
+    "swift-dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemScreen.swiftdeps",
+    "diagnostics": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemScreen.dia"
+  },
+  "/Users/danielrajakumar/code/MacHelm/app/Sources/UserConfigExporter.swift": {
+    "dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/UserConfigExporter.d",
+    "object": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/UserConfigExporter.swift.o",
+    "swiftmodule": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/UserConfigExporter~partial.swiftmodule",
+    "swift-dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/UserConfigExporter.swiftdeps",
+    "diagnostics": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/UserConfigExporter.dia"
   }
 }

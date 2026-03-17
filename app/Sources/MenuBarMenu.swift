@@ -108,8 +108,8 @@ struct QuickLinks: View {
                 .font(.caption)
                 .foregroundColor(.secondary)
             
-            LinkRow(title: "Edit System Config", icon: "laptopcomputer")
-            LinkRow(title: "Edit User Config", icon: "person.circle")
+            LinkRow(title: "Open System Data", icon: "laptopcomputer")
+            LinkRow(title: "Open User Data", icon: "person.circle")
         }
     }
 }

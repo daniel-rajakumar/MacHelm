@@ -40,8 +40,7 @@ struct MainView: View {
             case .store:
                 StoreScreen()
             case .system:
-                Text("System View")
-                    .font(.largeTitle)
+                SystemScreen()
             case .settings:
                 Text("Settings View")
                     .font(.largeTitle)
