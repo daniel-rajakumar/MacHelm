@@ -19,6 +19,9 @@ ROCKET_ICON="🚀"
 
 print_header() {
     local title=$1
+    if [ "$DEBUG" = true ]; then
+        echo -e "${YELLOW}${BOLD}[ DEBUG MODE ACTIVE ]${NC}"
+    fi
     echo -e "${BOLD}${BLUE}========================================${NC}"
     echo -e "${BOLD}${BLUE}  ${ROCKET_ICON}  MacHelm: ${title}${NC}"
     echo -e "${BOLD}${BLUE}========================================${NC}"

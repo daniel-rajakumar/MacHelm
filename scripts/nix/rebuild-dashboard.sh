@@ -5,6 +5,18 @@
 # Source UI library
 source "$(dirname "$0")/ui-lib.sh"
 
+# Parse arguments
+DEBUG=false
+for arg in "$@"; do
+    if [ "$arg" == "--debug" ]; then
+        DEBUG=true
+    fi
+done
+
+if [ "$DEBUG" = true ]; then
+    print_status "Debug mode enabled" "warn"
+fi
+
 print_header "System Rebuild Control"
 
 # Step 1: Flake Update

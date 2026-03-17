@@ -1,0 +1,52 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "🏗️ MacHelm: Build App",
+            "type": "shell",
+            "command": "swift build",
+            "options": {
+                "cwd": "${workspaceFolder}/app"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🛡️ MacHelm: Apply Nix Configuration",
+            "type": "shell",
+            "command": "./scripts/nix/rebuild-dashboard.sh",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🔄 MacHelm: Update Nix Flake",
+            "type": "shell",
+            "command": "nix flake update",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🛑 MacHelm: Stop All Dashboard Processes",
+            "type": "shell",
+            "command": "pkill MacHelm || true",
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
