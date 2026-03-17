@@ -89,6 +89,7 @@ class AppStateManager: ObservableObject {
                         self?.deletedApps.append(deletedApp)
                         self?.saveState()
                         print("Saved deleted app to state")
+                        self?.installedTokens.remove(appNameParam)
                         NotificationCenter.default.post(name: NSNotification.Name("ReloadApps"), object: nil)
                     } else {
                         print("Command failed, not adding to deleted apps")
@@ -442,7 +443,7 @@ class AppStateManager: ObservableObject {
         let command = "\(brewPath) uninstall --cask \(token)"
         
         print("Running Homebrew uninstall command with SUDO_ASKPASS: \(command)")
-        runElevatedCommandWithAskpass(command: command) { [weak self] status in
+        runHomebrewCommand(command: command) { [weak self] status in
             DispatchQueue.main.async {
                 print("Homebrew uninstall command finished with status: \(status)")
                 self?.processingRemovals.remove(token)
@@ -462,7 +463,7 @@ class AppStateManager: ObservableObject {
         let command = "\(brewPath) install --cask \(token)"
         
         print("Running Homebrew install command with SUDO_ASKPASS: \(command)")
-        runElevatedCommandWithAskpass(command: command) { [weak self] status in
+        runHomebrewCommand(command: command) { [weak self] status in
             DispatchQueue.main.async {
                 print("Homebrew install command finished with status: \(status)")
                 self?.processingInstalls.remove(token)
@@ -471,6 +472,16 @@ class AppStateManager: ObservableObject {
                     NotificationCenter.default.post(name: NSNotification.Name("ReloadApps"), object: nil)
                 }
             }
+        }
+    }
+
+    private func runHomebrewCommand(command: String, completion: @escaping (Int32) -> Void) {
+        let askpassPath = "/Users/danielrajakumar/code/MacHelm/scripts/machelm-askpass"
+        // For Homebrew, we don't use sudo -A BEFORE the command, because brew handles its own elevation.
+        let fullCommand = "export SUDO_ASKPASS='\(askpassPath)'; \(command)"
+        
+        runCommandInBackground(command: "/bin/bash -c \"\(fullCommand)\"") { status in
+            completion(status)
         }
     }
 

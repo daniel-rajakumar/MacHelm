@@ -8,12 +8,11 @@ struct NixApp: Identifiable {
     var installSource: String {
         let fileManager = FileManager.default
         
-        // 0. Resolve symlink if needed for accurate source detection
-        var actualPath = path
-        if let destination = try? fileManager.destinationOfSymbolicLink(atPath: path) {
-            // Resolve relative paths if any, and make absolute
-            let url = URL(fileURLWithPath: path)
-            actualPath = URL(fileURLWithPath: destination, relativeTo: url).standardized.path
+        // 0. Resolve symlink to get the real path on the system
+        let actualPath = URL(fileURLWithPath: path).resolvingSymlinksInPath().path
+        
+        if name == "Safari" {
+            print("DEBUG: Safari detection - Original: \(path), Resolved: \(actualPath)")
         }
 
         // 1. Nix check: based on directory path
@@ -33,12 +32,44 @@ struct NixApp: Identifiable {
         if actualPath.contains("homebrew") || actualPath.contains("Caskroom") {
             isHomebrew = true
         } else {
-            // Rough format match for cask name e.g., "Google Chrome" -> "google-chrome"
-            let appNameFormatted = name.lowercased().replacingOccurrences(of: " ", with: "-")
-            let caskroom1 = "/opt/homebrew/Caskroom/" + appNameFormatted
-            let caskroom2 = "/usr/local/Caskroom/" + appNameFormatted
-            if fileManager.fileExists(atPath: caskroom1) || fileManager.fileExists(atPath: caskroom2) {
-                isHomebrew = true
+            // Check multiple name variations for better Homebrew matching (e.g., zoom.us -> zoom)
+            let baseName = name.lowercased()
+            var candidates = [
+                baseName.replacingOccurrences(of: " ", with: "-"),
+                baseName.replacingOccurrences(of: ".us", with: ""),
+                baseName.replacingOccurrences(of: ".com", with: ""),
+                baseName.replacingOccurrences(of: "-desktop", with: ""),
+                baseName.replacingOccurrences(of: " x", with: ""), // CleanShot X -> cleanshot
+                baseName.replacingOccurrences(of: " pro", with: "") 
+            ]
+            
+            // Add a more aggressive dash-only candidate
+            let alphanumericOnly = baseName.components(separatedBy: CharacterSet.alphanumerics.inverted).joined(separator: "-")
+            candidates.append(alphanumericOnly)
+            
+            // Additional check: maybe the cask name is a prefix or suffix of the app name?
+            // We'll check the Caskroom directory for any folder that matches a substring of the app name.
+            let caskroomPath = "/opt/homebrew/Caskroom/"
+            if let caskroomFolders = try? fileManager.contentsOfDirectory(atPath: caskroomPath) {
+                for folder in caskroomFolders {
+                    let folderLower = folder.lowercased()
+                    // If "cleanshot" is in "cleanshot x", it's a match
+                    if baseName.contains(folderLower) || alphanumericOnly.contains(folderLower) {
+                        isHomebrew = true
+                        break
+                    }
+                }
+            }
+            
+            if !isHomebrew {
+                for candidate in Set(candidates) where !candidate.isEmpty {
+                    let caskroom1 = "/opt/homebrew/Caskroom/" + candidate
+                    let caskroom2 = "/usr/local/Caskroom/" + candidate
+                    if fileManager.fileExists(atPath: caskroom1) || fileManager.fileExists(atPath: caskroom2) {
+                        isHomebrew = true
+                        break
+                    }
+                }
             }
         }
         
