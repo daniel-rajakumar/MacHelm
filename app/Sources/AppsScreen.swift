@@ -40,6 +40,11 @@ struct NixApp: Identifiable {
             return "Homebrew"
         }
         
+        // 4. System check
+        if path.hasPrefix("/System/Applications") || path.contains("/Applications/Utilities") {
+            return "System"
+        }
+        
         return "Others"
     }
 }
@@ -50,6 +55,7 @@ struct AppsScreen: View {
         case nix = "Nix"
         case homebrew = "Homebrew"
         case macStore = "Mac Store"
+        case system = "System"
         case others = "Others"
         case deleted = "Deleted Apps"
         
@@ -61,6 +67,8 @@ struct AppsScreen: View {
     @State private var isLoading = true
     @State private var watchers: [DirectoryWatcher] = []
     @State private var selectedFilter: FilterCategory = .all
+    @StateObject private var storeManager = StoreManager()
+    @State private var searchText = ""
     
     let scanPaths = [
         "/Applications",
@@ -73,14 +81,24 @@ struct AppsScreen: View {
         "\(FileManager.default.homeDirectoryForCurrentUser.path)/Applications/Home Manager Apps"
     ]
     
-    var filteredApps: [NixApp] {
-        if selectedFilter == .deleted {
-            return [] // UI handled separately now
+    var installableCasks: [BrewCask] {
+        let filtered = storeManager.casks.filter { cask in
+            if searchText.isEmpty { return true }
+            return cask.name.first?.localizedCaseInsensitiveContains(searchText) ?? false || 
+                   cask.token.localizedCaseInsensitiveContains(searchText) || 
+                   cask.desc?.localizedCaseInsensitiveContains(searchText) ?? false
         }
-        
-        // For all other categories, filter out deleted apps
-        let undeletedApps = apps.filter { !stateManager.isDeleted(appPath: $0.path) }
-        
+        return filtered.filter { !stateManager.installedTokens.contains($0.token) }
+    }
+
+    var filteredApps: [NixApp] {
+        let searchedApps = apps.filter { app in
+            if searchText.isEmpty { return true }
+            return app.name.localizedCaseInsensitiveContains(searchText) || 
+                   app.path.localizedCaseInsensitiveContains(searchText) || 
+                   app.installSource.localizedCaseInsensitiveContains(searchText)
+        }
+        let undeletedApps = searchedApps.filter { !stateManager.isDeleted(appPath: $0.path) }
         if selectedFilter == .all {
             return undeletedApps
         }
@@ -89,93 +107,124 @@ struct AppsScreen: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // ... (Header and Divider)
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Installed Applications")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                Text("All applications on your Mac")
-                    .font(.title3)
-                    .foregroundColor(.secondary)
-            }
-            .padding(.top, 24)
-            .padding(.horizontal, 32)
-            .padding(.bottom, 24)
-            
-            Divider()
-            
-            if isLoading {
-                Spacer()
-                HStack {
-                    Spacer()
-                    ProgressView("Scanning for apps...")
-                    Spacer()
-                }
-                Spacer()
-            } else if apps.isEmpty {
-                Spacer()
-                HStack {
-                    Spacer()
-                    VStack(spacing: 16) {
-                        Image(systemName: "app.dashed")
-                            .font(.system(size: 48))
-                            .foregroundColor(.secondary)
-                        Text("No applications found")
-                            .font(.headline)
-                        Text("This is unusual. Are the scan paths correct?")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
-                    Spacer()
-                }
-                Spacer()
-            } else {
-                VStack(spacing: 0) {
-                    Picker("Filter by Source", selection: $selectedFilter) {
-                        ForEach(FilterCategory.allCases) { category in
-                            Text(category.rawValue).tag(category)
+            if !searchText.isEmpty {
+                // Search Results View (Lazy using List and Sections)
+                List {
+                    if !filteredApps.isEmpty {
+                        Section("Installed Apps") {
+                            ForEach(filteredApps) { app in
+                                AppListRow(app: app, stateManager: stateManager)
+                            }
                         }
                     }
-                    .pickerStyle(.segmented)
-                    .padding(.horizontal, 32)
-                    .padding(.bottom, 16)
                     
-                    if selectedFilter == .deleted {
-                        if stateManager.deletedApps.isEmpty {
+                    if !installableCasks.isEmpty {
+                        Section("Available to Install") {
+                            ForEach(installableCasks) { cask in
+                                StoreAppRow(cask: cask, stateManager: stateManager)
+                            }
+                        }
+                    }
+                    
+                    if filteredApps.isEmpty && installableCasks.isEmpty {
+                        Section {
+                            VStack {
+                                Spacer()
+                                Text("No apps match your search.")
+                                    .foregroundColor(.secondary)
+                                    .frame(maxWidth: .infinity)
+                                Spacer()
+                            }
+                            .listRowBackground(Color.clear)
+                            .frame(height: 300)
+                        }
+                    }
+                }
+                .listStyle(.inset)
+            } else {
+                // Normal Filtered View
+                VStack(alignment: .leading, spacing: 0) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Installed Applications")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                        Text("All applications on your Mac")
+                            .font(.title3)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.top, 24)
+                    .padding(.horizontal, 32)
+                    .padding(.bottom, 24)
+                    
+                    Divider()
+                    
+                    if isLoading {
+                        Spacer()
+                        HStack {
                             Spacer()
-                            HStack {
+                            ProgressView("Scanning for apps...")
+                            Spacer()
+                        }
+                        Spacer()
+                    } else if apps.isEmpty {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            VStack(spacing: 16) {
+                                Image(systemName: "app.dashed")
+                                    .font(.system(size: 48))
+                                    .foregroundColor(.secondary)
+                                Text("No applications found")
+                                    .font(.headline)
+                                Text("This is unusual. Are the scan paths correct?")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                        }
+                        Spacer()
+                    } else {
+                        Picker("Filter by Source", selection: $selectedFilter) {
+                            ForEach(FilterCategory.allCases) { category in
+                                Text(category.rawValue).tag(category)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .padding(.horizontal, 32)
+                        .padding(.vertical, 16)
+                        
+                        if selectedFilter == .deleted {
+                            if stateManager.deletedApps.isEmpty {
                                 Spacer()
                                 Text("No deleted apps.")
                                     .foregroundColor(.secondary)
+                                    .frame(maxWidth: .infinity)
                                 Spacer()
+                            } else {
+                                List(stateManager.deletedApps) { deletedApp in
+                                    DeletedAppListRow(app: deletedApp, stateManager: stateManager)
+                                }
+                                .listStyle(.plain)
                             }
-                            Spacer()
                         } else {
-                            List(stateManager.deletedApps) { deletedApp in
-                                DeletedAppListRow(app: deletedApp, stateManager: stateManager)
-                            }
-                            .listStyle(.plain)
-                        }
-                    } else {
-                        if filteredApps.isEmpty {
-                            Spacer()
-                            HStack {
+                            if filteredApps.isEmpty {
                                 Spacer()
                                 Text("No apps found for this category.")
                                     .foregroundColor(.secondary)
+                                    .frame(maxWidth: .infinity)
                                 Spacer()
+                            } else {
+                                List(filteredApps) { app in
+                                    AppListRow(app: app, stateManager: stateManager)
+                                }
+                                .listStyle(.plain)
                             }
-                            Spacer()
-                        } else {
-                            List(filteredApps) { app in
-                                AppListRow(app: app, stateManager: stateManager)
-                            }
-                            .listStyle(.plain)
                         }
                     }
                 }
             }
         }
+
         .toolbar {
             ToolbarItem(placement: .automatic) {
                 Button(action: {
@@ -187,9 +236,11 @@ struct AppsScreen: View {
                 .help("Refresh App List")
             }
         }
+        .searchable(text: $searchText, prompt: "Search apps...")
         .onAppear {
             setupWatchers()
             loadApps()
+            storeManager.fetchCasks()
         }
         .onDisappear {
             stopWatchers()
@@ -292,13 +343,20 @@ struct AppListRow: View {
                 }
                 .padding(.trailing, 8)
             } else if isHovered {
-                Button("Remove") {
-                    withAnimation {
-                        stateManager.deleteApp(app: app)
+                if app.installSource != "System" {
+                    Button("Remove") {
+                        withAnimation {
+                            stateManager.deleteApp(app: app)
+                        }
                     }
+                    .buttonStyle(.bordered)
+                    .tint(.red)
+                } else {
+                    Text("System Application")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .padding(.trailing, 8)
                 }
-                .buttonStyle(.bordered)
-                .tint(.red)
             }
             
             Button("Launch") {
@@ -327,6 +385,7 @@ struct AppListRow: View {
         case "Nix": return "cube.box.fill"
         case "Homebrew": return "mug.fill"
         case "Mac Store": return "bag.fill"
+        case "System": return "applelogo"
         default: return "app.badge"
         }
     }
@@ -336,6 +395,7 @@ struct AppListRow: View {
         case "Nix": return .blue
         case "Homebrew": return .orange
         case "Mac Store": return .indigo
+        case "System": return .primary
         default: return .secondary
         }
     }
@@ -400,6 +460,7 @@ struct DeletedAppListRow: View {
         case "Nix": return "cube.box.fill"
         case "Homebrew": return "mug.fill"
         case "Mac Store": return "bag.fill"
+        case "System": return "applelogo"
         default: return "app.badge"
         }
     }
@@ -409,6 +470,7 @@ struct DeletedAppListRow: View {
         case "Nix": return .blue
         case "Homebrew": return .orange
         case "Mac Store": return .indigo
+        case "System": return .primary
         default: return .secondary
         }
     }

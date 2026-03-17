@@ -1,0 +1,12 @@
+#!/bin/bash
+# MacHelm SUDO_ASKPASS Helper
+# This script is called by sudo when it needs a password and no TTY is available.
+
+prompt="MacHelm requires your administrator password to proceed with this installation:"
+if [ -n "$1" ]; then
+    prompt="$1"
+fi
+
+# Use osascript with a system icon to make it look premium and native.
+# The user can use TouchID if available or type their password.
+osascript -e "Tell application \"System Events\" to display dialog \"$prompt\" default answer \"\" with title \"MacHelm Security\" with hidden answer with icon file \"System:Library:CoreServices:CoreTypes.bundle:Contents:Resources:FileVaultIcon.icns\" buttons {\"Cancel\", \"OK\"} default button \"OK\"" -e "text returned of result"

@@ -18,7 +18,7 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.daniel = import ./hosts/daniel.nix;
+          home-manager.users.danielrajakumar = import ./hosts/daniel.nix;
         }
       ];
     };

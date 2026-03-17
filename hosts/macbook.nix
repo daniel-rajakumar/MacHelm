@@ -1,4 +1,9 @@
 { pkgs, ... }: {
+  users.users.danielrajakumar = {
+    name = "danielrajakumar";
+    home = "/Users/danielrajakumar";
+  };
+
   # System-wide packages
   environment.systemPackages = [
     pkgs.vim
@@ -6,14 +11,14 @@
   ];
 
   # Use Nix-Darwin to manage system defaults
+  system.primaryUser = "danielrajakumar";
   system.defaults = {
     dock.autohide = true;
     finder.AppleShowAllExtensions = true;
-    NSGlobalDomain.AppleAccentColor = 1; # Green (corresponds to MacHelm vision)
   };
 
   # Auto-upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
+  nix.enable = false;
   nix.settings.experimental-features = "nix-command flakes";
 
   # Set compatibility version
