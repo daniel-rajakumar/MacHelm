@@ -418,6 +418,16 @@ struct AppListRow: View {
                         .foregroundColor(.secondary)
                 }
                 .padding(.trailing, 8)
+            } else if let matchingCask = matchingCask, stateManager.processingUpgrades.contains(matchingCask.token) {
+                HStack(spacing: 4) {
+                    ProgressView()
+                        .scaleEffect(0.5)
+                        .frame(width: 16, height: 16)
+                    Text("Upgrading...")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.trailing, 8)
             } else if isHovered {
                 if app.installSource == "Others" {
                     if let matchingCask = matchingCask {
@@ -434,6 +444,24 @@ struct AppListRow: View {
                             .foregroundColor(.secondary)
                             .padding(.trailing, 8)
                     }
+                } else if app.installSource == "Homebrew" {
+                    if let token = matchingCask?.token, stateManager.outdatedTokens.contains(token) {
+                        Button("Upgrade") {
+                            withAnimation {
+                                stateManager.upgradeHomebrewCask(token: token)
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(.blue)
+                    }
+                    
+                    Button("Remove") {
+                        withAnimation {
+                            stateManager.deleteApp(app: app)
+                        }
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(.red)
                 } else if app.installSource != "System" {
                     Button("Remove") {
                         withAnimation {
@@ -454,7 +482,7 @@ struct AppListRow: View {
                 NSWorkspace.shared.open(URL(fileURLWithPath: app.path))
             }
             .buttonStyle(.borderedProminent)
-            .disabled(stateManager.processingRemovals.contains(app.path) || (matchingCask != nil && stateManager.processingInstalls.contains(matchingCask!.token)))
+            .disabled(stateManager.processingRemovals.contains(app.path) || (matchingCask != nil && (stateManager.processingInstalls.contains(matchingCask!.token) || stateManager.processingUpgrades.contains(matchingCask!.token))))
             .opacity(isHovered ? 1.0 : 0.4)
             .padding(.leading, 8)
         }

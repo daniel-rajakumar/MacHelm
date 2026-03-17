@@ -87,15 +87,13 @@ class AppStateManager: ObservableObject {
                 do {
                     try task.run()
                     let data = pipe.fileHandleForReading.readDataToEndOfFile()
-                    if let output = String(data: data, encoding: .utf8) {
-                        // Basic JSON parsing for brew outdated --cask --json
-                        // Expected structure: {"formulae": [], "casks": [{"name": "token", ...}]}
-                        if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                           let casks = json["casks"] as? [[String: Any]] {
-                            let tokens = casks.compactMap { $0["token"] as? String ?? $0["name"] as? String }
-                            self?.outdatedTokens = Set(tokens)
-                            print("Loaded outdated tokens: \(tokens)")
-                        }
+                    // Basic JSON parsing for brew outdated --cask --json
+                    // Expected structure: {"formulae": [], "casks": [{"name": "token", ...}]}
+                    if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                       let casks = json["casks"] as? [[String: Any]] {
+                        let tokens = casks.compactMap { $0["token"] as? String ?? $0["name"] as? String }
+                        self?.outdatedTokens = Set(tokens)
+                        print("Loaded outdated tokens: \(tokens)")
                     }
                 } catch {
                     print("Failed to load outdated tokens: \(error)")
