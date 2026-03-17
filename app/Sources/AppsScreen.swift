@@ -13,7 +13,7 @@ struct NixApp: Identifiable {
         if let destination = try? fileManager.destinationOfSymbolicLink(atPath: path) {
             // Resolve relative paths if any, and make absolute
             let url = URL(fileURLWithPath: path)
-            actualPath = URL(fileURLWithPath: destination, relativeTo: url).path
+            actualPath = URL(fileURLWithPath: destination, relativeTo: url).standardized.path
         }
 
         // 1. Nix check: based on directory path
@@ -47,7 +47,7 @@ struct NixApp: Identifiable {
         }
         
         // 4. System check
-        if actualPath.hasPrefix("/System/Applications") || actualPath.contains("/Applications/Utilities") {
+        if actualPath.hasPrefix("/System/") || actualPath.contains("/Applications/Utilities") {
             return "System"
         }
         
