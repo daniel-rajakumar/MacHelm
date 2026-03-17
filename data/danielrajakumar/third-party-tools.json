@@ -1,9 +1,38 @@
 [
   {
-    "name" : "corepack",
-    "path" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin\/corepack",
-    "pathEntry" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin",
-    "resolvedPath" : "..\/lib\/node_modules\/corepack\/dist\/corepack.js",
-    "source" : "Third-Party"
+    "name": "apply_patch",
+    "path": "/Users/danielrajakumar/.codex/tmp/arg0/codex-arg0rBHltm/apply_patch",
+    "resolvedPath": "/Applications/Codex.app/Contents/Resources/codex",
+    "source": "Third-Party",
+    "pathEntry": "/Users/danielrajakumar/.codex/tmp/arg0/codex-arg0rBHltm",
+    "formulaName": null,
+    "installIntent": null
+  },
+  {
+    "name": "applypatch",
+    "path": "/Users/danielrajakumar/.codex/tmp/arg0/codex-arg0rBHltm/applypatch",
+    "resolvedPath": "/Applications/Codex.app/Contents/Resources/codex",
+    "source": "Third-Party",
+    "pathEntry": "/Users/danielrajakumar/.codex/tmp/arg0/codex-arg0rBHltm",
+    "formulaName": null,
+    "installIntent": null
+  },
+  {
+    "name": "codex-execve-wrapper",
+    "path": "/Users/danielrajakumar/.codex/tmp/arg0/codex-arg0rBHltm/codex-execve-wrapper",
+    "resolvedPath": "/Applications/Codex.app/Contents/Resources/codex",
+    "source": "Third-Party",
+    "pathEntry": "/Users/danielrajakumar/.codex/tmp/arg0/codex-arg0rBHltm",
+    "formulaName": null,
+    "installIntent": null
+  },
+  {
+    "name": "corepack",
+    "path": "/Users/danielrajakumar/.nvm/versions/node/v22.22.0/bin/corepack",
+    "resolvedPath": "/Users/danielrajakumar/.nvm/versions/node/v22.22.0/lib/node_modules/corepack/dist/corepack.js",
+    "source": "Third-Party",
+    "pathEntry": "/Users/danielrajakumar/.nvm/versions/node/v22.22.0/bin",
+    "formulaName": null,
+    "installIntent": null
   }
 ]

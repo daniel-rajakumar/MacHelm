@@ -24,6 +24,47 @@ struct TerminalToolSnapshot: Codable, Identifiable {
     let resolvedPath: String?
     let source: String
     let pathEntry: String
+    let formulaName: String?
+    let installIntent: String?
+
+    enum CodingKeys: String, CodingKey {
+        case name
+        case path
+        case resolvedPath
+        case source
+        case pathEntry
+        case formulaName
+        case installIntent
+    }
+
+    init(
+        name: String,
+        path: String,
+        resolvedPath: String?,
+        source: String,
+        pathEntry: String,
+        formulaName: String? = nil,
+        installIntent: String? = nil
+    ) {
+        self.name = name
+        self.path = path
+        self.resolvedPath = resolvedPath
+        self.source = source
+        self.pathEntry = pathEntry
+        self.formulaName = formulaName
+        self.installIntent = installIntent
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        path = try container.decode(String.self, forKey: .path)
+        resolvedPath = try container.decodeIfPresent(String.self, forKey: .resolvedPath)
+        source = try container.decode(String.self, forKey: .source)
+        pathEntry = try container.decode(String.self, forKey: .pathEntry)
+        formulaName = try container.decodeIfPresent(String.self, forKey: .formulaName)
+        installIntent = try container.decodeIfPresent(String.self, forKey: .installIntent)
+    }
 }
 
 struct ToolInventorySnapshot {
@@ -33,6 +74,8 @@ struct ToolInventorySnapshot {
     let terminalTools: [TerminalToolSnapshot]
     let shellPaths: [String]
     let installedHomebrewFormulae: [String]
+    let manualHomebrewFormulae: [String]
+    let dependencyHomebrewFormulae: [String]
     let nixTools: [TerminalToolSnapshot]
     let thirdPartyTools: [TerminalToolSnapshot]
 }
@@ -49,6 +92,8 @@ struct UserConfigSnapshot: Codable {
     let terminalTools: [TerminalToolSnapshot]
     let shellPaths: [String]
     let installedHomebrewFormulae: [String]
+    let manualHomebrewFormulae: [String]
+    let dependencyHomebrewFormulae: [String]
     let nixTools: [TerminalToolSnapshot]
     let thirdPartyTools: [TerminalToolSnapshot]
 
@@ -64,6 +109,8 @@ struct UserConfigSnapshot: Codable {
         case terminalTools
         case shellPaths
         case installedHomebrewFormulae
+        case manualHomebrewFormulae
+        case dependencyHomebrewFormulae
         case nixTools
         case thirdPartyTools
     }
@@ -80,6 +127,8 @@ struct UserConfigSnapshot: Codable {
         terminalTools: [TerminalToolSnapshot],
         shellPaths: [String],
         installedHomebrewFormulae: [String],
+        manualHomebrewFormulae: [String],
+        dependencyHomebrewFormulae: [String],
         nixTools: [TerminalToolSnapshot],
         thirdPartyTools: [TerminalToolSnapshot]
     ) {
@@ -94,6 +143,8 @@ struct UserConfigSnapshot: Codable {
         self.terminalTools = terminalTools
         self.shellPaths = shellPaths
         self.installedHomebrewFormulae = installedHomebrewFormulae
+        self.manualHomebrewFormulae = manualHomebrewFormulae
+        self.dependencyHomebrewFormulae = dependencyHomebrewFormulae
         self.nixTools = nixTools
         self.thirdPartyTools = thirdPartyTools
     }
@@ -111,6 +162,8 @@ struct UserConfigSnapshot: Codable {
         terminalTools = try container.decodeIfPresent([TerminalToolSnapshot].self, forKey: .terminalTools) ?? []
         shellPaths = try container.decodeIfPresent([String].self, forKey: .shellPaths) ?? []
         installedHomebrewFormulae = try container.decodeIfPresent([String].self, forKey: .installedHomebrewFormulae) ?? []
+        manualHomebrewFormulae = try container.decodeIfPresent([String].self, forKey: .manualHomebrewFormulae) ?? []
+        dependencyHomebrewFormulae = try container.decodeIfPresent([String].self, forKey: .dependencyHomebrewFormulae) ?? []
         nixTools = try container.decodeIfPresent([TerminalToolSnapshot].self, forKey: .nixTools) ?? []
         thirdPartyTools = try container.decodeIfPresent([TerminalToolSnapshot].self, forKey: .thirdPartyTools) ?? []
     }
@@ -159,6 +212,14 @@ enum UserConfigExporter {
         userDirectoryURL(for: username).appendingPathComponent("homebrew-formulae.json")
     }
 
+    static func homebrewManualFormulaeFileURL(for username: String = NSUserName()) -> URL {
+        userDirectoryURL(for: username).appendingPathComponent("homebrew-manual-formulae.json")
+    }
+
+    static func homebrewDependencyFormulaeFileURL(for username: String = NSUserName()) -> URL {
+        userDirectoryURL(for: username).appendingPathComponent("homebrew-dependency-formulae.json")
+    }
+
     static func nixToolsFileURL(for username: String = NSUserName()) -> URL {
         userDirectoryURL(for: username).appendingPathComponent("nix-tools.json")
     }
@@ -169,6 +230,9 @@ enum UserConfigExporter {
 
     static func loadSnapshot(for username: String = NSUserName()) -> UserConfigSnapshot? {
         migrateLegacyDataIfNeeded(for: username)
+
+        let manualHomebrewFormulae: [String] = loadJSON(from: homebrewManualFormulaeFileURL(for: username)) ?? []
+        let dependencyHomebrewFormulae: [String] = loadJSON(from: homebrewDependencyFormulaeFileURL(for: username)) ?? []
 
         guard
             let metadata: UserMetadataSnapshot = loadJSON(from: metadataFileURL(for: username)),
@@ -197,6 +261,8 @@ enum UserConfigExporter {
             terminalTools: terminalTools,
             shellPaths: shellPaths,
             installedHomebrewFormulae: installedHomebrewFormulae,
+            manualHomebrewFormulae: manualHomebrewFormulae,
+            dependencyHomebrewFormulae: dependencyHomebrewFormulae,
             nixTools: nixTools,
             thirdPartyTools: thirdPartyTools
         )
@@ -204,6 +270,9 @@ enum UserConfigExporter {
 
     static func loadToolInventory(for username: String = NSUserName()) -> ToolInventorySnapshot? {
         migrateLegacyDataIfNeeded(for: username)
+
+        let manualHomebrewFormulae: [String] = loadJSON(from: homebrewManualFormulaeFileURL(for: username)) ?? []
+        let dependencyHomebrewFormulae: [String] = loadJSON(from: homebrewDependencyFormulaeFileURL(for: username)) ?? []
 
         guard
             let metadata: UserMetadataSnapshot = loadJSON(from: metadataFileURL(for: username)),
@@ -223,6 +292,8 @@ enum UserConfigExporter {
             terminalTools: terminalTools,
             shellPaths: shellPaths,
             installedHomebrewFormulae: installedHomebrewFormulae,
+            manualHomebrewFormulae: manualHomebrewFormulae,
+            dependencyHomebrewFormulae: dependencyHomebrewFormulae,
             nixTools: nixTools,
             thirdPartyTools: thirdPartyTools
         )
@@ -291,6 +362,8 @@ enum UserConfigExporter {
             try writeJSON(terminalInventory.terminalTools, to: terminalToolsFileURL(for: username))
             try writeJSON(terminalInventory.shellPaths, to: shellPathsFileURL(for: username))
             try writeJSON(terminalInventory.homebrewFormulae, to: homebrewFormulaeFileURL(for: username))
+            try writeJSON(terminalInventory.manualHomebrewFormulae, to: homebrewManualFormulaeFileURL(for: username))
+            try writeJSON(terminalInventory.dependencyHomebrewFormulae, to: homebrewDependencyFormulaeFileURL(for: username))
             try writeJSON(terminalInventory.nixTools, to: nixToolsFileURL(for: username))
             try writeJSON(terminalInventory.thirdPartyTools, to: thirdPartyToolsFileURL(for: username))
         } catch {
@@ -316,6 +389,8 @@ enum UserConfigExporter {
             try writeJSON(terminalInventory.terminalTools, to: terminalToolsFileURL(for: username))
             try writeJSON(terminalInventory.shellPaths, to: shellPathsFileURL(for: username))
             try writeJSON(terminalInventory.homebrewFormulae, to: homebrewFormulaeFileURL(for: username))
+            try writeJSON(terminalInventory.manualHomebrewFormulae, to: homebrewManualFormulaeFileURL(for: username))
+            try writeJSON(terminalInventory.dependencyHomebrewFormulae, to: homebrewDependencyFormulaeFileURL(for: username))
             try writeJSON(terminalInventory.nixTools, to: nixToolsFileURL(for: username))
             try writeJSON(terminalInventory.thirdPartyTools, to: thirdPartyToolsFileURL(for: username))
         } catch {
@@ -399,6 +474,8 @@ enum UserConfigExporter {
             try writeJSON(legacySnapshot.terminalTools, to: terminalToolsFileURL(for: username))
             try writeJSON(legacySnapshot.shellPaths, to: shellPathsFileURL(for: username))
             try writeJSON(legacySnapshot.installedHomebrewFormulae, to: homebrewFormulaeFileURL(for: username))
+            try writeJSON(legacySnapshot.manualHomebrewFormulae, to: homebrewManualFormulaeFileURL(for: username))
+            try writeJSON(legacySnapshot.dependencyHomebrewFormulae, to: homebrewDependencyFormulaeFileURL(for: username))
             try writeJSON(legacySnapshot.nixTools, to: nixToolsFileURL(for: username))
             try writeJSON(legacySnapshot.thirdPartyTools, to: thirdPartyToolsFileURL(for: username))
 
@@ -415,17 +492,18 @@ enum UserConfigExporter {
         terminalTools: [TerminalToolSnapshot],
         shellPaths: [String],
         homebrewFormulae: [String],
+        manualHomebrewFormulae: [String],
+        dependencyHomebrewFormulae: [String],
         nixTools: [TerminalToolSnapshot],
         thirdPartyTools: [TerminalToolSnapshot]
     ) {
         let shellPaths = normalizedShellPaths()
-        let terminalTools = collectTerminalTools(from: shellPaths)
-        let homebrewFormulae = runCommandAndSplitLines([
-            "/bin/zsh",
-            "-lc",
-            "if command -v brew >/dev/null 2>&1; then brew list --formula; fi"
-        ])
-        .sorted()
+        let homebrewFormulaInventory = homebrewFormulaInventory()
+        let terminalTools = collectTerminalTools(
+            from: shellPaths,
+            manualFormulae: Set(homebrewFormulaInventory.manualFormulae),
+            dependencyFormulae: Set(homebrewFormulaInventory.dependencyFormulae)
+        )
 
         let nixTools = terminalTools
             .filter { $0.source == "Nix" }
@@ -437,7 +515,9 @@ enum UserConfigExporter {
         return (
             terminalTools.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending },
             shellPaths,
-            homebrewFormulae,
+            homebrewFormulaInventory.formulae,
+            homebrewFormulaInventory.manualFormulae,
+            homebrewFormulaInventory.dependencyFormulae,
             nixTools,
             thirdPartyTools
         )
@@ -459,7 +539,11 @@ enum UserConfigExporter {
         return orderedPaths
     }
 
-    private static func collectTerminalTools(from shellPaths: [String]) -> [TerminalToolSnapshot] {
+    private static func collectTerminalTools(
+        from shellPaths: [String],
+        manualFormulae: Set<String>,
+        dependencyFormulae: Set<String>
+    ) -> [TerminalToolSnapshot] {
         let fileManager = FileManager.default
         var toolsByName: [String: TerminalToolSnapshot] = [:]
 
@@ -477,14 +561,31 @@ enum UserConfigExporter {
 
                 guard fileManager.isExecutableFile(atPath: fullPath) else { continue }
 
-                let resolvedPath = try? fileManager.destinationOfSymbolicLink(atPath: fullPath)
+                let resolvedPath = resolvedExecutablePath(at: fullPath)
                 let source = classifyTerminalTool(path: fullPath, resolvedPath: resolvedPath)
+                let formulaName = source == "Homebrew" ? extractHomebrewFormulaName(path: fullPath, resolvedPath: resolvedPath) : nil
+                let installIntent: String?
+
+                if let formulaName {
+                    if manualFormulae.contains(formulaName) {
+                        installIntent = "Manual"
+                    } else if dependencyFormulae.contains(formulaName) {
+                        installIntent = "Dependency"
+                    } else {
+                        installIntent = nil
+                    }
+                } else {
+                    installIntent = nil
+                }
+
                 toolsByName[child] = TerminalToolSnapshot(
                     name: child,
                     path: fullPath,
                     resolvedPath: resolvedPath,
                     source: source,
-                    pathEntry: pathEntry
+                    pathEntry: pathEntry,
+                    formulaName: formulaName,
+                    installIntent: installIntent
                 )
             }
         }
@@ -522,29 +623,106 @@ enum UserConfigExporter {
         return "Third-Party"
     }
 
+    private static func resolvedExecutablePath(at path: String) -> String? {
+        guard let destination = try? FileManager.default.destinationOfSymbolicLink(atPath: path) else {
+            return nil
+        }
+
+        if destination.hasPrefix("/") {
+            return URL(fileURLWithPath: destination).standardizedFileURL.path
+        }
+
+        let parentURL = URL(fileURLWithPath: path).deletingLastPathComponent()
+        return URL(fileURLWithPath: destination, relativeTo: parentURL).standardizedFileURL.path
+    }
+
+    private static func extractHomebrewFormulaName(path: String, resolvedPath: String?) -> String? {
+        let candidates = [resolvedPath, path].compactMap { $0 }
+
+        for candidate in candidates {
+            if let range = candidate.range(of: "/Cellar/") {
+                let suffix = candidate[range.upperBound...]
+                return suffix.split(separator: "/").first.map(String.init)
+            }
+
+            if let range = candidate.range(of: "Cellar/") {
+                let suffix = candidate[range.upperBound...]
+                return suffix.split(separator: "/").first.map(String.init)
+            }
+
+            if let range = candidate.range(of: "/opt/") {
+                let suffix = candidate[range.upperBound...]
+                return suffix.split(separator: "/").first.map(String.init)
+            }
+        }
+
+        return nil
+    }
+
+    private static func homebrewFormulaInventory() -> (formulae: [String], manualFormulae: [String], dependencyFormulae: [String]) {
+        let output = runCommand([
+            "/bin/zsh",
+            "-lc",
+            "if command -v brew >/dev/null 2>&1; then brew info --json=v2 --installed; fi"
+        ])
+
+        guard
+            !output.isEmpty,
+            let data = output.data(using: .utf8),
+            let root = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+            let formulae = root["formulae"] as? [[String: Any]]
+        else {
+            return ([], [], [])
+        }
+
+        var allFormulae: [String] = []
+        var manualFormulae: [String] = []
+        var dependencyFormulae: [String] = []
+
+        for formula in formulae {
+            guard let name = formula["name"] as? String else { continue }
+            allFormulae.append(name)
+
+            let installMetadata = (formula["installed"] as? [[String: Any]])?.first
+            if installMetadata?["installed_on_request"] as? Bool == true {
+                manualFormulae.append(name)
+            }
+            if installMetadata?["installed_as_dependency"] as? Bool == true {
+                dependencyFormulae.append(name)
+            }
+        }
+
+        return (allFormulae.sorted(), manualFormulae.sorted(), dependencyFormulae.sorted())
+    }
+
     private static func runCommandAndSplitLines(_ arguments: [String]) -> [String] {
+        runCommand(arguments)
+            .split(separator: "\n")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+    }
+
+    private static func runCommand(_ arguments: [String]) -> String {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: arguments[0])
         process.arguments = Array(arguments.dropFirst())
 
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = Pipe()
+        let outputPipe = Pipe()
+        let errorPipe = Pipe()
+        process.standardOutput = outputPipe
+        process.standardError = errorPipe
 
         do {
             try process.run()
             process.waitUntilExit()
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            guard process.terminationStatus == 0, let output = String(data: data, encoding: .utf8) else {
-                return []
+            let data = outputPipe.fileHandleForReading.readDataToEndOfFile()
+            guard process.terminationStatus == 0 else {
+                return ""
             }
-            return output
-                .split(separator: "\n")
-                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-                .filter { !$0.isEmpty }
+            return String(data: data, encoding: .utf8) ?? ""
         } catch {
             print("Failed to run terminal inventory command: \(error)")
-            return []
+            return ""
         }
     }
 }

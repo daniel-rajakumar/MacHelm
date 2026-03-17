@@ -12,6 +12,8 @@ struct SystemScreen: View {
         "scan-paths.json",
         "terminal-tools.json",
         "homebrew-formulae.json",
+        "homebrew-manual-formulae.json",
+        "homebrew-dependency-formulae.json",
         "nix-tools.json",
         "third-party-tools.json",
         "shell-paths.json"
@@ -81,6 +83,8 @@ struct SystemScreen: View {
                         SummaryCard(title: "Deleted Apps", value: "\(snapshot.deletedApps.count)", subtitle: "Tracked by MacHelm", icon: "trash")
                         SummaryCard(title: "Homebrew Casks", value: "\(snapshot.installedHomebrewCasks.count)", subtitle: "Installed cask tokens", icon: "shippingbox")
                         SummaryCard(title: "Homebrew Formulae", value: "\(snapshot.installedHomebrewFormulae.count)", subtitle: "CLI packages from brew", icon: "shippingbox.fill")
+                        SummaryCard(title: "Brew Manual", value: "\(snapshot.manualHomebrewFormulae.count)", subtitle: "Requested by user", icon: "hand.tap")
+                        SummaryCard(title: "Brew Dependencies", value: "\(snapshot.dependencyHomebrewFormulae.count)", subtitle: "Pulled in by brew", icon: "arrow.triangle.branch")
                         SummaryCard(title: "Nix Tools", value: "\(snapshot.nixTools.count)", subtitle: "CLI tools from Nix paths", icon: "cube.box.fill")
                         SummaryCard(title: "Third-Party Tools", value: "\(snapshot.thirdPartyTools.count)", subtitle: "Non-system CLI tools", icon: "wand.and.stars")
                     }

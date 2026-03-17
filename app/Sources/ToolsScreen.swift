@@ -1,18 +1,7 @@
 import SwiftUI
 
 struct ToolsScreen: View {
-    enum FilterCategory: String, CaseIterable, Identifiable {
-        case all = "All"
-        case homebrew = "Homebrew"
-        case nix = "Nix"
-        case system = "System"
-        case thirdParty = "Third-Party"
-
-        var id: String { rawValue }
-    }
-
     @State private var inventory = UserConfigExporter.loadToolInventory()
-    @State private var selectedFilter: FilterCategory = .all
     @State private var searchText = ""
     @State private var isRefreshing = false
 
@@ -20,9 +9,6 @@ struct ToolsScreen: View {
         let tools = inventory?.terminalTools ?? []
 
         return tools.filter { tool in
-            let matchesFilter = selectedFilter == .all || tool.source == selectedFilter.rawValue
-            guard matchesFilter else { return false }
-
             guard !searchText.isEmpty else { return true }
             return tool.name.localizedCaseInsensitiveContains(searchText)
                 || tool.path.localizedCaseInsensitiveContains(searchText)
@@ -50,15 +36,6 @@ struct ToolsScreen: View {
 
             if let inventory {
                 VStack(alignment: .leading, spacing: 0) {
-                    Picker("Filter by Source", selection: $selectedFilter) {
-                        ForEach(FilterCategory.allCases) { category in
-                            Text(category.rawValue).tag(category)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .padding(.horizontal, 32)
-                    .padding(.vertical, 16)
-
                     HStack(spacing: 16) {
                         Text("User: \(inventory.username)")
                             .foregroundColor(.secondary)
@@ -69,11 +46,11 @@ struct ToolsScreen: View {
                     }
                     .font(.subheadline)
                     .padding(.horizontal, 32)
-                    .padding(.bottom, 16)
+                    .padding(.vertical, 16)
 
                     if filteredTools.isEmpty {
                         Spacer()
-                        Text(searchText.isEmpty ? "No tools found for this category." : "No tools match your search.")
+                        Text(searchText.isEmpty ? "No tools found." : "No tools match your search.")
                             .foregroundColor(.secondary)
                             .frame(maxWidth: .infinity)
                         Spacer()
@@ -161,6 +138,20 @@ private struct ToolListRow: View {
                     Text(tool.source)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
+                    if let installIntent = tool.installIntent {
+                        Text("•")
+                            .foregroundColor(.secondary)
+                        Text(installIntent)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    if let formulaName = tool.formulaName {
+                        Text("•")
+                            .foregroundColor(.secondary)
+                        Text(formulaName)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
                     Text("•")
                         .foregroundColor(.secondary)
                     Text(tool.pathEntry)

@@ -8,6 +8,8 @@ Each user gets their own folder:
 - `data/<username>/scan-paths.json`
 - `data/<username>/terminal-tools.json`
 - `data/<username>/homebrew-formulae.json`
+- `data/<username>/homebrew-manual-formulae.json`
+- `data/<username>/homebrew-dependency-formulae.json`
 - `data/<username>/nix-tools.json`
 - `data/<username>/third-party-tools.json`
 - `data/<username>/shell-paths.json`
