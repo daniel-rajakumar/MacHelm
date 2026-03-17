@@ -2,6 +2,20 @@
   "": {
     "swift-dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/master.swiftdeps"
   },
+  "/Users/danielrajakumar/code/MacHelm/app/Sources/AppsScreen.swift": {
+    "dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppsScreen.d",
+    "object": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppsScreen.swift.o",
+    "swiftmodule": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppsScreen~partial.swiftmodule",
+    "swift-dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppsScreen.swiftdeps",
+    "diagnostics": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppsScreen.dia"
+  },
+  "/Users/danielrajakumar/code/MacHelm/app/Sources/DirectoryWatcher.swift": {
+    "dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DirectoryWatcher.d",
+    "object": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DirectoryWatcher.swift.o",
+    "swiftmodule": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DirectoryWatcher~partial.swiftmodule",
+    "swift-dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DirectoryWatcher.swiftdeps",
+    "diagnostics": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DirectoryWatcher.dia"
+  },
   "/Users/danielrajakumar/code/MacHelm/app/Sources/HomeScreen.swift": {
     "dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/HomeScreen.d",
     "object": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/HomeScreen.swift.o",

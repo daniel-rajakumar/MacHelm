@@ -24,6 +24,14 @@
       "inputs" : [
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/AppsScreen.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/DirectoryWatcher.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/HomeScreen.swift"
         },
         {
@@ -55,6 +63,8 @@
       "moduleName" : "MacHelm",
       "moduleOutputPath" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/Modules/MacHelm.swiftmodule",
       "objects" : [
+        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppsScreen.swift.o",
+        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DirectoryWatcher.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/HomeScreen.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/MacHelmApp.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/MainView.swift.o",
@@ -121,6 +131,14 @@
       "outputs" : [
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppsScreen.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DirectoryWatcher.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/HomeScreen.swift.o"
         },
         {
@@ -146,6 +164,8 @@
       ],
       "prepareForIndexing" : false,
       "sources" : [
+        "/Users/danielrajakumar/code/MacHelm/app/Sources/AppsScreen.swift",
+        "/Users/danielrajakumar/code/MacHelm/app/Sources/DirectoryWatcher.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/HomeScreen.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/MacHelmApp.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/MainView.swift",
@@ -167,6 +187,8 @@
       "-package-name",
       "app",
       "-c",
+      "/Users/danielrajakumar/code/MacHelm/app/Sources/AppsScreen.swift",
+      "/Users/danielrajakumar/code/MacHelm/app/Sources/DirectoryWatcher.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/HomeScreen.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/MacHelmApp.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/MainView.swift",
@@ -272,6 +294,14 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/AppsScreen.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/DirectoryWatcher.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/HomeScreen.swift"
         },
         {
@@ -299,6 +329,14 @@
         {
           "kind" : "virtual",
           "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppsScreen.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DirectoryWatcher.swift.o"
         },
         {
           "kind" : "file",

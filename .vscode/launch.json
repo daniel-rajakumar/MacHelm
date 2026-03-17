@@ -9,7 +9,10 @@
             "args": [],
             "cwd": "${workspaceFolder}/app",
             "preLaunchTask": "🏗️ MacHelm: Build App",
-            "postDebugTask": "🛑 MacHelm: Stop All Dashboard Processes"
+            "postDebugTask": "🛑 MacHelm: Stop App",
+            "initCommands": [
+                "process handle SIGTERM -n true -p true -s false"
+            ]
         }
     ]
 }

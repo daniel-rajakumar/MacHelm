@@ -39,7 +39,7 @@
             "problemMatcher": []
         },
         {
-            "label": "🛑 MacHelm: Stop All Dashboard Processes",
+            "label": "🛑 MacHelm: Stop App",
             "type": "shell",
             "command": "pkill MacHelm || true",
             "presentation": {
