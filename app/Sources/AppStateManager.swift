@@ -34,13 +34,16 @@ class AppStateManager: ObservableObject {
     @Published var processingRemovals: Set<String> = []
     @Published var processingRestores: Set<String> = []
     @Published var processingInstalls: Set<String> = []
+    @Published var processingUpgrades: Set<String> = []
     @Published var installedTokens: Set<String> = []
+    @Published var outdatedTokens: Set<String> = []
     
     private let deletedKey = "MacHelmDeletedApps"
     
     init() {
         loadState()
         loadInstalledTokens()
+        loadOutdatedTokens()
     }
     
     private func loadInstalledTokens() {
@@ -49,8 +52,6 @@ class AppStateManager: ObservableObject {
         runCommandInBackground(command: cmd) { [weak self] status in
             DispatchQueue.main.async {
                 guard status == 0 else { return }
-                // The command output is captured in the pipe; we need to read it from the previous runCommandInBackground's output handling.
-                // Since runCommandInBackground already prints output, we will re-run a synchronous version here for simplicity.
                 let task = Process()
                 task.launchPath = "/bin/bash"
                 task.arguments = ["-c", cmd]
@@ -66,6 +67,38 @@ class AppStateManager: ObservableObject {
                     }
                 } catch {
                     print("Failed to load installed tokens: \(error)")
+                }
+            }
+        }
+    }
+
+    func loadOutdatedTokens() {
+        let brewPath = "/opt/homebrew/bin/brew"
+        let cmd = "\(brewPath) outdated --cask --json"
+        
+        runCommandInBackground(command: cmd) { [weak self] status in
+            DispatchQueue.main.async {
+                let task = Process()
+                task.launchPath = "/bin/bash"
+                task.arguments = ["-c", cmd]
+                let pipe = Pipe()
+                task.standardOutput = pipe
+                task.standardError = pipe
+                do {
+                    try task.run()
+                    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                    if let output = String(data: data, encoding: .utf8) {
+                        // Basic JSON parsing for brew outdated --cask --json
+                        // Expected structure: {"formulae": [], "casks": [{"name": "token", ...}]}
+                        if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                           let casks = json["casks"] as? [[String: Any]] {
+                            let tokens = casks.compactMap { $0["token"] as? String ?? $0["name"] as? String }
+                            self?.outdatedTokens = Set(tokens)
+                            print("Loaded outdated tokens: \(tokens)")
+                        }
+                    }
+                } catch {
+                    print("Failed to load outdated tokens: \(error)")
                 }
             }
         }
@@ -460,7 +493,7 @@ class AppStateManager: ObservableObject {
         processingInstalls.insert(token)
         
         let brewPath = "/opt/homebrew/bin/brew"
-        let command = "\(brewPath) install --cask \(token)"
+        let command = "\(brewPath) install --cask \(token) --force"
         
         print("Running Homebrew install command with SUDO_ASKPASS: \(command)")
         runHomebrewCommand(command: command) { [weak self] status in
@@ -469,6 +502,27 @@ class AppStateManager: ObservableObject {
                 self?.processingInstalls.remove(token)
                 if status == 0 {
                     self?.installedTokens.insert(token)
+                    self?.loadOutdatedTokens()
+                    NotificationCenter.default.post(name: NSNotification.Name("ReloadApps"), object: nil)
+                }
+            }
+        }
+    }
+
+    func upgradeHomebrewCask(token: String) {
+        print("UpgradeCask called for token: \(token)")
+        processingUpgrades.insert(token)
+        
+        let brewPath = "/opt/homebrew/bin/brew"
+        let command = "\(brewPath) upgrade --cask \(token)"
+        
+        print("Running Homebrew upgrade command with SUDO_ASKPASS: \(command)")
+        runHomebrewCommand(command: command) { [weak self] status in
+            DispatchQueue.main.async {
+                print("Homebrew upgrade command finished with status: \(status)")
+                self?.processingUpgrades.remove(token)
+                if status == 0 {
+                    self?.loadOutdatedTokens()
                     NotificationCenter.default.post(name: NSNotification.Name("ReloadApps"), object: nil)
                 }
             }

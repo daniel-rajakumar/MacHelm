@@ -33,7 +33,13 @@ struct NixApp: Identifiable {
             isHomebrew = true
         } else {
             // Check multiple name variations for better Homebrew matching (e.g., zoom.us -> zoom)
-            let baseName = name.lowercased()
+            var baseName = name.lowercased()
+            
+            // Handle hidden apps (e.g., .Karabiner-VirtualHIDDevice-Manager)
+            if baseName.hasPrefix(".") {
+                baseName = String(baseName.dropFirst())
+            }
+            
             var candidates = [
                 baseName.replacingOccurrences(of: " ", with: "-"),
                 baseName.replacingOccurrences(of: ".us", with: ""),
@@ -47,6 +53,13 @@ struct NixApp: Identifiable {
             let alphanumericOnly = baseName.components(separatedBy: CharacterSet.alphanumerics.inverted).joined(separator: "-")
             candidates.append(alphanumericOnly)
             
+            // Prefix-based matching: if app name starts with a word found in Caskroom
+            // e.g., "Karabiner-EventViewer" starts with "karabiner"
+            let words = baseName.components(separatedBy: CharacterSet.alphanumerics.inverted).filter { !$0.isEmpty }
+            if let firstWord = words.first {
+                candidates.append(firstWord)
+            }
+            
             // Additional check: maybe the cask name is a prefix or suffix of the app name?
             // We'll check the Caskroom directory for any folder that matches a substring of the app name.
             let caskroomPath = "/opt/homebrew/Caskroom/"
@@ -54,9 +67,13 @@ struct NixApp: Identifiable {
                 for folder in caskroomFolders {
                     let folderLower = folder.lowercased()
                     // If "cleanshot" is in "cleanshot x", it's a match
-                    if baseName.contains(folderLower) || alphanumericOnly.contains(folderLower) {
-                        isHomebrew = true
-                        break
+                    // If "karabiner" is a prefix of "karabiner-elements", it's a match
+                    if baseName.contains(folderLower) || alphanumericOnly.contains(folderLower) || folderLower.hasPrefix(words.first ?? "") {
+                        // Special case: don't match too-short prefixes to avoid false positives
+                        if (words.first?.count ?? 0) > 3 {
+                            isHomebrew = true
+                            break
+                        }
                     }
                 }
             }
@@ -150,7 +167,7 @@ struct AppsScreen: View {
                     if !filteredApps.isEmpty {
                         Section("Installed Apps") {
                             ForEach(filteredApps) { app in
-                                AppListRow(app: app, stateManager: stateManager)
+                                AppListRow(app: app, stateManager: stateManager, storeManager: storeManager)
                             }
                         }
                     }
@@ -252,7 +269,7 @@ struct AppsScreen: View {
                                 Spacer()
                             } else {
                                 List(filteredApps) { app in
-                                    AppListRow(app: app, stateManager: stateManager)
+                                    AppListRow(app: app, stateManager: stateManager, storeManager: storeManager)
                                 }
                                 .listStyle(.plain)
                             }
@@ -336,8 +353,20 @@ struct AppsScreen: View {
 struct AppListRow: View {
     let app: NixApp
     @ObservedObject var stateManager: AppStateManager
+    @ObservedObject var storeManager: StoreManager
     
     @State private var isHovered = false
+    
+    private var matchingCask: BrewCask? {
+        let baseName = app.name.lowercased()
+        let alphanumericOnly = baseName.components(separatedBy: CharacterSet.alphanumerics.inverted).joined(separator: "-")
+        
+        return storeManager.casks.first { cask in
+            cask.token == baseName || 
+            cask.token == alphanumericOnly ||
+            cask.name.contains { $0.lowercased() == baseName }
+        }
+    }
     
     var body: some View {
         HStack(spacing: 16) {
@@ -379,8 +408,33 @@ struct AppListRow: View {
                         .foregroundColor(.secondary)
                 }
                 .padding(.trailing, 8)
+            } else if let matchingCask = matchingCask, stateManager.processingInstalls.contains(matchingCask.token) {
+                HStack(spacing: 4) {
+                    ProgressView()
+                        .scaleEffect(0.5)
+                        .frame(width: 16, height: 16)
+                    Text("Brewing...")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.trailing, 8)
             } else if isHovered {
-                if app.installSource != "System" {
+                if app.installSource == "Others" {
+                    if let matchingCask = matchingCask {
+                        Button("Brew this") {
+                            withAnimation {
+                                stateManager.installHomebrewCask(token: matchingCask.token)
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(.orange)
+                    } else {
+                        Text("Can't brew this")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .padding(.trailing, 8)
+                    }
+                } else if app.installSource != "System" {
                     Button("Remove") {
                         withAnimation {
                             stateManager.deleteApp(app: app)
@@ -400,7 +454,7 @@ struct AppListRow: View {
                 NSWorkspace.shared.open(URL(fileURLWithPath: app.path))
             }
             .buttonStyle(.borderedProminent)
-            .disabled(stateManager.processingRemovals.contains(app.path))
+            .disabled(stateManager.processingRemovals.contains(app.path) || (matchingCask != nil && stateManager.processingInstalls.contains(matchingCask!.token)))
             .opacity(isHovered ? 1.0 : 0.4)
             .padding(.leading, 8)
         }
