@@ -17,6 +17,26 @@ struct UserMetadataSnapshot: Codable {
     let homeDirectory: String
 }
 
+struct TerminalToolSnapshot: Codable, Identifiable {
+    var id: String { name }
+    let name: String
+    let path: String
+    let resolvedPath: String?
+    let source: String
+    let pathEntry: String
+}
+
+struct ToolInventorySnapshot {
+    let username: String
+    let hostName: String
+    let generatedAt: String
+    let terminalTools: [TerminalToolSnapshot]
+    let shellPaths: [String]
+    let installedHomebrewFormulae: [String]
+    let nixTools: [TerminalToolSnapshot]
+    let thirdPartyTools: [TerminalToolSnapshot]
+}
+
 struct UserConfigSnapshot: Codable {
     let username: String
     let hostName: String
@@ -26,6 +46,74 @@ struct UserConfigSnapshot: Codable {
     let installedApps: [InstalledAppSnapshot]
     let deletedApps: [DeletedApp]
     let installedHomebrewCasks: [String]
+    let terminalTools: [TerminalToolSnapshot]
+    let shellPaths: [String]
+    let installedHomebrewFormulae: [String]
+    let nixTools: [TerminalToolSnapshot]
+    let thirdPartyTools: [TerminalToolSnapshot]
+
+    enum CodingKeys: String, CodingKey {
+        case username
+        case hostName
+        case generatedAt
+        case homeDirectory
+        case scanPaths
+        case installedApps
+        case deletedApps
+        case installedHomebrewCasks
+        case terminalTools
+        case shellPaths
+        case installedHomebrewFormulae
+        case nixTools
+        case thirdPartyTools
+    }
+
+    init(
+        username: String,
+        hostName: String,
+        generatedAt: String,
+        homeDirectory: String,
+        scanPaths: [String],
+        installedApps: [InstalledAppSnapshot],
+        deletedApps: [DeletedApp],
+        installedHomebrewCasks: [String],
+        terminalTools: [TerminalToolSnapshot],
+        shellPaths: [String],
+        installedHomebrewFormulae: [String],
+        nixTools: [TerminalToolSnapshot],
+        thirdPartyTools: [TerminalToolSnapshot]
+    ) {
+        self.username = username
+        self.hostName = hostName
+        self.generatedAt = generatedAt
+        self.homeDirectory = homeDirectory
+        self.scanPaths = scanPaths
+        self.installedApps = installedApps
+        self.deletedApps = deletedApps
+        self.installedHomebrewCasks = installedHomebrewCasks
+        self.terminalTools = terminalTools
+        self.shellPaths = shellPaths
+        self.installedHomebrewFormulae = installedHomebrewFormulae
+        self.nixTools = nixTools
+        self.thirdPartyTools = thirdPartyTools
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        username = try container.decode(String.self, forKey: .username)
+        hostName = try container.decode(String.self, forKey: .hostName)
+        generatedAt = try container.decode(String.self, forKey: .generatedAt)
+        homeDirectory = try container.decode(String.self, forKey: .homeDirectory)
+        scanPaths = try container.decode([String].self, forKey: .scanPaths)
+        installedApps = try container.decode([InstalledAppSnapshot].self, forKey: .installedApps)
+        deletedApps = try container.decode([DeletedApp].self, forKey: .deletedApps)
+        installedHomebrewCasks = try container.decode([String].self, forKey: .installedHomebrewCasks)
+        terminalTools = try container.decodeIfPresent([TerminalToolSnapshot].self, forKey: .terminalTools) ?? []
+        shellPaths = try container.decodeIfPresent([String].self, forKey: .shellPaths) ?? []
+        installedHomebrewFormulae = try container.decodeIfPresent([String].self, forKey: .installedHomebrewFormulae) ?? []
+        nixTools = try container.decodeIfPresent([TerminalToolSnapshot].self, forKey: .nixTools) ?? []
+        thirdPartyTools = try container.decodeIfPresent([TerminalToolSnapshot].self, forKey: .thirdPartyTools) ?? []
+    }
 }
 
 enum UserConfigExporter {
@@ -59,6 +147,26 @@ enum UserConfigExporter {
         userDirectoryURL(for: username).appendingPathComponent("scan-paths.json")
     }
 
+    static func terminalToolsFileURL(for username: String = NSUserName()) -> URL {
+        userDirectoryURL(for: username).appendingPathComponent("terminal-tools.json")
+    }
+
+    static func shellPathsFileURL(for username: String = NSUserName()) -> URL {
+        userDirectoryURL(for: username).appendingPathComponent("shell-paths.json")
+    }
+
+    static func homebrewFormulaeFileURL(for username: String = NSUserName()) -> URL {
+        userDirectoryURL(for: username).appendingPathComponent("homebrew-formulae.json")
+    }
+
+    static func nixToolsFileURL(for username: String = NSUserName()) -> URL {
+        userDirectoryURL(for: username).appendingPathComponent("nix-tools.json")
+    }
+
+    static func thirdPartyToolsFileURL(for username: String = NSUserName()) -> URL {
+        userDirectoryURL(for: username).appendingPathComponent("third-party-tools.json")
+    }
+
     static func loadSnapshot(for username: String = NSUserName()) -> UserConfigSnapshot? {
         migrateLegacyDataIfNeeded(for: username)
 
@@ -67,7 +175,12 @@ enum UserConfigExporter {
             let installedApps: [InstalledAppSnapshot] = loadJSON(from: appsFileURL(for: username)),
             let deletedApps: [DeletedApp] = loadJSON(from: deletedAppsFileURL(for: username)),
             let installedHomebrewCasks: [String] = loadJSON(from: homebrewCasksFileURL(for: username)),
-            let scanPaths: [String] = loadJSON(from: scanPathsFileURL(for: username))
+            let scanPaths: [String] = loadJSON(from: scanPathsFileURL(for: username)),
+            let terminalTools: [TerminalToolSnapshot] = loadJSON(from: terminalToolsFileURL(for: username)),
+            let shellPaths: [String] = loadJSON(from: shellPathsFileURL(for: username)),
+            let installedHomebrewFormulae: [String] = loadJSON(from: homebrewFormulaeFileURL(for: username)),
+            let nixTools: [TerminalToolSnapshot] = loadJSON(from: nixToolsFileURL(for: username)),
+            let thirdPartyTools: [TerminalToolSnapshot] = loadJSON(from: thirdPartyToolsFileURL(for: username))
         else {
             return nil
         }
@@ -80,7 +193,38 @@ enum UserConfigExporter {
             scanPaths: scanPaths,
             installedApps: installedApps,
             deletedApps: deletedApps,
-            installedHomebrewCasks: installedHomebrewCasks
+            installedHomebrewCasks: installedHomebrewCasks,
+            terminalTools: terminalTools,
+            shellPaths: shellPaths,
+            installedHomebrewFormulae: installedHomebrewFormulae,
+            nixTools: nixTools,
+            thirdPartyTools: thirdPartyTools
+        )
+    }
+
+    static func loadToolInventory(for username: String = NSUserName()) -> ToolInventorySnapshot? {
+        migrateLegacyDataIfNeeded(for: username)
+
+        guard
+            let metadata: UserMetadataSnapshot = loadJSON(from: metadataFileURL(for: username)),
+            let terminalTools: [TerminalToolSnapshot] = loadJSON(from: terminalToolsFileURL(for: username)),
+            let shellPaths: [String] = loadJSON(from: shellPathsFileURL(for: username)),
+            let installedHomebrewFormulae: [String] = loadJSON(from: homebrewFormulaeFileURL(for: username)),
+            let nixTools: [TerminalToolSnapshot] = loadJSON(from: nixToolsFileURL(for: username)),
+            let thirdPartyTools: [TerminalToolSnapshot] = loadJSON(from: thirdPartyToolsFileURL(for: username))
+        else {
+            return nil
+        }
+
+        return ToolInventorySnapshot(
+            username: metadata.username,
+            hostName: metadata.hostName,
+            generatedAt: metadata.generatedAt,
+            terminalTools: terminalTools,
+            shellPaths: shellPaths,
+            installedHomebrewFormulae: installedHomebrewFormulae,
+            nixTools: nixTools,
+            thirdPartyTools: thirdPartyTools
         )
     }
 
@@ -131,6 +275,7 @@ enum UserConfigExporter {
             generatedAt: ISO8601DateFormatter().string(from: Date()),
             homeDirectory: fileManager.homeDirectoryForCurrentUser.path
         )
+        let terminalInventory = terminalInventorySnapshot()
 
         let sortedApps = installedApps.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
         let sortedDeletedApps = deletedApps.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
@@ -143,8 +288,38 @@ enum UserConfigExporter {
             try writeJSON(sortedDeletedApps, to: deletedAppsFileURL(for: username))
             try writeJSON(sortedInstalledTokens, to: homebrewCasksFileURL(for: username))
             try writeJSON(sortedScanPaths, to: scanPathsFileURL(for: username))
+            try writeJSON(terminalInventory.terminalTools, to: terminalToolsFileURL(for: username))
+            try writeJSON(terminalInventory.shellPaths, to: shellPathsFileURL(for: username))
+            try writeJSON(terminalInventory.homebrewFormulae, to: homebrewFormulaeFileURL(for: username))
+            try writeJSON(terminalInventory.nixTools, to: nixToolsFileURL(for: username))
+            try writeJSON(terminalInventory.thirdPartyTools, to: thirdPartyToolsFileURL(for: username))
         } catch {
             print("Failed to write user config snapshot: \(error)")
+        }
+    }
+
+    static func refreshTerminalInventory(for username: String = NSUserName()) {
+        do {
+            try ensureUserDirectoryExists(for: username)
+
+            let existingMetadata: UserMetadataSnapshot? = loadJSON(from: metadataFileURL(for: username))
+            let metadata = UserMetadataSnapshot(
+                username: username,
+                hostName: existingMetadata?.hostName ?? Host.current().localizedName ?? Host.current().name ?? "Unknown Host",
+                generatedAt: ISO8601DateFormatter().string(from: Date()),
+                homeDirectory: existingMetadata?.homeDirectory ?? FileManager.default.homeDirectoryForCurrentUser.path
+            )
+
+            let terminalInventory = terminalInventorySnapshot()
+
+            try writeJSON(metadata, to: metadataFileURL(for: username))
+            try writeJSON(terminalInventory.terminalTools, to: terminalToolsFileURL(for: username))
+            try writeJSON(terminalInventory.shellPaths, to: shellPathsFileURL(for: username))
+            try writeJSON(terminalInventory.homebrewFormulae, to: homebrewFormulaeFileURL(for: username))
+            try writeJSON(terminalInventory.nixTools, to: nixToolsFileURL(for: username))
+            try writeJSON(terminalInventory.thirdPartyTools, to: thirdPartyToolsFileURL(for: username))
+        } catch {
+            print("Failed to refresh terminal inventory: \(error)")
         }
     }
 
@@ -221,6 +396,11 @@ enum UserConfigExporter {
             try writeJSON(legacySnapshot.deletedApps, to: deletedAppsFileURL(for: username))
             try writeJSON(legacySnapshot.installedHomebrewCasks, to: homebrewCasksFileURL(for: username))
             try writeJSON(legacySnapshot.scanPaths, to: scanPathsFileURL(for: username))
+            try writeJSON(legacySnapshot.terminalTools, to: terminalToolsFileURL(for: username))
+            try writeJSON(legacySnapshot.shellPaths, to: shellPathsFileURL(for: username))
+            try writeJSON(legacySnapshot.installedHomebrewFormulae, to: homebrewFormulaeFileURL(for: username))
+            try writeJSON(legacySnapshot.nixTools, to: nixToolsFileURL(for: username))
+            try writeJSON(legacySnapshot.thirdPartyTools, to: thirdPartyToolsFileURL(for: username))
 
             try? fileManager.removeItem(at: legacySnapshotURL)
             if fileManager.fileExists(atPath: legacyDeletedAppsURL.path) {
@@ -228,6 +408,143 @@ enum UserConfigExporter {
             }
         } catch {
             print("Failed to migrate legacy snapshot data: \(error)")
+        }
+    }
+
+    private static func terminalInventorySnapshot() -> (
+        terminalTools: [TerminalToolSnapshot],
+        shellPaths: [String],
+        homebrewFormulae: [String],
+        nixTools: [TerminalToolSnapshot],
+        thirdPartyTools: [TerminalToolSnapshot]
+    ) {
+        let shellPaths = normalizedShellPaths()
+        let terminalTools = collectTerminalTools(from: shellPaths)
+        let homebrewFormulae = runCommandAndSplitLines([
+            "/bin/zsh",
+            "-lc",
+            "if command -v brew >/dev/null 2>&1; then brew list --formula; fi"
+        ])
+        .sorted()
+
+        let nixTools = terminalTools
+            .filter { $0.source == "Nix" }
+            .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        let thirdPartyTools = terminalTools
+            .filter { $0.source == "Third-Party" }
+            .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+
+        return (
+            terminalTools.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending },
+            shellPaths,
+            homebrewFormulae,
+            nixTools,
+            thirdPartyTools
+        )
+    }
+
+    private static func normalizedShellPaths() -> [String] {
+        let rawPath = ProcessInfo.processInfo.environment["PATH"] ?? ""
+        var seen = Set<String>()
+        var orderedPaths: [String] = []
+
+        for entry in rawPath.split(separator: ":").map(String.init) where !entry.isEmpty {
+            let standardized = URL(fileURLWithPath: entry).standardizedFileURL.path
+            if !seen.contains(standardized) {
+                seen.insert(standardized)
+                orderedPaths.append(standardized)
+            }
+        }
+
+        return orderedPaths
+    }
+
+    private static func collectTerminalTools(from shellPaths: [String]) -> [TerminalToolSnapshot] {
+        let fileManager = FileManager.default
+        var toolsByName: [String: TerminalToolSnapshot] = [:]
+
+        for pathEntry in shellPaths {
+            guard let children = try? fileManager.contentsOfDirectory(atPath: pathEntry) else { continue }
+
+            for child in children {
+                guard toolsByName[child] == nil else { continue }
+
+                let fullPath = (pathEntry as NSString).appendingPathComponent(child)
+                var isDirectory: ObjCBool = false
+                guard fileManager.fileExists(atPath: fullPath, isDirectory: &isDirectory), !isDirectory.boolValue else {
+                    continue
+                }
+
+                guard fileManager.isExecutableFile(atPath: fullPath) else { continue }
+
+                let resolvedPath = try? fileManager.destinationOfSymbolicLink(atPath: fullPath)
+                let source = classifyTerminalTool(path: fullPath, resolvedPath: resolvedPath)
+                toolsByName[child] = TerminalToolSnapshot(
+                    name: child,
+                    path: fullPath,
+                    resolvedPath: resolvedPath,
+                    source: source,
+                    pathEntry: pathEntry
+                )
+            }
+        }
+
+        return Array(toolsByName.values)
+    }
+
+    private static func classifyTerminalTool(path: String, resolvedPath: String?) -> String {
+        let candidates = [path, resolvedPath].compactMap { $0?.lowercased() }
+
+        if candidates.contains(where: { $0.hasPrefix("/usr/bin/") || $0.hasPrefix("/bin/") || $0.hasPrefix("/usr/sbin/") || $0.hasPrefix("/sbin/") }) {
+            return "System"
+        }
+
+        if candidates.contains(where: {
+            $0.contains("/opt/homebrew/")
+                || $0.contains("/usr/local/cellar/")
+                || $0.contains("/usr/local/homebrew/")
+                || $0.hasPrefix("/usr/local/bin/")
+                || $0.hasPrefix("/usr/local/sbin/")
+        }) {
+            return "Homebrew"
+        }
+
+        if candidates.contains(where: {
+            $0.contains("/nix/store/")
+                || $0.contains("/.nix-profile/")
+                || $0.contains("/etc/profiles/per-user/")
+                || $0.contains("/run/current-system/sw/")
+                || $0.contains("/nix/var/nix/profiles/")
+        }) {
+            return "Nix"
+        }
+
+        return "Third-Party"
+    }
+
+    private static func runCommandAndSplitLines(_ arguments: [String]) -> [String] {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: arguments[0])
+        process.arguments = Array(arguments.dropFirst())
+
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        process.standardError = Pipe()
+
+        do {
+            try process.run()
+            process.waitUntilExit()
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            guard process.terminationStatus == 0, let output = String(data: data, encoding: .utf8) else {
+                return []
+            }
+            return output
+                .split(separator: "\n")
+                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                .filter { !$0.isEmpty }
+        } catch {
+            print("Failed to run terminal inventory command: \(error)")
+            return []
         }
     }
 }

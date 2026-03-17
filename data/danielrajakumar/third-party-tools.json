@@ -1,0 +1,9 @@
+[
+  {
+    "name" : "corepack",
+    "path" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin\/corepack",
+    "pathEntry" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin",
+    "resolvedPath" : "..\/lib\/node_modules\/corepack\/dist\/corepack.js",
+    "source" : "Third-Party"
+  }
+]

@@ -6,6 +6,7 @@ struct MainView: View {
     enum SidebarItem: Hashable {
         case home
         case apps
+        case tools
         case store
         case system
         case settings
@@ -19,6 +20,9 @@ struct MainView: View {
                 }
                 NavigationLink(value: SidebarItem.apps) {
                     Label("Apps", systemImage: "app.window.stack")
+                }
+                NavigationLink(value: SidebarItem.tools) {
+                    Label("Tools", systemImage: "terminal")
                 }
                 NavigationLink(value: SidebarItem.store) {
                     Label("Store", systemImage: "bag.fill")
@@ -37,6 +41,8 @@ struct MainView: View {
                 HomeScreen()
             case .apps:
                 AppsScreen()
+            case .tools:
+                ToolsScreen()
             case .store:
                 StoreScreen()
             case .system:

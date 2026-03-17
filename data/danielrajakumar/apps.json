@@ -1,585 +1,585 @@
 [
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": ".Karabiner-VirtualHIDDevice-Manager",
-    "path": "/Applications/.Karabiner-VirtualHIDDevice-Manager.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : ".Karabiner-VirtualHIDDevice-Manager",
+    "path" : "\/Applications\/.Karabiner-VirtualHIDDevice-Manager.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "1Password",
-    "path": "/Applications/1Password.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "1Password",
+    "path" : "\/Applications\/1Password.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Activity Monitor",
-    "path": "/System/Applications/Utilities/Activity Monitor.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Activity Monitor",
+    "path" : "\/System\/Applications\/Utilities\/Activity Monitor.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "AirPort Utility",
-    "path": "/System/Applications/Utilities/AirPort Utility.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "AirPort Utility",
+    "path" : "\/System\/Applications\/Utilities\/AirPort Utility.app"
   },
   {
-    "installSource": "Mac Store",
-    "isDeleted": false,
-    "name": "Amphetamine",
-    "path": "/Applications/Amphetamine.app"
+    "installSource" : "Mac Store",
+    "isDeleted" : false,
+    "name" : "Amphetamine",
+    "path" : "\/Applications\/Amphetamine.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Android Studio",
-    "path": "/Applications/Android Studio.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Android Studio",
+    "path" : "\/Applications\/Android Studio.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Antigravity",
-    "path": "/Applications/Antigravity.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Antigravity",
+    "path" : "\/Applications\/Antigravity.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "App Store",
-    "path": "/System/Applications/App Store.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "App Store",
+    "path" : "\/System\/Applications\/App Store.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Apps",
-    "path": "/System/Applications/Apps.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Apps",
+    "path" : "\/System\/Applications\/Apps.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Audio MIDI Setup",
-    "path": "/System/Applications/Utilities/Audio MIDI Setup.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Audio MIDI Setup",
+    "path" : "\/System\/Applications\/Utilities\/Audio MIDI Setup.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Automator",
-    "path": "/System/Applications/Automator.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Automator",
+    "path" : "\/System\/Applications\/Automator.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Bluetooth File Exchange",
-    "path": "/System/Applications/Utilities/Bluetooth File Exchange.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Bluetooth File Exchange",
+    "path" : "\/System\/Applications\/Utilities\/Bluetooth File Exchange.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Books",
-    "path": "/System/Applications/Books.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Books",
+    "path" : "\/System\/Applications\/Books.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Boot Camp Assistant",
-    "path": "/System/Applications/Utilities/Boot Camp Assistant.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Boot Camp Assistant",
+    "path" : "\/System\/Applications\/Utilities\/Boot Camp Assistant.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Calculator",
-    "path": "/System/Applications/Calculator.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Calculator",
+    "path" : "\/System\/Applications\/Calculator.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Calendar",
-    "path": "/System/Applications/Calendar.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Calendar",
+    "path" : "\/System\/Applications\/Calendar.app"
   },
   {
-    "installSource": "Mac Store",
-    "isDeleted": false,
-    "name": "CapCut",
-    "path": "/Applications/CapCut.app"
+    "installSource" : "Mac Store",
+    "isDeleted" : false,
+    "name" : "CapCut",
+    "path" : "\/Applications\/CapCut.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Chess",
-    "path": "/System/Applications/Chess.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Chess",
+    "path" : "\/System\/Applications\/Chess.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Claude",
-    "path": "/Applications/Claude.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Claude",
+    "path" : "\/Applications\/Claude.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "CleanShot X",
-    "path": "/Applications/CleanShot X.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "CleanShot X",
+    "path" : "\/Applications\/CleanShot X.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "CLion",
-    "path": "/Applications/CLion.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "CLion",
+    "path" : "\/Applications\/CLion.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Clock",
-    "path": "/System/Applications/Clock.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Clock",
+    "path" : "\/System\/Applications\/Clock.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Codex",
-    "path": "/Applications/Codex.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Codex",
+    "path" : "\/Applications\/Codex.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "ColorSync Utility",
-    "path": "/System/Applications/Utilities/ColorSync Utility.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "ColorSync Utility",
+    "path" : "\/System\/Applications\/Utilities\/ColorSync Utility.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Console",
-    "path": "/System/Applications/Utilities/Console.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Console",
+    "path" : "\/System\/Applications\/Utilities\/Console.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Contacts",
-    "path": "/System/Applications/Contacts.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Contacts",
+    "path" : "\/System\/Applications\/Contacts.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Dictionary",
-    "path": "/System/Applications/Dictionary.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Dictionary",
+    "path" : "\/System\/Applications\/Dictionary.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Digital Color Meter",
-    "path": "/System/Applications/Utilities/Digital Color Meter.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Digital Color Meter",
+    "path" : "\/System\/Applications\/Utilities\/Digital Color Meter.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Disk Utility",
-    "path": "/System/Applications/Utilities/Disk Utility.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Disk Utility",
+    "path" : "\/System\/Applications\/Utilities\/Disk Utility.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "DockDoor",
-    "path": "/Applications/DockDoor.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "DockDoor",
+    "path" : "\/Applications\/DockDoor.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "FaceTime",
-    "path": "/System/Applications/FaceTime.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "FaceTime",
+    "path" : "\/System\/Applications\/FaceTime.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "FindMy",
-    "path": "/System/Applications/FindMy.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "FindMy",
+    "path" : "\/System\/Applications\/FindMy.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Font Book",
-    "path": "/System/Applications/Font Book.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Font Book",
+    "path" : "\/System\/Applications\/Font Book.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Freeform",
-    "path": "/System/Applications/Freeform.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Freeform",
+    "path" : "\/System\/Applications\/Freeform.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Games",
-    "path": "/System/Applications/Games.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Games",
+    "path" : "\/System\/Applications\/Games.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Google Chrome",
-    "path": "/Applications/Google Chrome.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Google Chrome",
+    "path" : "\/Applications\/Google Chrome.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Grapher",
-    "path": "/System/Applications/Utilities/Grapher.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Grapher",
+    "path" : "\/System\/Applications\/Utilities\/Grapher.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Home",
-    "path": "/System/Applications/Home.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Home",
+    "path" : "\/System\/Applications\/Home.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Image Capture",
-    "path": "/System/Applications/Image Capture.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Image Capture",
+    "path" : "\/System\/Applications\/Image Capture.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Image Playground",
-    "path": "/System/Applications/Image Playground.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Image Playground",
+    "path" : "\/System\/Applications\/Image Playground.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "iPhone Mirroring",
-    "path": "/System/Applications/iPhone Mirroring.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "iPhone Mirroring",
+    "path" : "\/System\/Applications\/iPhone Mirroring.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Journal",
-    "path": "/System/Applications/Journal.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Journal",
+    "path" : "\/System\/Applications\/Journal.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Karabiner-Elements",
-    "path": "/Applications/Karabiner-Elements.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Karabiner-Elements",
+    "path" : "\/Applications\/Karabiner-Elements.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Karabiner-EventViewer",
-    "path": "/Applications/Karabiner-EventViewer.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Karabiner-EventViewer",
+    "path" : "\/Applications\/Karabiner-EventViewer.app"
   },
   {
-    "installSource": "Mac Store",
-    "isDeleted": false,
-    "name": "Lunar",
-    "path": "/Applications/Lunar.app"
+    "installSource" : "Mac Store",
+    "isDeleted" : false,
+    "name" : "Lunar",
+    "path" : "\/Applications\/Lunar.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Magnifier",
-    "path": "/System/Applications/Utilities/Magnifier.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Magnifier",
+    "path" : "\/System\/Applications\/Utilities\/Magnifier.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Mail",
-    "path": "/System/Applications/Mail.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Mail",
+    "path" : "\/System\/Applications\/Mail.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Maps",
-    "path": "/System/Applications/Maps.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Maps",
+    "path" : "\/System\/Applications\/Maps.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Messages",
-    "path": "/System/Applications/Messages.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Messages",
+    "path" : "\/System\/Applications\/Messages.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Microsoft Edge",
-    "path": "/Applications/Microsoft Edge.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Microsoft Edge",
+    "path" : "\/Applications\/Microsoft Edge.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Microsoft Excel",
-    "path": "/Applications/Microsoft Excel.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Microsoft Excel",
+    "path" : "\/Applications\/Microsoft Excel.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Microsoft PowerPoint",
-    "path": "/Applications/Microsoft PowerPoint.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Microsoft PowerPoint",
+    "path" : "\/Applications\/Microsoft PowerPoint.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Microsoft Teams",
-    "path": "/Applications/Microsoft Teams.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Microsoft Teams",
+    "path" : "\/Applications\/Microsoft Teams.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Microsoft Word",
-    "path": "/Applications/Microsoft Word.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Microsoft Word",
+    "path" : "\/Applications\/Microsoft Word.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Migration Assistant",
-    "path": "/System/Applications/Utilities/Migration Assistant.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Migration Assistant",
+    "path" : "\/System\/Applications\/Utilities\/Migration Assistant.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Mission Control",
-    "path": "/System/Applications/Mission Control.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Mission Control",
+    "path" : "\/System\/Applications\/Mission Control.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Music",
-    "path": "/System/Applications/Music.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Music",
+    "path" : "\/System\/Applications\/Music.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "News",
-    "path": "/System/Applications/News.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "News",
+    "path" : "\/System\/Applications\/News.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Notes",
-    "path": "/System/Applications/Notes.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Notes",
+    "path" : "\/System\/Applications\/Notes.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Passwords",
-    "path": "/System/Applications/Passwords.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Passwords",
+    "path" : "\/System\/Applications\/Passwords.app"
   },
   {
-    "installSource": "Mac Store",
-    "isDeleted": false,
-    "name": "Paste",
-    "path": "/Applications/Paste.app"
+    "installSource" : "Mac Store",
+    "isDeleted" : false,
+    "name" : "Paste",
+    "path" : "\/Applications\/Paste.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Phone",
-    "path": "/System/Applications/Phone.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Phone",
+    "path" : "\/System\/Applications\/Phone.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Photo Booth",
-    "path": "/System/Applications/Photo Booth.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Photo Booth",
+    "path" : "\/System\/Applications\/Photo Booth.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Photos",
-    "path": "/System/Applications/Photos.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Photos",
+    "path" : "\/System\/Applications\/Photos.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Podcasts",
-    "path": "/System/Applications/Podcasts.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Podcasts",
+    "path" : "\/System\/Applications\/Podcasts.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Preview",
-    "path": "/System/Applications/Preview.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Preview",
+    "path" : "\/System\/Applications\/Preview.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Print Center",
-    "path": "/System/Applications/Utilities/Print Center.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Print Center",
+    "path" : "\/System\/Applications\/Utilities\/Print Center.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "PyCharm",
-    "path": "/Applications/PyCharm.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "PyCharm",
+    "path" : "\/Applications\/PyCharm.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "QuickTime Player",
-    "path": "/System/Applications/QuickTime Player.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "QuickTime Player",
+    "path" : "\/System\/Applications\/QuickTime Player.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Raycast",
-    "path": "/Applications/Raycast.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Raycast",
+    "path" : "\/Applications\/Raycast.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Reminders",
-    "path": "/System/Applications/Reminders.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Reminders",
+    "path" : "\/System\/Applications\/Reminders.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Safari",
-    "path": "/Applications/Safari.app",
-    "resolvedPath": "../System/Cryptexes/App/System/Applications/Safari.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Safari",
+    "path" : "\/Applications\/Safari.app",
+    "resolvedPath" : "..\/System\/Cryptexes\/App\/System\/Applications\/Safari.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Screen Sharing",
-    "path": "/System/Applications/Utilities/Screen Sharing.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Screen Sharing",
+    "path" : "\/System\/Applications\/Utilities\/Screen Sharing.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Screenshot",
-    "path": "/System/Applications/Utilities/Screenshot.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Screenshot",
+    "path" : "\/System\/Applications\/Utilities\/Screenshot.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Script Editor",
-    "path": "/System/Applications/Utilities/Script Editor.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Script Editor",
+    "path" : "\/System\/Applications\/Utilities\/Script Editor.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Shortcuts",
-    "path": "/System/Applications/Shortcuts.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Shortcuts",
+    "path" : "\/System\/Applications\/Shortcuts.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Siri",
-    "path": "/System/Applications/Siri.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Siri",
+    "path" : "\/System\/Applications\/Siri.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Stickies",
-    "path": "/System/Applications/Stickies.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Stickies",
+    "path" : "\/System\/Applications\/Stickies.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Stocks",
-    "path": "/System/Applications/Stocks.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Stocks",
+    "path" : "\/System\/Applications\/Stocks.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Surfshark",
-    "path": "/Applications/Surfshark.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Surfshark",
+    "path" : "\/Applications\/Surfshark.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "System Information",
-    "path": "/System/Applications/Utilities/System Information.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "System Information",
+    "path" : "\/System\/Applications\/Utilities\/System Information.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "System Settings",
-    "path": "/System/Applications/System Settings.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "System Settings",
+    "path" : "\/System\/Applications\/System Settings.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Terminal",
-    "path": "/System/Applications/Utilities/Terminal.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Terminal",
+    "path" : "\/System\/Applications\/Utilities\/Terminal.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "TextEdit",
-    "path": "/System/Applications/TextEdit.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "TextEdit",
+    "path" : "\/System\/Applications\/TextEdit.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Time Machine",
-    "path": "/System/Applications/Time Machine.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Time Machine",
+    "path" : "\/System\/Applications\/Time Machine.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Tips",
-    "path": "/System/Applications/Tips.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Tips",
+    "path" : "\/System\/Applications\/Tips.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "TV",
-    "path": "/System/Applications/TV.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "TV",
+    "path" : "\/System\/Applications\/TV.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Visual Studio Code",
-    "path": "/Applications/Visual Studio Code.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Visual Studio Code",
+    "path" : "\/Applications\/Visual Studio Code.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "VoiceMemos",
-    "path": "/System/Applications/VoiceMemos.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "VoiceMemos",
+    "path" : "\/System\/Applications\/VoiceMemos.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "VoiceOver Utility",
-    "path": "/System/Applications/Utilities/VoiceOver Utility.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "VoiceOver Utility",
+    "path" : "\/System\/Applications\/Utilities\/VoiceOver Utility.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Warp",
-    "path": "/Applications/Warp.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Warp",
+    "path" : "\/Applications\/Warp.app"
   },
   {
-    "installSource": "System",
-    "isDeleted": false,
-    "name": "Weather",
-    "path": "/System/Applications/Weather.app"
+    "installSource" : "System",
+    "isDeleted" : false,
+    "name" : "Weather",
+    "path" : "\/System\/Applications\/Weather.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Webex",
-    "path": "/Applications/Webex.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Webex",
+    "path" : "\/Applications\/Webex.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "WebStorm",
-    "path": "/Applications/WebStorm.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "WebStorm",
+    "path" : "\/Applications\/WebStorm.app"
   },
   {
-    "installSource": "Mac Store",
-    "isDeleted": false,
-    "name": "Xcode",
-    "path": "/Applications/Xcode.app"
+    "installSource" : "Mac Store",
+    "isDeleted" : false,
+    "name" : "Xcode",
+    "path" : "\/Applications\/Xcode.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "Zen",
-    "path": "/Applications/Zen.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "Zen",
+    "path" : "\/Applications\/Zen.app"
   },
   {
-    "installSource": "Homebrew",
-    "isDeleted": false,
-    "name": "zoom.us",
-    "path": "/Applications/zoom.us.app"
+    "installSource" : "Homebrew",
+    "isDeleted" : false,
+    "name" : "zoom.us",
+    "path" : "\/Applications\/zoom.us.app"
   }
 ]
