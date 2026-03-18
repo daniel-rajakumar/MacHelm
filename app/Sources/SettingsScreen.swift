@@ -3,6 +3,8 @@ import SwiftUI
 struct SettingsScreen: View {
     @AppStorage("machelm.autoRefreshToolsOnOpen") private var autoRefreshToolsOnOpen = true
     @AppStorage("machelm.autoRefreshBinariesOnOpen") private var autoRefreshBinariesOnOpen = true
+    @AppStorage("machelm.showToolsTab") private var showToolsTab = true
+    @AppStorage("machelm.showBinariesTab") private var showBinariesTab = true
 
     private let dataDirectoryURL = UserConfigExporter.dataDirectoryURL()
     private let userDataDirectoryURL = UserConfigExporter.userDirectoryURL()
@@ -14,13 +16,6 @@ struct SettingsScreen: View {
             symbol: "gearshape.fill",
             symbolColor: .green
         ) {
-            MacSettingsIntroCard(
-                symbol: "gearshape.fill",
-                color: .green,
-                title: "General",
-                description: "Control how MacHelm refreshes inventories and where the app reads and writes its repo-backed data."
-            )
-
             MacSettingsSection(title: "Inventory Refresh") {
                 SettingsToggleRow(
                     title: "Auto-refresh Tools",
@@ -32,6 +27,21 @@ struct SettingsScreen: View {
                     title: "Auto-refresh Binaries",
                     description: "Refresh filesystem-binary data whenever the Binaries screen opens.",
                     isOn: $autoRefreshBinariesOnOpen,
+                    showsDivider: false
+                )
+            }
+
+            MacSettingsSection(title: "Sidebar") {
+                SettingsToggleRow(
+                    title: "Show Tools Tab",
+                    description: "Display the Tools section in the sidebar.",
+                    isOn: $showToolsTab
+                )
+
+                SettingsToggleRow(
+                    title: "Show Binaries Tab",
+                    description: "Display the Binaries section in the sidebar.",
+                    isOn: $showBinariesTab,
                     showsDivider: false
                 )
             }
@@ -98,17 +108,40 @@ private struct SettingsToggleRow: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Toggle(isOn: $isOn) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(title)
-                        .font(.headline)
-                    Text(description)
-                        .foregroundColor(.secondary)
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .center, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(title)
+                            .font(.headline)
+                        Text(description)
+                            .foregroundColor(.secondary)
+                    }
+
+                    Spacer(minLength: 12)
+
+                    Toggle("", isOn: $isOn)
+                        .labelsHidden()
+                        .toggleStyle(.switch)
+                }
+
+                VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(title)
+                            .font(.headline)
+                        Text(description)
+                            .foregroundColor(.secondary)
+                    }
+
+                    HStack {
+                        Spacer(minLength: 0)
+                        Toggle("", isOn: $isOn)
+                            .labelsHidden()
+                            .toggleStyle(.switch)
+                    }
                 }
             }
-            .toggleStyle(.switch)
             .padding(.horizontal, 20)
-            .padding(.vertical, 16)
+            .padding(.vertical, 14)
 
             if showsDivider {
                 Divider()

@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct MainView: View {
+    @AppStorage("machelm.showToolsTab") private var showToolsTab = true
+    @AppStorage("machelm.showBinariesTab") private var showBinariesTab = true
     @State private var selection: SidebarItem = .home
     @State private var appsFilter: AppsScreen.FilterCategory = .all
     @State private var showsAppsTree = false
@@ -32,9 +34,9 @@ struct MainView: View {
             case .store:
                 return "Store"
             case .system:
-                return "General"
+                return "Settings"
             case .settings:
-                return "Accessibility"
+                return "Settings"
             }
         }
 
@@ -81,7 +83,7 @@ struct MainView: View {
         HStack(alignment: .top, spacing: 0) {
             MacSidebar(
                 selection: $selection,
-                items: SidebarItem.allCases,
+                items: visibleSidebarItems,
                 appsFilter: $appsFilter,
                 showsAppsTree: $showsAppsTree,
                 isRebuilding: isRebuilding,
@@ -110,8 +112,15 @@ struct MainView: View {
         .onAppear {
             guard !hasPreloadedData else { return }
             hasPreloadedData = true
+            normalizeSelection()
             appsModel.start(scanPaths: AppsScreenModel.defaultScanPaths)
             storeManager.fetchCasks()
+        }
+        .onChange(of: showToolsTab) {
+            normalizeSelection()
+        }
+        .onChange(of: showBinariesTab) {
+            normalizeSelection()
         }
     }
 
@@ -134,9 +143,36 @@ struct MainView: View {
         case .store:
             StoreScreen(storeManager: storeManager, stateManager: appStateManager)
         case .system:
-            SystemScreen()
+            SettingsScreen()
         case .settings:
             SettingsScreen()
+        }
+    }
+
+    private var visibleSidebarItems: [SidebarItem] {
+        SidebarItem.allCases.filter { item in
+            switch item {
+            case .tools:
+                return showToolsTab
+            case .binaries:
+                return showBinariesTab
+            case .settings:
+                return false
+            default:
+                return true
+            }
+        }
+    }
+
+    private func normalizeSelection() {
+        if selection == .tools && !showToolsTab {
+            selection = .home
+            showsAppsTree = false
+        }
+
+        if selection == .binaries && !showBinariesTab {
+            selection = .home
+            showsAppsTree = false
         }
     }
     
@@ -337,7 +373,7 @@ private struct MacSidebar: View {
                     .controlSize(.small)
                     .buttonStyle(.plain)
                 }
-                .padding(.top, 16)
+                .padding(.top, 21)
                 .padding(.trailing, 18)
 
                 Spacer()
@@ -398,7 +434,7 @@ private struct AppFilterSidebarButton: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 12) {
-                SidebarIconChip(symbol: iconName, color: iconColor)
+                SidebarMonoIcon(symbol: iconName, isSelected: isSelected)
 
                 Text(category.rawValue)
                     .font(.system(size: 12.5, weight: isSelected ? .semibold : .regular))
@@ -436,24 +472,6 @@ private struct AppFilterSidebarButton: View {
         }
     }
 
-    private var iconColor: Color {
-        switch category {
-        case .all:
-            return .blue
-        case .nix:
-            return .indigo
-        case .homebrew:
-            return .orange
-        case .macStore:
-            return .pink
-        case .system:
-            return Color(red: 0.72, green: 0.72, blue: 0.74)
-        case .others:
-            return .gray
-        case .deleted:
-            return .red
-        }
-    }
 }
 
 private struct SidebarNavButton: View {
@@ -464,7 +482,7 @@ private struct SidebarNavButton: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 12) {
-                SidebarIconChip(symbol: item.symbol, color: item.color)
+                SidebarMonoIcon(symbol: item.symbol, isSelected: isSelected)
 
                 Text(item.title)
                     .font(.system(size: 12.5, weight: isSelected ? .semibold : .regular))
@@ -483,26 +501,16 @@ private struct SidebarNavButton: View {
     }
 }
 
-private struct SidebarIconChip: View {
+private struct SidebarMonoIcon: View {
     let symbol: String
-    let color: Color
+    let isSelected: Bool
 
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 6, style: .continuous)
-                .fill(
-                    LinearGradient(
-                        colors: [color.opacity(0.98), color.opacity(0.82)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-
-            Image(systemName: symbol)
-                .font(.system(size: 11.5, weight: .semibold))
-                .foregroundColor(.white)
-        }
-        .frame(width: 22, height: 22)
+        Image(systemName: symbol)
+            .font(.system(size: 14, weight: .medium))
+            .foregroundColor(isSelected ? .white : Color.white.opacity(0.78))
+            .frame(width: 18, height: 18)
+            .symbolRenderingMode(.monochrome)
     }
 }
 

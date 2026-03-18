@@ -13,9 +13,9 @@ struct MacSettingsPage<Content: View>: View {
                 content
             }
             .frame(maxWidth: 920, alignment: .leading)
-            .padding(.horizontal, 28)
-            .padding(.top, 24)
-            .padding(.bottom, 40)
+            .padding(.horizontal, 20)
+            .padding(.top, 18)
+            .padding(.bottom, 28)
         }
         .background(Color(NSColor.windowBackgroundColor))
     }
@@ -28,24 +28,25 @@ struct MacSettingsIntroCard: View {
     let description: String
 
     var body: some View {
-        VStack(spacing: 18) {
-            SettingsSidebarIcon(symbol: symbol, color: color, size: 72)
+        HStack(alignment: .top, spacing: 14) {
+            SettingsSidebarIcon(symbol: symbol, color: color, size: 44)
 
-            VStack(spacing: 8) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(title)
-                    .font(.system(size: 34, weight: .semibold))
+                    .font(.system(size: 24, weight: .semibold))
                 Text(description)
-                    .font(.title3)
+                    .font(.system(size: 14, weight: .regular))
                     .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: 620)
+                    .multilineTextAlignment(.leading)
             }
+
+            Spacer(minLength: 0)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.horizontal, 24)
-        .padding(.vertical, 30)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 18)
+        .padding(.vertical, 18)
         .background(
-            RoundedRectangle(cornerRadius: 26, style: .continuous)
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(Color(NSColor.controlBackgroundColor))
         )
     }
@@ -143,13 +144,24 @@ struct MacSettingsRow<Leading: View, Trailing: View>: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack(alignment: .center, spacing: 16) {
-                leading
-                Spacer(minLength: 16)
-                trailing
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .center, spacing: 16) {
+                    leading
+                    Spacer(minLength: 16)
+                    trailing
+                }
+
+                VStack(alignment: .leading, spacing: 12) {
+                    leading
+
+                    HStack {
+                        Spacer(minLength: 0)
+                        trailing
+                    }
+                }
             }
             .padding(.horizontal, 20)
-            .padding(.vertical, 16)
+            .padding(.vertical, 14)
 
             if showsDivider {
                 Divider()

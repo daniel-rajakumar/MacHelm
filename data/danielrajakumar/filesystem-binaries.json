@@ -281,16 +281,16 @@
   },
   {
     "name" : "apropos",
+    "path" : "\/usr\/bin\/apropos",
+    "scanRoot" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "apropos",
     "path" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin\/apropos",
     "resolvedPath" : "\/nix\/store\/75jj92zj1plsqddjm7knw4nsm3bv1rkp-home-manager-path\/bin\/apropos",
     "scanRoot" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin",
     "source" : "Nix"
-  },
-  {
-    "name" : "apropos",
-    "path" : "\/usr\/bin\/apropos",
-    "scanRoot" : "\/usr\/bin",
-    "source" : "System"
   },
   {
     "name" : "ar",
@@ -440,16 +440,16 @@
     "source" : "System"
   },
   {
-    "name" : "automator",
-    "path" : "\/usr\/bin\/automator",
-    "scanRoot" : "\/usr\/bin",
-    "source" : "System"
-  },
-  {
     "name" : "Automator",
     "path" : "\/System\/Applications\/Automator.app\/Contents\/MacOS\/Automator",
     "scanRoot" : "\/System\/Applications",
     "source" : "Third-Party"
+  },
+  {
+    "name" : "automator",
+    "path" : "\/usr\/bin\/automator",
+    "scanRoot" : "\/usr\/bin",
+    "source" : "System"
   },
   {
     "name" : "automount",
@@ -570,16 +570,16 @@
   },
   {
     "name" : "bash",
+    "path" : "\/bin\/bash",
+    "scanRoot" : "\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "bash",
     "path" : "\/run\/current-system\/sw\/bin\/bash",
     "resolvedPath" : "\/nix\/store\/zk0hi525wn70pm93gzgdbb5k07y6x2lm-bash-interactive-5.3p9\/bin\/bash",
     "scanRoot" : "\/run\/current-system\/sw\/bin",
     "source" : "Nix"
-  },
-  {
-    "name" : "bash",
-    "path" : "\/bin\/bash",
-    "scanRoot" : "\/bin",
-    "source" : "System"
   },
   {
     "name" : "bashbug",
@@ -958,16 +958,16 @@
     "source" : "Third-Party"
   },
   {
-    "name" : "calendar",
-    "path" : "\/usr\/bin\/calendar",
-    "scanRoot" : "\/usr\/bin",
-    "source" : "System"
-  },
-  {
     "name" : "Calendar",
     "path" : "\/System\/Applications\/Calendar.app\/Contents\/MacOS\/Calendar",
     "scanRoot" : "\/System\/Applications",
     "source" : "Third-Party"
+  },
+  {
+    "name" : "calendar",
+    "path" : "\/usr\/bin\/calendar",
+    "scanRoot" : "\/usr\/bin",
+    "source" : "System"
   },
   {
     "name" : "cancel",
@@ -1203,16 +1203,16 @@
   },
   {
     "name" : "clion",
-    "path" : "\/Applications\/CLion.app\/Contents\/MacOS\/clion",
-    "scanRoot" : "\/Applications",
-    "source" : "Third-Party"
-  },
-  {
-    "name" : "clion",
     "path" : "\/opt\/homebrew\/bin\/clion",
     "resolvedPath" : "\/opt\/homebrew\/Caskroom\/clion\/2025.1.3,251.26927.39\/clion.wrapper.sh",
     "scanRoot" : "\/opt\/homebrew\/bin",
     "source" : "Homebrew"
+  },
+  {
+    "name" : "clion",
+    "path" : "\/Applications\/CLion.app\/Contents\/MacOS\/clion",
+    "scanRoot" : "\/Applications",
+    "source" : "Third-Party"
   },
   {
     "name" : "Clock",
@@ -1272,17 +1272,17 @@
     "source" : "System"
   },
   {
-    "name" : "Codex",
-    "path" : "\/Applications\/Codex.app\/Contents\/MacOS\/Codex",
-    "scanRoot" : "\/Applications",
-    "source" : "Third-Party"
-  },
-  {
     "name" : "codex",
     "path" : "\/opt\/homebrew\/bin\/codex",
     "resolvedPath" : "\/opt\/homebrew\/Caskroom\/codex\/0.115.0\/codex-aarch64-apple-darwin",
     "scanRoot" : "\/opt\/homebrew\/bin",
     "source" : "Homebrew"
+  },
+  {
+    "name" : "Codex",
+    "path" : "\/Applications\/Codex.app\/Contents\/MacOS\/Codex",
+    "scanRoot" : "\/Applications",
+    "source" : "Third-Party"
   },
   {
     "name" : "col",
@@ -2490,13 +2490,13 @@
   },
   {
     "name" : "Electron",
-    "path" : "\/Applications\/Antigravity.app\/Contents\/MacOS\/Electron",
+    "path" : "\/Applications\/Visual Studio Code.app\/Contents\/MacOS\/Electron",
     "scanRoot" : "\/Applications",
     "source" : "Third-Party"
   },
   {
     "name" : "Electron",
-    "path" : "\/Applications\/Visual Studio Code.app\/Contents\/MacOS\/Electron",
+    "path" : "\/Applications\/Antigravity.app\/Contents\/MacOS\/Electron",
     "scanRoot" : "\/Applications",
     "source" : "Third-Party"
   },
@@ -3452,10 +3452,9 @@
   },
   {
     "name" : "git",
-    "path" : "\/run\/current-system\/sw\/bin\/git",
-    "resolvedPath" : "\/nix\/store\/rfbzyqcygzpyh5ncb79n07x8bhws2pq3-git-2.53.0\/bin\/git",
-    "scanRoot" : "\/run\/current-system\/sw\/bin",
-    "source" : "Nix"
+    "path" : "\/usr\/bin\/git",
+    "scanRoot" : "\/usr\/bin",
+    "source" : "System"
   },
   {
     "name" : "git",
@@ -3466,9 +3465,10 @@
   },
   {
     "name" : "git",
-    "path" : "\/usr\/bin\/git",
-    "scanRoot" : "\/usr\/bin",
-    "source" : "System"
+    "path" : "\/run\/current-system\/sw\/bin\/git",
+    "resolvedPath" : "\/nix\/store\/rfbzyqcygzpyh5ncb79n07x8bhws2pq3-git-2.53.0\/bin\/git",
+    "scanRoot" : "\/run\/current-system\/sw\/bin",
+    "source" : "Nix"
   },
   {
     "name" : "git-credential-netrc",
@@ -3486,23 +3486,16 @@
   },
   {
     "name" : "git-credential-osxkeychain",
-    "path" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin\/git-credential-osxkeychain",
-    "resolvedPath" : "\/nix\/store\/75jj92zj1plsqddjm7knw4nsm3bv1rkp-home-manager-path\/bin\/git-credential-osxkeychain",
-    "scanRoot" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin",
-    "source" : "Nix"
-  },
-  {
-    "name" : "git-credential-osxkeychain",
     "path" : "\/run\/current-system\/sw\/bin\/git-credential-osxkeychain",
     "resolvedPath" : "\/nix\/store\/rfbzyqcygzpyh5ncb79n07x8bhws2pq3-git-2.53.0\/bin\/git-credential-osxkeychain",
     "scanRoot" : "\/run\/current-system\/sw\/bin",
     "source" : "Nix"
   },
   {
-    "name" : "git-cvsserver",
-    "path" : "\/run\/current-system\/sw\/bin\/git-cvsserver",
-    "resolvedPath" : "\/nix\/store\/rfbzyqcygzpyh5ncb79n07x8bhws2pq3-git-2.53.0\/bin\/git-cvsserver",
-    "scanRoot" : "\/run\/current-system\/sw\/bin",
+    "name" : "git-credential-osxkeychain",
+    "path" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin\/git-credential-osxkeychain",
+    "resolvedPath" : "\/nix\/store\/75jj92zj1plsqddjm7knw4nsm3bv1rkp-home-manager-path\/bin\/git-credential-osxkeychain",
+    "scanRoot" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin",
     "source" : "Nix"
   },
   {
@@ -3510,6 +3503,13 @@
     "path" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin\/git-cvsserver",
     "resolvedPath" : "\/nix\/store\/75jj92zj1plsqddjm7knw4nsm3bv1rkp-home-manager-path\/bin\/git-cvsserver",
     "scanRoot" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin",
+    "source" : "Nix"
+  },
+  {
+    "name" : "git-cvsserver",
+    "path" : "\/run\/current-system\/sw\/bin\/git-cvsserver",
+    "resolvedPath" : "\/nix\/store\/rfbzyqcygzpyh5ncb79n07x8bhws2pq3-git-2.53.0\/bin\/git-cvsserver",
+    "scanRoot" : "\/run\/current-system\/sw\/bin",
     "source" : "Nix"
   },
   {
@@ -3542,9 +3542,10 @@
   },
   {
     "name" : "git-receive-pack",
-    "path" : "\/usr\/bin\/git-receive-pack",
-    "scanRoot" : "\/usr\/bin",
-    "source" : "System"
+    "path" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin\/git-receive-pack",
+    "resolvedPath" : "\/nix\/store\/75jj92zj1plsqddjm7knw4nsm3bv1rkp-home-manager-path\/bin\/git-receive-pack",
+    "scanRoot" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin",
+    "source" : "Nix"
   },
   {
     "name" : "git-receive-pack",
@@ -3555,21 +3556,7 @@
   },
   {
     "name" : "git-receive-pack",
-    "path" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin\/git-receive-pack",
-    "resolvedPath" : "\/nix\/store\/75jj92zj1plsqddjm7knw4nsm3bv1rkp-home-manager-path\/bin\/git-receive-pack",
-    "scanRoot" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin",
-    "source" : "Nix"
-  },
-  {
-    "name" : "git-shell",
-    "path" : "\/run\/current-system\/sw\/bin\/git-shell",
-    "resolvedPath" : "\/nix\/store\/rfbzyqcygzpyh5ncb79n07x8bhws2pq3-git-2.53.0\/bin\/git-shell",
-    "scanRoot" : "\/run\/current-system\/sw\/bin",
-    "source" : "Nix"
-  },
-  {
-    "name" : "git-shell",
-    "path" : "\/usr\/bin\/git-shell",
+    "path" : "\/usr\/bin\/git-receive-pack",
     "scanRoot" : "\/usr\/bin",
     "source" : "System"
   },
@@ -3581,6 +3568,19 @@
     "source" : "Nix"
   },
   {
+    "name" : "git-shell",
+    "path" : "\/usr\/bin\/git-shell",
+    "scanRoot" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "git-shell",
+    "path" : "\/run\/current-system\/sw\/bin\/git-shell",
+    "resolvedPath" : "\/nix\/store\/rfbzyqcygzpyh5ncb79n07x8bhws2pq3-git-2.53.0\/bin\/git-shell",
+    "scanRoot" : "\/run\/current-system\/sw\/bin",
+    "source" : "Nix"
+  },
+  {
     "name" : "git-upload-archive",
     "path" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin\/git-upload-archive",
     "resolvedPath" : "\/nix\/store\/75jj92zj1plsqddjm7knw4nsm3bv1rkp-home-manager-path\/bin\/git-upload-archive",
@@ -3589,16 +3589,16 @@
   },
   {
     "name" : "git-upload-archive",
-    "path" : "\/usr\/bin\/git-upload-archive",
-    "scanRoot" : "\/usr\/bin",
-    "source" : "System"
-  },
-  {
-    "name" : "git-upload-archive",
     "path" : "\/run\/current-system\/sw\/bin\/git-upload-archive",
     "resolvedPath" : "\/nix\/store\/rfbzyqcygzpyh5ncb79n07x8bhws2pq3-git-2.53.0\/bin\/git-upload-archive",
     "scanRoot" : "\/run\/current-system\/sw\/bin",
     "source" : "Nix"
+  },
+  {
+    "name" : "git-upload-archive",
+    "path" : "\/usr\/bin\/git-upload-archive",
+    "scanRoot" : "\/usr\/bin",
+    "source" : "System"
   },
   {
     "name" : "git-upload-pack",
@@ -3609,16 +3609,16 @@
   },
   {
     "name" : "git-upload-pack",
+    "path" : "\/usr\/bin\/git-upload-pack",
+    "scanRoot" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "git-upload-pack",
     "path" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin\/git-upload-pack",
     "resolvedPath" : "\/nix\/store\/75jj92zj1plsqddjm7knw4nsm3bv1rkp-home-manager-path\/bin\/git-upload-pack",
     "scanRoot" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin",
     "source" : "Nix"
-  },
-  {
-    "name" : "git-upload-pack",
-    "path" : "\/usr\/bin\/git-upload-pack",
-    "scanRoot" : "\/usr\/bin",
-    "source" : "System"
   },
   {
     "name" : "git2",
@@ -5651,16 +5651,16 @@
     "source" : "Third-Party"
   },
   {
-    "name" : "mail",
-    "path" : "\/usr\/bin\/mail",
-    "scanRoot" : "\/usr\/bin",
-    "source" : "System"
-  },
-  {
     "name" : "Mail",
     "path" : "\/System\/Applications\/Mail.app\/Contents\/MacOS\/Mail",
     "scanRoot" : "\/System\/Applications",
     "source" : "Third-Party"
+  },
+  {
+    "name" : "mail",
+    "path" : "\/usr\/bin\/mail",
+    "scanRoot" : "\/usr\/bin",
+    "source" : "System"
   },
   {
     "name" : "mailq",
@@ -5703,16 +5703,16 @@
   },
   {
     "name" : "man",
+    "path" : "\/usr\/bin\/man",
+    "scanRoot" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "man",
     "path" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin\/man",
     "resolvedPath" : "\/nix\/store\/75jj92zj1plsqddjm7knw4nsm3bv1rkp-home-manager-path\/bin\/man",
     "scanRoot" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin",
     "source" : "Nix"
-  },
-  {
-    "name" : "man",
-    "path" : "\/usr\/bin\/man",
-    "scanRoot" : "\/usr\/bin",
-    "source" : "System"
   },
   {
     "name" : "man-recode",
@@ -6914,16 +6914,16 @@
   },
   {
     "name" : "openssl",
-    "path" : "\/usr\/bin\/openssl",
-    "scanRoot" : "\/usr\/bin",
-    "source" : "System"
-  },
-  {
-    "name" : "openssl",
     "path" : "\/opt\/homebrew\/bin\/openssl",
     "resolvedPath" : "\/opt\/homebrew\/Cellar\/openssl@3\/3.6.0\/bin\/openssl",
     "scanRoot" : "\/opt\/homebrew\/bin",
     "source" : "Homebrew"
+  },
+  {
+    "name" : "openssl",
+    "path" : "\/usr\/bin\/openssl",
+    "scanRoot" : "\/usr\/bin",
+    "source" : "System"
   },
   {
     "name" : "opj_compress",
@@ -7988,16 +7988,16 @@
   },
   {
     "name" : "pycharm",
+    "path" : "\/Applications\/PyCharm.app\/Contents\/MacOS\/pycharm",
+    "scanRoot" : "\/Applications",
+    "source" : "Third-Party"
+  },
+  {
+    "name" : "pycharm",
     "path" : "\/opt\/homebrew\/bin\/pycharm",
     "resolvedPath" : "\/opt\/homebrew\/Caskroom\/pycharm\/2025.3.3,253.31033.139\/pycharm.wrapper.sh",
     "scanRoot" : "\/opt\/homebrew\/bin",
     "source" : "Homebrew"
-  },
-  {
-    "name" : "pycharm",
-    "path" : "\/Applications\/PyCharm.app\/Contents\/MacOS\/pycharm",
-    "scanRoot" : "\/Applications",
-    "source" : "Third-Party"
   },
   {
     "name" : "pydoc3",
@@ -8349,17 +8349,17 @@
   },
   {
     "name" : "rg",
-    "path" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin\/rg",
-    "resolvedPath" : "\/nix\/store\/75jj92zj1plsqddjm7knw4nsm3bv1rkp-home-manager-path\/bin\/rg",
-    "scanRoot" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin",
-    "source" : "Nix"
-  },
-  {
-    "name" : "rg",
     "path" : "\/opt\/homebrew\/bin\/rg",
     "resolvedPath" : "\/opt\/homebrew\/Cellar\/ripgrep\/15.1.0\/bin\/rg",
     "scanRoot" : "\/opt\/homebrew\/bin",
     "source" : "Homebrew"
+  },
+  {
+    "name" : "rg",
+    "path" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin\/rg",
+    "resolvedPath" : "\/nix\/store\/75jj92zj1plsqddjm7knw4nsm3bv1rkp-home-manager-path\/bin\/rg",
+    "scanRoot" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin",
+    "source" : "Nix"
   },
   {
     "name" : "ri",
@@ -8556,17 +8556,17 @@
   },
   {
     "name" : "rview",
-    "path" : "\/run\/current-system\/sw\/bin\/rview",
-    "resolvedPath" : "\/nix\/store\/6fbv9xmrij2v5hzlzh1azqfnll620sc0-vim-9.2.0106\/bin\/rview",
-    "scanRoot" : "\/run\/current-system\/sw\/bin",
-    "source" : "Nix"
-  },
-  {
-    "name" : "rview",
     "path" : "\/usr\/bin\/rview",
     "resolvedPath" : "\/usr\/bin\/vim",
     "scanRoot" : "\/usr\/bin",
     "source" : "System"
+  },
+  {
+    "name" : "rview",
+    "path" : "\/run\/current-system\/sw\/bin\/rview",
+    "resolvedPath" : "\/nix\/store\/6fbv9xmrij2v5hzlzh1azqfnll620sc0-vim-9.2.0106\/bin\/rview",
+    "scanRoot" : "\/run\/current-system\/sw\/bin",
+    "source" : "Nix"
   },
   {
     "name" : "rvim",
@@ -8669,16 +8669,16 @@
   },
   {
     "name" : "scalar",
-    "path" : "\/run\/current-system\/sw\/bin\/scalar",
-    "resolvedPath" : "\/nix\/store\/rfbzyqcygzpyh5ncb79n07x8bhws2pq3-git-2.53.0\/bin\/scalar",
-    "scanRoot" : "\/run\/current-system\/sw\/bin",
+    "path" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin\/scalar",
+    "resolvedPath" : "\/nix\/store\/75jj92zj1plsqddjm7knw4nsm3bv1rkp-home-manager-path\/bin\/scalar",
+    "scanRoot" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin",
     "source" : "Nix"
   },
   {
     "name" : "scalar",
-    "path" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin\/scalar",
-    "resolvedPath" : "\/nix\/store\/75jj92zj1plsqddjm7knw4nsm3bv1rkp-home-manager-path\/bin\/scalar",
-    "scanRoot" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin",
+    "path" : "\/run\/current-system\/sw\/bin\/scalar",
+    "resolvedPath" : "\/nix\/store\/rfbzyqcygzpyh5ncb79n07x8bhws2pq3-git-2.53.0\/bin\/scalar",
+    "scanRoot" : "\/run\/current-system\/sw\/bin",
     "source" : "Nix"
   },
   {
@@ -8912,16 +8912,16 @@
   },
   {
     "name" : "sh",
-    "path" : "\/bin\/sh",
-    "scanRoot" : "\/bin",
-    "source" : "System"
-  },
-  {
-    "name" : "sh",
     "path" : "\/run\/current-system\/sw\/bin\/sh",
     "resolvedPath" : "\/nix\/store\/zk0hi525wn70pm93gzgdbb5k07y6x2lm-bash-interactive-5.3p9\/bin\/sh",
     "scanRoot" : "\/run\/current-system\/sw\/bin",
     "source" : "Nix"
+  },
+  {
+    "name" : "sh",
+    "path" : "\/bin\/sh",
+    "scanRoot" : "\/bin",
+    "source" : "System"
   },
   {
     "name" : "sha1",
@@ -9756,16 +9756,16 @@
   },
   {
     "name" : "studio",
-    "path" : "\/Applications\/Android Studio.app\/Contents\/MacOS\/studio",
-    "scanRoot" : "\/Applications",
-    "source" : "Third-Party"
-  },
-  {
-    "name" : "studio",
     "path" : "\/opt\/homebrew\/bin\/studio",
     "resolvedPath" : "\/Applications\/Android Studio.app\/Contents\/MacOS\/studio",
     "scanRoot" : "\/opt\/homebrew\/bin",
     "source" : "Homebrew"
+  },
+  {
+    "name" : "studio",
+    "path" : "\/Applications\/Android Studio.app\/Contents\/MacOS\/studio",
+    "scanRoot" : "\/Applications",
+    "source" : "Third-Party"
   },
   {
     "name" : "stz",
@@ -11028,21 +11028,14 @@
   },
   {
     "name" : "vim",
-    "path" : "\/run\/current-system\/sw\/bin\/vim",
-    "resolvedPath" : "\/nix\/store\/6fbv9xmrij2v5hzlzh1azqfnll620sc0-vim-9.2.0106\/bin\/vim",
-    "scanRoot" : "\/run\/current-system\/sw\/bin",
-    "source" : "Nix"
-  },
-  {
-    "name" : "vim",
     "path" : "\/usr\/bin\/vim",
     "scanRoot" : "\/usr\/bin",
     "source" : "System"
   },
   {
-    "name" : "vimdiff",
-    "path" : "\/run\/current-system\/sw\/bin\/vimdiff",
-    "resolvedPath" : "\/nix\/store\/6fbv9xmrij2v5hzlzh1azqfnll620sc0-vim-9.2.0106\/bin\/vimdiff",
+    "name" : "vim",
+    "path" : "\/run\/current-system\/sw\/bin\/vim",
+    "resolvedPath" : "\/nix\/store\/6fbv9xmrij2v5hzlzh1azqfnll620sc0-vim-9.2.0106\/bin\/vim",
     "scanRoot" : "\/run\/current-system\/sw\/bin",
     "source" : "Nix"
   },
@@ -11052,6 +11045,13 @@
     "resolvedPath" : "\/usr\/bin\/vim",
     "scanRoot" : "\/usr\/bin",
     "source" : "System"
+  },
+  {
+    "name" : "vimdiff",
+    "path" : "\/run\/current-system\/sw\/bin\/vimdiff",
+    "resolvedPath" : "\/nix\/store\/6fbv9xmrij2v5hzlzh1azqfnll620sc0-vim-9.2.0106\/bin\/vimdiff",
+    "scanRoot" : "\/run\/current-system\/sw\/bin",
+    "source" : "Nix"
   },
   {
     "name" : "vimtutor",
@@ -11204,16 +11204,16 @@
   },
   {
     "name" : "webstorm",
+    "path" : "\/Applications\/WebStorm.app\/Contents\/MacOS\/webstorm",
+    "scanRoot" : "\/Applications",
+    "source" : "Third-Party"
+  },
+  {
+    "name" : "webstorm",
     "path" : "\/opt\/homebrew\/bin\/webstorm",
     "resolvedPath" : "\/opt\/homebrew\/Caskroom\/webstorm\/2025.1.3,251.26927.40\/webstorm.wrapper.sh",
     "scanRoot" : "\/opt\/homebrew\/bin",
     "source" : "Homebrew"
-  },
-  {
-    "name" : "webstorm",
-    "path" : "\/Applications\/WebStorm.app\/Contents\/MacOS\/webstorm",
-    "scanRoot" : "\/Applications",
-    "source" : "Third-Party"
   },
   {
     "name" : "wfsctl",
@@ -11229,16 +11229,16 @@
   },
   {
     "name" : "whatis",
-    "path" : "\/usr\/bin\/whatis",
-    "scanRoot" : "\/usr\/bin",
-    "source" : "System"
-  },
-  {
-    "name" : "whatis",
     "path" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin\/whatis",
     "resolvedPath" : "\/nix\/store\/75jj92zj1plsqddjm7knw4nsm3bv1rkp-home-manager-path\/bin\/whatis",
     "scanRoot" : "\/etc\/profiles\/per-user\/danielrajakumar\/bin",
     "source" : "Nix"
+  },
+  {
+    "name" : "whatis",
+    "path" : "\/usr\/bin\/whatis",
+    "scanRoot" : "\/usr\/bin",
+    "source" : "System"
   },
   {
     "name" : "wheel3",
@@ -11909,16 +11909,16 @@
   },
   {
     "name" : "zsh",
+    "path" : "\/bin\/zsh",
+    "scanRoot" : "\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "zsh",
     "path" : "\/run\/current-system\/sw\/bin\/zsh",
     "resolvedPath" : "\/nix\/store\/zf2c7aa7am9dbq9mbbpnsfs2qbv8639q-zsh-5.9\/bin\/zsh",
     "scanRoot" : "\/run\/current-system\/sw\/bin",
     "source" : "Nix"
-  },
-  {
-    "name" : "zsh",
-    "path" : "\/bin\/zsh",
-    "scanRoot" : "\/bin",
-    "source" : "System"
   },
   {
     "name" : "zstd",
