@@ -198,19 +198,20 @@ struct AppsScreen: View {
             } else {
                 // Normal Filtered View
                 VStack(alignment: .leading, spacing: 0) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Installed Applications")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                        Text("All applications on your Mac")
-                            .font(.title3)
-                            .foregroundColor(.secondary)
+                    HStack(alignment: .top, spacing: 16) {
+                        SettingsSidebarIcon(symbol: "square.grid.2x2.fill", color: .blue, size: 44)
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Apps")
+                                .font(.system(size: 28, weight: .semibold))
+                            Text("Applications discovered across system, user, and managed locations")
+                                .font(.title3)
+                                .foregroundColor(.secondary)
+                        }
                     }
                     .padding(.top, 24)
                     .padding(.horizontal, 32)
-                    .padding(.bottom, 24)
-                    
-                    Divider()
+                    .padding(.bottom, 20)
                     
                     if isLoading {
                         Spacer()
@@ -238,14 +239,24 @@ struct AppsScreen: View {
                         }
                         Spacer()
                     } else {
-                        Picker("Filter by Source", selection: $selectedFilter) {
-                            ForEach(FilterCategory.allCases) { category in
-                                Text(category.rawValue).tag(category)
+                        MacSettingsCard {
+                            HStack(spacing: 18) {
+                                Text("\(filteredApps.count) visible apps")
+                                    .foregroundColor(.secondary)
+                                Text("\(stateManager.deletedApps.count) deleted")
+                                    .foregroundColor(.secondary)
+                                Spacer()
+
+                                Picker("Filter by Source", selection: $selectedFilter) {
+                                    ForEach(FilterCategory.allCases) { category in
+                                        Text(category.rawValue).tag(category)
+                                    }
+                                }
+                                .pickerStyle(.segmented)
                             }
                         }
-                        .pickerStyle(.segmented)
                         .padding(.horizontal, 32)
-                        .padding(.vertical, 16)
+                        .padding(.bottom, 16)
                         
                         if selectedFilter == .deleted {
                             if stateManager.deletedApps.isEmpty {
@@ -278,7 +289,7 @@ struct AppsScreen: View {
                 }
             }
         }
-
+        .background(Color(NSColor.windowBackgroundColor))
         .toolbar {
             ToolbarItem(placement: .automatic) {
                 Button(action: {
@@ -357,12 +368,19 @@ struct AppsScreen: View {
     }
 
     func exportUserSnapshot() {
-        UserConfigExporter.writeSnapshot(
-            apps: apps,
-            deletedApps: stateManager.deletedApps,
-            installedTokens: stateManager.installedTokens,
-            scanPaths: scanPaths
-        )
+        let apps = apps
+        let deletedApps = stateManager.deletedApps
+        let installedTokens = stateManager.installedTokens
+        let scanPaths = scanPaths
+
+        DispatchQueue.global(qos: .utility).async {
+            UserConfigExporter.writeSnapshot(
+                apps: apps,
+                deletedApps: deletedApps,
+                installedTokens: installedTokens,
+                scanPaths: scanPaths
+            )
+        }
     }
 }
 
@@ -382,6 +400,10 @@ struct AppListRow: View {
             cask.token == alphanumericOnly ||
             cask.name.contains { $0.lowercased() == baseName }
         }
+    }
+
+    private var managementState: ManagementState {
+        ManagementResolver.appState(for: app, matchingCask: matchingCask)
     }
     
     var body: some View {
@@ -409,7 +431,13 @@ struct AppListRow: View {
                     Text(app.installSource)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
+                    ManagementBadge(state: managementState)
                 }
+
+                Text(managementState.detail)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
             }
             
             Spacer()
@@ -445,22 +473,7 @@ struct AppListRow: View {
                 }
                 .padding(.trailing, 8)
             } else if isHovered {
-                if app.installSource == "Others" {
-                    if let matchingCask = matchingCask {
-                        Button("Brew this") {
-                            withAnimation {
-                                stateManager.installHomebrewCask(token: matchingCask.token)
-                            }
-                        }
-                        .buttonStyle(.bordered)
-                        .tint(.orange)
-                    } else {
-                        Text("Can't brew this")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .padding(.trailing, 8)
-                    }
-                } else if app.installSource == "Homebrew" {
+                if app.installSource == "Homebrew" {
                     if let token = matchingCask?.token, stateManager.outdatedTokens.contains(token) {
                         Button("Upgrade") {
                             withAnimation {
@@ -478,7 +491,7 @@ struct AppListRow: View {
                     }
                     .buttonStyle(.bordered)
                     .tint(.red)
-                } else if app.installSource != "System" {
+                } else if managementState.isManaged {
                     Button("Remove") {
                         withAnimation {
                             stateManager.deleteApp(app: app)
@@ -487,7 +500,7 @@ struct AppListRow: View {
                     .buttonStyle(.bordered)
                     .tint(.red)
                 } else {
-                    Text("System Application")
+                    Text("Detected only")
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .padding(.trailing, 8)
@@ -505,6 +518,8 @@ struct AppListRow: View {
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
         .contentShape(Rectangle())
+        .listRowBackground(Color(NSColor.controlBackgroundColor))
+        .listRowSeparator(.hidden)
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.2)) {
                 isHovered = hovering
@@ -560,6 +575,7 @@ struct DeletedAppListRow: View {
                     Text(app.installSource)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
+                    ManagementBadge(state: managementState)
                 }
             }
             
@@ -588,6 +604,8 @@ struct DeletedAppListRow: View {
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
         .contentShape(Rectangle())
+        .listRowBackground(Color(NSColor.controlBackgroundColor))
+        .listRowSeparator(.hidden)
     }
     
     private func getIconForSource(_ source: String) -> String {
@@ -607,6 +625,19 @@ struct DeletedAppListRow: View {
         case "Mac Store": return .indigo
         case "System": return .primary
         default: return .secondary
+        }
+    }
+
+    private var managementState: ManagementState {
+        switch app.installSource {
+        case "Homebrew", "Nix":
+            return .managed("MacHelm previously removed this from a managed source")
+        case "System":
+            return .detected("Built into macOS")
+        case "Mac Store":
+            return .detected("Detected from the App Store")
+        default:
+            return .detected("Detected on disk only")
         }
     }
 }

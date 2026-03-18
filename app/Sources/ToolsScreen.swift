@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ToolsScreen: View {
+    @AppStorage("machelm.autoRefreshToolsOnOpen") private var autoRefreshOnOpen = true
     @State private var inventory = UserConfigExporter.loadToolInventory()
     @State private var searchText = ""
     @State private var isRefreshing = false
@@ -20,39 +21,46 @@ struct ToolsScreen: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Installed Tools")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                Text("Terminal tools visible in your shell PATH")
-                    .font(.title3)
-                    .foregroundColor(.secondary)
+            HStack(alignment: .top, spacing: 16) {
+                SettingsSidebarIcon(symbol: "terminal.fill", color: .mint, size: 44)
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Tools")
+                        .font(.system(size: 28, weight: .semibold))
+                    Text("Terminal tools visible in your shell PATH")
+                        .font(.title3)
+                        .foregroundColor(.secondary)
+                }
             }
             .padding(.top, 24)
             .padding(.horizontal, 32)
-            .padding(.bottom, 24)
-
-            Divider()
+            .padding(.bottom, 20)
 
             if let inventory {
                 VStack(alignment: .leading, spacing: 0) {
-                    HStack(spacing: 16) {
-                        Text("User: \(inventory.username)")
-                            .foregroundColor(.secondary)
-                        Text("Host: \(inventory.hostName)")
-                            .foregroundColor(.secondary)
-                        Text("Last Refresh: \(inventory.generatedAt)")
-                            .foregroundColor(.secondary)
+                    MacSettingsCard {
+                        HStack(spacing: 18) {
+                            Text("User: \(inventory.username)")
+                            Text("Host: \(inventory.hostName)")
+                            Text("Last Refresh: \(inventory.generatedAt)")
+                            Spacer()
+                            Text("\(filteredTools.count) tools")
+                                .foregroundColor(.secondary)
+                        }
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                     }
-                    .font(.subheadline)
                     .padding(.horizontal, 32)
-                    .padding(.vertical, 16)
+                    .padding(.bottom, 16)
 
                     if filteredTools.isEmpty {
                         Spacer()
-                        Text(searchText.isEmpty ? "No tools found." : "No tools match your search.")
-                            .foregroundColor(.secondary)
-                            .frame(maxWidth: .infinity)
+                        MacSettingsEmptyState(
+                            symbol: "terminal",
+                            title: searchText.isEmpty ? "No tools found" : "No matching tools",
+                            message: searchText.isEmpty ? "Refresh the tool inventory to scan your current PATH." : "Try a different search term."
+                        )
+                        .frame(maxWidth: .infinity)
                         Spacer()
                     } else {
                         List(filteredTools) { tool in
@@ -72,15 +80,17 @@ struct ToolsScreen: View {
             } else {
                 Spacer()
                 VStack(spacing: 12) {
-                    Text("No tool inventory yet.")
-                        .font(.headline)
-                    Text("Refresh the tool inventory to generate terminal-tool data.")
-                        .foregroundColor(.secondary)
+                    MacSettingsEmptyState(
+                        symbol: "terminal",
+                        title: "No tool inventory yet",
+                        message: "Refresh the tool inventory to generate terminal-tool data."
+                    )
                 }
                 .frame(maxWidth: .infinity)
                 Spacer()
             }
         }
+        .background(Color(NSColor.windowBackgroundColor))
         .toolbar {
             ToolbarItem(placement: .automatic) {
                 Button(action: refreshInventory) {
@@ -97,7 +107,7 @@ struct ToolsScreen: View {
         }
         .searchable(text: $searchText, prompt: "Search tools...")
         .onAppear {
-            if inventory == nil {
+            if inventory == nil || autoRefreshOnOpen {
                 refreshInventory()
             } else {
                 inventory = UserConfigExporter.loadToolInventory()
@@ -123,6 +133,10 @@ struct ToolsScreen: View {
 private struct ToolListRow: View {
     let tool: TerminalToolSnapshot
 
+    private var managementState: ManagementState {
+        ManagementResolver.toolState(for: tool)
+    }
+
     var body: some View {
         HStack(spacing: 16) {
             Image(systemName: iconName(for: tool.source))
@@ -138,6 +152,7 @@ private struct ToolListRow: View {
                     Text(tool.source)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
+                    ManagementBadge(state: managementState)
                     if let installIntent = tool.installIntent {
                         Text("•")
                             .foregroundColor(.secondary)
@@ -171,6 +186,11 @@ private struct ToolListRow: View {
                         .foregroundColor(.secondary)
                         .lineLimit(1)
                 }
+
+                Text(managementState.detail)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
             }
 
             Spacer()
@@ -188,6 +208,8 @@ private struct ToolListRow: View {
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
+        .listRowBackground(Color(NSColor.controlBackgroundColor))
+        .listRowSeparator(.hidden)
     }
 
     private func iconName(for source: String) -> String {

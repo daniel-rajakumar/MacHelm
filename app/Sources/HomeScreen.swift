@@ -2,152 +2,74 @@ import SwiftUI
 
 struct HomeScreen: View {
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                // Header
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Welcome to MacHelm")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                    Text("Your Declarative macOS System")
-                        .font(.title3)
-                        .foregroundColor(.secondary)
-                }
-                .padding(.top, 24)
-                .padding(.horizontal, 32)
-                
-                // Content Grid
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 300, maximum: 400), spacing: 24)], spacing: 24) {
-                    // System Status Card
-                    StatCard(
-                        title: "System Status",
-                        icon: "checkmark.seal.fill",
-                        iconColor: .green,
-                        value: "Healthy",
-                        subtitle: "Last rebuild: 2 hours ago"
-                    )
-                    
-                    // Configuration Card
-                    StatCard(
-                        title: "Configuration",
-                        icon: "doc.text.fill",
-                        iconColor: .blue,
-                        value: "flake.nix",
-                        subtitle: "3 pending changes"
-                    )
-                    
-                    // Updates Card
-                    StatCard(
-                        title: "Updates",
-                        icon: "arrow.triangle.2.circlepath",
-                        iconColor: .orange,
-                        value: "Available",
-                        subtitle: "Nixpkgs unstable needs update"
-                    )
-                }
-                .padding(.horizontal, 32)
-                
-                // Quick Actions Section
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Quick Actions")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                    
-                    HStack(spacing: 16) {
-                        ActionButton(title: "Run Rebuild", icon: "hammer.fill", color: .blue) {
-                            // TODO: Trigger rebuild
-                        }
-                        
-                        ActionButton(title: "Update Flake", icon: "arrow.down.doc.fill", color: .purple) {
-                            // TODO: Trigger flake update
-                        }
+        MacSettingsPage(
+            title: "Home",
+            subtitle: "Overview of your MacHelm workspace and machine state",
+            symbol: "house.fill",
+            symbolColor: .orange
+        ) {
+            MacSettingsIntroCard(
+                symbol: "steeringwheel",
+                color: .orange,
+                title: "MacHelm",
+                description: "Manage apps, tools, data exports, and declarative macOS workflows from one native control surface."
+            )
+
+            MacSettingsStatGrid(items: [
+                MacSettingsStatItem(
+                    title: "System Status",
+                    value: "Healthy",
+                    subtitle: "Current workspace is available",
+                    symbol: "checkmark.seal.fill"
+                ),
+                MacSettingsStatItem(
+                    title: "Configuration",
+                    value: "flake.nix",
+                    subtitle: "Repo-backed system configuration",
+                    symbol: "doc.text.fill"
+                ),
+                MacSettingsStatItem(
+                    title: "Data Store",
+                    value: "data/",
+                    subtitle: "User and machine snapshots",
+                    symbol: "externaldrive.fill"
+                )
+            ])
+
+            MacSettingsSection(title: "Quick Actions") {
+                MacSettingsRow {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Rebuild app")
+                            .font(.headline)
+                        Text("Compile and relaunch the current MacHelm app build.")
+                            .foregroundColor(.secondary)
                     }
+                } trailing: {
+                    Button("Restart App") {
+                        NSApp.sendAction(#selector(NSApplication.terminate(_:)), to: nil, from: nil)
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
-                .padding(.horizontal, 32)
-                .padding(.top, 16)
-                
-                Spacer()
-            }
-        }
-    }
-}
 
-// Reusable Native-Looking Card
-struct StatCard: View {
-    let title: String
-    let icon: String
-    let iconColor: Color
-    let value: String
-    let subtitle: String
-    
-    @State private var isHovered = false
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Label {
-                    Text(title)
-                        .font(.headline)
-                } icon: {
-                    Image(systemName: icon)
-                        .foregroundColor(iconColor)
+                MacSettingsRow(showsDivider: false) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Open data folder")
+                            .font(.headline)
+                        Text("Reveal the exported workspace data used by the frontend.")
+                            .foregroundColor(.secondary)
+                    }
+                } trailing: {
+                    Button("Reveal") {
+                        NSWorkspace.shared.activateFileViewerSelecting([UserConfigExporter.userDirectoryURL()])
+                    }
+                    .buttonStyle(.bordered)
                 }
-                Spacer()
-            }
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(value)
-                    .font(.system(size: 28, weight: .bold))
-                Text(subtitle)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
             }
         }
-        .padding(20)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color(NSColor.controlBackgroundColor))
-                .shadow(color: Color.black.opacity(isHovered ? 0.1 : 0.05), radius: isHovered ? 8 : 4, x: 0, y: isHovered ? 4 : 2)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(Color.primary.opacity(0.05), lineWidth: 1)
-        )
-        .onHover { hovering in
-            withAnimation(.easeInOut(duration: 0.2)) {
-                isHovered = hovering
-            }
-        }
-    }
-}
-
-// Reusable Action Button
-struct ActionButton: View {
-    let title: String
-    let icon: String
-    let color: Color
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 12) {
-                Image(systemName: icon)
-                    .font(.title2)
-                Text(title)
-                    .font(.headline)
-            }
-            .padding(.vertical, 16)
-            .padding(.horizontal, 24)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(color.opacity(0.1))
-            .foregroundColor(color)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        }
-        .buttonStyle(.plain)
     }
 }
 
 #Preview {
     HomeScreen()
-        .frame(width: 800, height: 600)
+        .frame(width: 1000, height: 700)
 }

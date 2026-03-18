@@ -7,19 +7,20 @@ struct StoreScreen: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 0) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("App Store")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                    Text("Discover and install Homebrew packages")
-                        .font(.title3)
-                        .foregroundColor(.secondary)
+                HStack(alignment: .top, spacing: 16) {
+                    SettingsSidebarIcon(symbol: "bag.fill", color: .pink, size: 44)
+
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Store")
+                            .font(.system(size: 28, weight: .semibold))
+                        Text("Discover and install Homebrew packages")
+                            .font(.title3)
+                            .foregroundColor(.secondary)
+                    }
                 }
                 .padding(.top, 24)
                 .padding(.horizontal, 32)
-                .padding(.bottom, 24)
-                
-                Divider()
+                .padding(.bottom, 20)
                 
                 if storeManager.isLoading && storeManager.casks.isEmpty {
                     Spacer()
@@ -36,6 +37,20 @@ struct StoreScreen: View {
                         .padding()
                     Spacer()
                 } else {
+                    MacSettingsCard {
+                        HStack(spacing: 18) {
+                            Text("\(storeManager.filteredCasks.count) available casks")
+                            Text("\(stateManager.installedTokens.count) installed tokens")
+                            Spacer()
+                            Text("Homebrew catalog")
+                                .foregroundColor(.secondary)
+                        }
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    }
+                    .padding(.horizontal, 32)
+                    .padding(.bottom, 16)
+
                     List(storeManager.filteredCasks) { cask in
                         StoreAppRow(cask: cask, stateManager: stateManager)
                     }
@@ -43,6 +58,7 @@ struct StoreScreen: View {
                     .searchable(text: $storeManager.searchText, prompt: "Search Homebrew (e.g., spotify, vscode...)")
                 }
             }
+            .background(Color(NSColor.windowBackgroundColor))
         }
         .onAppear {
             storeManager.fetchCasks()
@@ -154,6 +170,8 @@ struct StoreAppRow: View {
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
         .contentShape(Rectangle())
+        .listRowBackground(Color(NSColor.controlBackgroundColor))
+        .listRowSeparator(.hidden)
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.2)) {
                 isHovered = hovering

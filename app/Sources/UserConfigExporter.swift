@@ -80,6 +80,23 @@ struct ToolInventorySnapshot {
     let thirdPartyTools: [TerminalToolSnapshot]
 }
 
+struct FilesystemBinarySnapshot: Codable, Identifiable {
+    var id: String { path }
+    let name: String
+    let path: String
+    let resolvedPath: String?
+    let source: String
+    let scanRoot: String
+}
+
+struct BinaryInventorySnapshot {
+    let username: String
+    let hostName: String
+    let generatedAt: String
+    let binaries: [FilesystemBinarySnapshot]
+    let scanRoots: [String]
+}
+
 struct UserConfigSnapshot: Codable {
     let username: String
     let hostName: String
@@ -228,6 +245,14 @@ enum UserConfigExporter {
         userDirectoryURL(for: username).appendingPathComponent("third-party-tools.json")
     }
 
+    static func filesystemBinariesFileURL(for username: String = NSUserName()) -> URL {
+        userDirectoryURL(for: username).appendingPathComponent("filesystem-binaries.json")
+    }
+
+    static func binaryScanRootsFileURL(for username: String = NSUserName()) -> URL {
+        userDirectoryURL(for: username).appendingPathComponent("binary-scan-roots.json")
+    }
+
     static func loadSnapshot(for username: String = NSUserName()) -> UserConfigSnapshot? {
         migrateLegacyDataIfNeeded(for: username)
 
@@ -302,6 +327,26 @@ enum UserConfigExporter {
     static func loadDeletedApps(for username: String = NSUserName()) -> [DeletedApp] {
         migrateLegacyDataIfNeeded(for: username)
         return loadJSON(from: deletedAppsFileURL(for: username)) ?? []
+    }
+
+    static func loadBinaryInventory(for username: String = NSUserName()) -> BinaryInventorySnapshot? {
+        migrateLegacyDataIfNeeded(for: username)
+
+        guard
+            let metadata: UserMetadataSnapshot = loadJSON(from: metadataFileURL(for: username)),
+            let binaries: [FilesystemBinarySnapshot] = loadJSON(from: filesystemBinariesFileURL(for: username)),
+            let scanRoots: [String] = loadJSON(from: binaryScanRootsFileURL(for: username))
+        else {
+            return nil
+        }
+
+        return BinaryInventorySnapshot(
+            username: metadata.username,
+            hostName: metadata.hostName,
+            generatedAt: metadata.generatedAt,
+            binaries: binaries,
+            scanRoots: scanRoots
+        )
     }
 
     static func saveDeletedApps(_ deletedApps: [DeletedApp], for username: String = NSUserName()) {
@@ -395,6 +440,27 @@ enum UserConfigExporter {
             try writeJSON(terminalInventory.thirdPartyTools, to: thirdPartyToolsFileURL(for: username))
         } catch {
             print("Failed to refresh terminal inventory: \(error)")
+        }
+    }
+
+    static func refreshFilesystemBinaries(for username: String = NSUserName()) {
+        do {
+            try ensureUserDirectoryExists(for: username)
+
+            let existingMetadata: UserMetadataSnapshot? = loadJSON(from: metadataFileURL(for: username))
+            let metadata = UserMetadataSnapshot(
+                username: username,
+                hostName: existingMetadata?.hostName ?? Host.current().localizedName ?? Host.current().name ?? "Unknown Host",
+                generatedAt: ISO8601DateFormatter().string(from: Date()),
+                homeDirectory: existingMetadata?.homeDirectory ?? FileManager.default.homeDirectoryForCurrentUser.path
+            )
+            let binaryInventory = filesystemBinaryInventorySnapshot(for: username)
+
+            try writeJSON(metadata, to: metadataFileURL(for: username))
+            try writeJSON(binaryInventory.binaries, to: filesystemBinariesFileURL(for: username))
+            try writeJSON(binaryInventory.scanRoots, to: binaryScanRootsFileURL(for: username))
+        } catch {
+            print("Failed to refresh filesystem binary inventory: \(error)")
         }
     }
 
@@ -520,6 +586,109 @@ enum UserConfigExporter {
             homebrewFormulaInventory.dependencyFormulae,
             nixTools,
             thirdPartyTools
+        )
+    }
+
+    private static func filesystemBinaryInventorySnapshot(for username: String) -> (
+        binaries: [FilesystemBinarySnapshot],
+        scanRoots: [String]
+    ) {
+        let scanRoots = filesystemBinaryRoots(for: username)
+        var binariesByPath: [String: FilesystemBinarySnapshot] = [:]
+        let fileManager = FileManager.default
+
+        for root in scanRoots {
+            guard fileManager.fileExists(atPath: root) else { continue }
+
+            if root.hasSuffix("/Applications")
+                || root.hasSuffix("/Applications/")
+                || root.contains("/Applications/")
+            {
+                collectAppBundleBinaries(from: root, into: &binariesByPath)
+            } else {
+                collectDirectoryBinaries(from: root, into: &binariesByPath)
+            }
+        }
+
+        return (
+            Array(binariesByPath.values).sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending },
+            scanRoots
+        )
+    }
+
+    private static func filesystemBinaryRoots(for username: String) -> [String] {
+        let home = FileManager.default.homeDirectoryForCurrentUser.path
+        let perUserProfile = "/etc/profiles/per-user/\(username)/bin"
+
+        return [
+            "/usr/bin",
+            "/bin",
+            "/usr/sbin",
+            "/sbin",
+            "/usr/local/bin",
+            "/usr/local/sbin",
+            "/opt/homebrew/bin",
+            "/opt/homebrew/sbin",
+            "\(home)/.nix-profile/bin",
+            perUserProfile,
+            "/run/current-system/sw/bin",
+            "/nix/var/nix/profiles/default/bin",
+            "/Applications",
+            "\(home)/Applications",
+            "/System/Applications",
+            "/System/Applications/Utilities"
+        ]
+    }
+
+    private static func collectDirectoryBinaries(
+        from root: String,
+        into binariesByPath: inout [String: FilesystemBinarySnapshot]
+    ) {
+        let fileManager = FileManager.default
+        guard let children = try? fileManager.contentsOfDirectory(atPath: root) else { return }
+
+        for child in children {
+            let fullPath = (root as NSString).appendingPathComponent(child)
+            var isDirectory: ObjCBool = false
+
+            guard fileManager.fileExists(atPath: fullPath, isDirectory: &isDirectory), !isDirectory.boolValue else {
+                continue
+            }
+
+            guard fileManager.isExecutableFile(atPath: fullPath) else { continue }
+            binariesByPath[fullPath] = filesystemBinarySnapshot(path: fullPath, scanRoot: root)
+        }
+    }
+
+    private static func collectAppBundleBinaries(
+        from root: String,
+        into binariesByPath: inout [String: FilesystemBinarySnapshot]
+    ) {
+        let fileManager = FileManager.default
+        guard let children = try? fileManager.contentsOfDirectory(atPath: root) else { return }
+
+        for child in children where child.hasSuffix(".app") {
+            let appBundlePath = (root as NSString).appendingPathComponent(child)
+            let executableDirectory = (appBundlePath as NSString).appendingPathComponent("Contents/MacOS")
+            guard let executables = try? fileManager.contentsOfDirectory(atPath: executableDirectory) else { continue }
+
+            for executable in executables {
+                let fullPath = (executableDirectory as NSString).appendingPathComponent(executable)
+                guard fileManager.isExecutableFile(atPath: fullPath) else { continue }
+                binariesByPath[fullPath] = filesystemBinarySnapshot(path: fullPath, scanRoot: root)
+            }
+        }
+    }
+
+    private static func filesystemBinarySnapshot(path: String, scanRoot: String) -> FilesystemBinarySnapshot {
+        let resolvedPath = resolvedExecutablePath(at: path)
+
+        return FilesystemBinarySnapshot(
+            name: URL(fileURLWithPath: path).lastPathComponent,
+            path: path,
+            resolvedPath: resolvedPath,
+            source: classifyTerminalTool(path: path, resolvedPath: resolvedPath),
+            scanRoot: scanRoot
         )
     }
 

@@ -10,6 +10,8 @@ struct MacHelmApp: App {
         WindowGroup {
             MainView()
         }
+        .defaultSize(width: 720, height: 740)
+        .windowResizability(.contentSize)
         
         MenuBarExtra("MacHelm", systemImage: "steeringwheel") {
             MenuBarMenu()

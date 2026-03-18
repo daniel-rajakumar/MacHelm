@@ -45,27 +45,17 @@ class AppStateManager: ObservableObject {
     }
     
     private func loadInstalledTokens() {
-        // Use brew list --cask to get installed cask tokens
         let cmd = "/opt/homebrew/bin/brew list --cask || /usr/local/bin/brew list --cask"
-        runCommandInBackground(command: cmd) { [weak self] status in
+        runCommandForOutput(command: cmd) { [weak self] status, output in
+            guard status == 0 else { return }
+
+            let tokens = output
+                .split(separator: "\n")
+                .map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
+                .filter { !$0.isEmpty }
+
             DispatchQueue.main.async {
-                guard status == 0 else { return }
-                let task = Process()
-                task.launchPath = "/bin/bash"
-                task.arguments = ["-c", cmd]
-                let pipe = Pipe()
-                task.standardOutput = pipe
-                task.standardError = pipe
-                do {
-                    try task.run()
-                    let data = pipe.fileHandleForReading.readDataToEndOfFile()
-                    if let output = String(data: data, encoding: .utf8) {
-                        let tokens = output.split(separator: "\n").map { String($0) }
-                        self?.installedTokens = Set(tokens)
-                    }
-                } catch {
-                    print("Failed to load installed tokens: \(error)")
-                }
+                self?.installedTokens = Set(tokens)
             }
         }
     }
@@ -74,27 +64,15 @@ class AppStateManager: ObservableObject {
         let brewPath = "/opt/homebrew/bin/brew"
         let cmd = "\(brewPath) outdated --cask --json"
         
-        runCommandInBackground(command: cmd) { [weak self] status in
-            DispatchQueue.main.async {
-                let task = Process()
-                task.launchPath = "/bin/bash"
-                task.arguments = ["-c", cmd]
-                let pipe = Pipe()
-                task.standardOutput = pipe
-                task.standardError = pipe
-                do {
-                    try task.run()
-                    let data = pipe.fileHandleForReading.readDataToEndOfFile()
-                    // Basic JSON parsing for brew outdated --cask --json
-                    // Expected structure: {"formulae": [], "casks": [{"name": "token", ...}]}
-                    if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                       let casks = json["casks"] as? [[String: Any]] {
-                        let tokens = casks.compactMap { $0["token"] as? String ?? $0["name"] as? String }
-                        self?.outdatedTokens = Set(tokens)
-                        print("Loaded outdated tokens: \(tokens)")
-                    }
-                } catch {
-                    print("Failed to load outdated tokens: \(error)")
+        runCommandForOutput(command: cmd) { [weak self] status, output in
+            guard status == 0, let data = output.data(using: .utf8) else { return }
+
+            if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let casks = json["casks"] as? [[String: Any]] {
+                let tokens = casks.compactMap { $0["token"] as? String ?? $0["name"] as? String }
+                DispatchQueue.main.async {
+                    self?.outdatedTokens = Set(tokens)
+                    print("Loaded outdated tokens: \(tokens)")
                 }
             }
         }
@@ -337,6 +315,7 @@ class AppStateManager: ObservableObject {
             if let match {
                 do {
                     try updatedLines.joined(separator: "\n").write(toFile: path, atomically: true, encoding: .utf8)
+                    ManagementResolver.invalidateRepoPackageCache()
                     return match
                 } catch {
                     print("Failed to write Nix config at \(path): \(error)")
@@ -586,6 +565,15 @@ class AppStateManager: ObservableObject {
     }
     
     private func runCommandInBackground(command: String, completion: ((Int32) -> Void)? = nil) {
+        runCommandForOutput(command: command) { status, _ in
+            completion?(status)
+        }
+    }
+
+    private func runCommandForOutput(
+        command: String,
+        completion: @escaping (Int32, String) -> Void
+    ) {
         DispatchQueue.global(qos: .userInitiated).async {
             let task = Process()
             task.launchPath = "/bin/bash"
@@ -604,14 +592,16 @@ class AppStateManager: ObservableObject {
             do {
                 try task.run()
                 let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                task.waitUntilExit()
                 if let output = String(data: data, encoding: .utf8) {
                     print("Command Output for '\(command)':\n\(output)")
+                    completion(task.terminationStatus, output)
+                } else {
+                    completion(task.terminationStatus, "")
                 }
-                task.waitUntilExit()
-                completion?(task.terminationStatus)
             } catch {
                 print("Failed to run command: \(error)")
-                completion?(-1)
+                completion(-1, "")
             }
         }
     }
