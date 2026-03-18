@@ -23,90 +23,15 @@ struct BinariesScreen: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            if let inventory {
-                VStack(alignment: .leading, spacing: 0) {
-                    MacSettingsCard {
-                        HStack(spacing: 12) {
-                            MacInlineSearchField(prompt: "Search binaries...", text: $searchText)
-
-                            Button(action: refreshInventory) {
-                                if isRefreshing {
-                                    ProgressView()
-                                } else {
-                                    Image(systemName: "arrow.clockwise")
-                                        .font(.system(size: 13, weight: .semibold))
-                                }
-                            }
-                            .buttonStyle(.bordered)
-                            .disabled(isRefreshing)
-                        }
-
-                        ViewThatFits(in: .horizontal) {
-                            HStack(spacing: 18) {
-                                Text("User: \(inventory.username)")
-                                Text("Host: \(inventory.hostName)")
-                                Text("Last Refresh: \(inventory.generatedAt)")
-                                Spacer()
-                                Text("\(inventory.scanRoots.count) scan roots")
-                                    .foregroundColor(.secondary)
-                                Text("\(filteredBinaries.count) binaries")
-                                    .foregroundColor(.secondary)
-                            }
-
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("User: \(inventory.username)")
-                                Text("Host: \(inventory.hostName)")
-                                Text("Last Refresh: \(inventory.generatedAt)")
-                                Text("\(inventory.scanRoots.count) scan roots")
-                                    .foregroundColor(.secondary)
-                                Text("\(filteredBinaries.count) binaries")
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 24)
-                    .padding(.bottom, 16)
-
-                    if filteredBinaries.isEmpty {
-                        Spacer()
-                        MacSettingsEmptyState(
-                            symbol: "doc.text.magnifyingglass",
-                            title: searchText.isEmpty ? "No binaries found" : "No matching binaries",
-                            message: searchText.isEmpty ? "Refresh the binary inventory to scan filesystem executables." : "Try a different search term."
-                        )
-                        .frame(maxWidth: .infinity)
-                        Spacer()
-                    } else {
-                        List(filteredBinaries) { binary in
-                            BinaryListRow(binary: binary)
-                        }
-                        .listStyle(.plain)
-                    }
-                }
-            } else if isRefreshing {
-                Spacer()
-                HStack {
-                    Spacer()
-                    ProgressView("Scanning filesystem binaries...")
-                    Spacer()
-                }
-                Spacer()
-            } else {
-                Spacer()
-                VStack(spacing: 12) {
-                    MacSettingsEmptyState(
-                        symbol: "doc.text.magnifyingglass",
-                        title: "No binary inventory yet",
-                        message: "Refresh the binary inventory to generate filesystem-binary data."
-                    )
-                }
-                .frame(maxWidth: .infinity)
-                Spacer()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                screenHeader(title: "Binaries", subtitle: "Filesystem executables discovered under configured scan roots.")
+                inventorySection
+                binariesContent
             }
+            .padding(.horizontal, 22)
+            .padding(.top, 24)
+            .padding(.bottom, 28)
         }
         .background(Color(NSColor.windowBackgroundColor))
         .onAppear {
@@ -122,6 +47,105 @@ struct BinariesScreen: View {
             dataWatcher?.stop()
             dataWatcher = nil
         }
+    }
+
+    @ViewBuilder
+    private var inventorySection: some View {
+        if let inventory {
+            MacSettingsSection(title: "Inventory") {
+                VStack(spacing: 0) {
+                    MacSettingsRow {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Search & Refresh")
+                                .font(.headline)
+                            MacInlineSearchField(prompt: "Search binaries...", text: $searchText)
+                        }
+                    } trailing: {
+                        Button(action: refreshInventory) {
+                            if isRefreshing {
+                                ProgressView()
+                            } else {
+                                Image(systemName: "arrow.clockwise")
+                                    .font(.system(size: 13, weight: .semibold))
+                            }
+                        }
+                        .buttonStyle(MacSecondaryButtonStyle())
+                        .disabled(isRefreshing)
+                    }
+
+                    MacSettingsRow(showsDivider: false) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Scan roots")
+                                .font(.headline)
+                            Text("\(inventory.username) on \(inventory.hostName)")
+                                .foregroundColor(.secondary)
+                        }
+                    } trailing: {
+                        HStack(spacing: 16) {
+                            metricPill("\(inventory.scanRoots.count)", label: "Roots")
+                            metricPill("\(filteredBinaries.count)", label: "Visible")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var binariesContent: some View {
+        if let _ = inventory {
+            if filteredBinaries.isEmpty {
+                MacSettingsCard {
+                    MacSettingsEmptyState(
+                        symbol: "doc.text.magnifyingglass",
+                        title: searchText.isEmpty ? "No binaries found" : "No matching binaries",
+                        message: searchText.isEmpty ? "Refresh the binary inventory to scan filesystem executables." : "Try a different search term."
+                    )
+                }
+            } else {
+                MacSettingsSection(title: "Discovered Binaries") {
+                    ForEach(Array(filteredBinaries.enumerated()), id: \.element.id) { index, binary in
+                        VStack(spacing: 0) {
+                            BinaryListRow(binary: binary)
+
+                            if index < filteredBinaries.count - 1 {
+                                MacSettingsDivider()
+                            }
+                        }
+                    }
+                }
+            }
+        } else if isRefreshing {
+            MacSettingsCard {
+                MacSettingsEmptyState(
+                    symbol: "doc.text.magnifyingglass",
+                    title: "Scanning filesystem binaries",
+                    message: "MacHelm is rebuilding the current binary inventory."
+                )
+            }
+        } else {
+            MacSettingsCard {
+                MacSettingsEmptyState(
+                    symbol: "doc.text.magnifyingglass",
+                    title: "No binary inventory yet",
+                    message: "Refresh the binary inventory to generate filesystem-binary data."
+                )
+            }
+        }
+    }
+
+    private func screenHeader(title: String, subtitle: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.system(size: 24, weight: .semibold))
+            Text(subtitle)
+                .font(.system(size: 13.5))
+                .foregroundColor(.secondary)
+        }
+    }
+
+    private func metricPill(_ value: String, label: String) -> some View {
+        MacMetricPill(value: value, label: label)
     }
 
     private var shouldAutoRefreshOnAppear: Bool {
@@ -180,8 +204,6 @@ private struct BinaryListRow: View {
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
-        .listRowBackground(Color(NSColor.controlBackgroundColor))
-        .listRowSeparator(.hidden)
     }
 
     private var regularContent: some View {
@@ -262,13 +284,13 @@ private struct BinaryListRow: View {
             Button("Reveal") {
                 NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: binary.path)])
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(MacSecondaryButtonStyle())
 
             Button("Copy Path") {
                 NSPasteboard.general.clearContents()
                 NSPasteboard.general.setString(binary.path, forType: .string)
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(MacPrimaryButtonStyle())
         }
     }
 

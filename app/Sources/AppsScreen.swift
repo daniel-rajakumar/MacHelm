@@ -263,9 +263,15 @@ struct AppsScreen: View {
     }
 
     private var baseContent: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            controlsSection
-            contentSection
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                screenHeader(title: "Apps", subtitle: "Applications discovered across system, user, and managed locations.")
+                controlsSection
+                contentSection
+            }
+            .padding(.horizontal, 22)
+            .padding(.top, 24)
+            .padding(.bottom, 28)
         }
         .background(Color(NSColor.windowBackgroundColor))
     }
@@ -312,131 +318,165 @@ struct AppsScreen: View {
     @ViewBuilder
     private var contentSection: some View {
         if model.isLoading && model.apps.isEmpty {
-            Spacer()
-            HStack {
-                Spacer()
-                ProgressView("Scanning for apps...")
-                Spacer()
+            MacSettingsCard {
+                MacSettingsEmptyState(
+                    symbol: "app.badge",
+                    title: "Scanning applications",
+                    message: "MacHelm is refreshing the installed app inventory."
+                )
             }
-            Spacer()
         } else if model.apps.isEmpty {
-            Spacer()
-            HStack {
-                Spacer()
-                VStack(spacing: 16) {
-                    Image(systemName: "app.dashed")
-                        .font(.system(size: 48))
-                        .foregroundColor(.secondary)
-                    Text("No applications found")
-                        .font(.headline)
-                    Text("This is unusual. Are the scan paths correct?")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                Spacer()
+            MacSettingsCard {
+                MacSettingsEmptyState(
+                    symbol: "app.dashed",
+                    title: "No applications found",
+                    message: "MacHelm did not find any apps in the configured scan paths."
+                )
             }
-            Spacer()
         } else if !searchText.isEmpty {
-            List {
+            VStack(alignment: .leading, spacing: 24) {
                 if !visibleAppRows.isEmpty {
-                    Section("Installed Apps") {
-                        ForEach(visibleAppRows) { item in
-                            AppListRow(
-                                app: item.app,
-                                matchingCask: item.matchingCask,
-                                managementState: item.managementState,
-                                stateManager: stateManager
-                            )
-                        }
-                    }
+                    appRowsSection(title: "Installed Apps", rows: visibleAppRows)
                 }
 
                 if !visibleInstallableCasks.isEmpty {
-                    Section("Available to Install") {
-                        ForEach(visibleInstallableCasks) { cask in
-                            StoreAppRow(cask: cask, stateManager: stateManager)
-                        }
-                    }
+                    storeRowsSection(title: "Available to Install", casks: visibleInstallableCasks)
                 }
 
                 if visibleAppRows.isEmpty && visibleInstallableCasks.isEmpty {
-                    Section {
-                        VStack {
-                            Spacer()
-                            Text("No apps match your search.")
-                                .foregroundColor(.secondary)
-                                .frame(maxWidth: .infinity)
-                            Spacer()
-                        }
-                        .listRowBackground(Color.clear)
-                        .frame(height: 300)
+                    MacSettingsCard {
+                        MacSettingsEmptyState(
+                            symbol: "magnifyingglass",
+                            title: "No apps match your search",
+                            message: "Try a different name, path, or source filter."
+                        )
                     }
                 }
             }
-            .listStyle(.inset)
         } else if selectedFilter == .deleted {
             if stateManager.deletedApps.isEmpty {
-                Spacer()
-                Text("No deleted apps.")
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity)
-                Spacer()
-            } else {
-                List(stateManager.deletedApps) { deletedApp in
-                    DeletedAppListRow(app: deletedApp, stateManager: stateManager)
+                MacSettingsCard {
+                    MacSettingsEmptyState(
+                        symbol: "trash",
+                        title: "No deleted apps",
+                        message: "Removed apps will appear here after you delete them from MacHelm."
+                    )
                 }
-                .listStyle(.plain)
+            } else {
+                deletedAppsSection
             }
         } else if visibleAppRows.isEmpty {
-            Spacer()
-            Text("No apps found for this category.")
-                .foregroundColor(.secondary)
-                .frame(maxWidth: .infinity)
-            Spacer()
-        } else {
-            List(visibleAppRows) { item in
-                AppListRow(
-                    app: item.app,
-                    matchingCask: item.matchingCask,
-                    managementState: item.managementState,
-                    stateManager: stateManager
+            MacSettingsCard {
+                MacSettingsEmptyState(
+                    symbol: "square.grid.2x2",
+                    title: "No apps in this category",
+                    message: "Switch filters or refresh the inventory to repopulate this section."
                 )
             }
-            .listStyle(.plain)
+        } else {
+            appRowsSection(title: selectedFilter.rawValue, rows: visibleAppRows)
         }
     }
 
     private var controlsSection: some View {
-        MacSettingsCard {
-            HStack(spacing: 12) {
-                MacInlineSearchField(prompt: "Search apps...", text: $searchText)
-
-                Button(action: {
-                    model.refresh(scanPaths: scanPaths) {
-                        exportUserSnapshot()
+        MacSettingsSection(title: "Inventory") {
+            VStack(spacing: 0) {
+                MacSettingsRow {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Search & Refresh")
+                            .font(.headline)
+                        MacInlineSearchField(prompt: "Search apps...", text: $searchText)
                     }
-                    runAppBuildInBackground()
-                }) {
-                    Image(systemName: "arrow.clockwise")
-                        .font(.system(size: 13, weight: .semibold))
+                } trailing: {
+                    Button(action: {
+                        model.refresh(scanPaths: scanPaths) {
+                            exportUserSnapshot()
+                        }
+                        runAppBuildInBackground()
+                    }) {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.system(size: 13, weight: .semibold))
+                    }
+                    .buttonStyle(MacSecondaryButtonStyle())
+                    .help("Refresh App List")
                 }
-                .buttonStyle(.bordered)
-                .help("Refresh App List")
-            }
 
-            HStack(spacing: 18) {
-                Text("\(visibleAppRows.count) visible apps")
-                    .foregroundColor(.secondary)
-                Text("\(stateManager.deletedApps.count) deleted")
-                    .foregroundColor(.secondary)
-                Spacer()
+                MacSettingsRow(showsDivider: false) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Current filter")
+                            .font(.headline)
+                        Text(selectedFilter.rawValue)
+                            .foregroundColor(.secondary)
+                    }
+                } trailing: {
+                    HStack(spacing: 16) {
+                        metricPill("\(visibleAppRows.count)", label: "Visible")
+                        metricPill("\(stateManager.deletedApps.count)", label: "Deleted")
+                    }
+                }
             }
-            .font(.subheadline)
-
         }
-        .padding(.horizontal, 20)
-        .padding(.top, 24)
-        .padding(.bottom, 16)
+    }
+
+    private func screenHeader(title: String, subtitle: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.system(size: 24, weight: .semibold))
+            Text(subtitle)
+                .font(.system(size: 13.5))
+                .foregroundColor(.secondary)
+        }
+    }
+
+    private func metricPill(_ value: String, label: String) -> some View {
+        MacMetricPill(value: value, label: label)
+    }
+
+    private func appRowsSection(title: String, rows: [AppRowItem]) -> some View {
+        MacSettingsSection(title: title) {
+            ForEach(Array(rows.enumerated()), id: \.element.id) { index, item in
+                VStack(spacing: 0) {
+                    AppListRow(
+                        app: item.app,
+                        matchingCask: item.matchingCask,
+                        managementState: item.managementState,
+                        stateManager: stateManager
+                    )
+
+                    if index < rows.count - 1 {
+                        MacSettingsDivider()
+                    }
+                }
+            }
+        }
+    }
+
+    private func storeRowsSection(title: String, casks: [BrewCask]) -> some View {
+        MacSettingsSection(title: title) {
+            ForEach(Array(casks.enumerated()), id: \.element.id) { index, cask in
+                VStack(spacing: 0) {
+                    StoreAppRow(cask: cask, stateManager: stateManager)
+
+                    if index < casks.count - 1 {
+                        MacSettingsDivider()
+                    }
+                }
+            }
+        }
+    }
+
+    private var deletedAppsSection: some View {
+        MacSettingsSection(title: "Deleted Apps") {
+            ForEach(Array(stateManager.deletedApps.enumerated()), id: \.element.id) { index, deletedApp in
+                VStack(spacing: 0) {
+                    DeletedAppListRow(app: deletedApp, stateManager: stateManager)
+
+                    if index < stateManager.deletedApps.count - 1 {
+                        MacSettingsDivider()
+                    }
+                }
+            }
+        }
     }
 
     func exportUserSnapshot() {
@@ -546,8 +586,6 @@ struct AppListRow: View {
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
         .contentShape(Rectangle())
-        .listRowBackground(Color(NSColor.controlBackgroundColor))
-        .listRowSeparator(.hidden)
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.2)) {
                 isHovered = hovering
@@ -647,8 +685,7 @@ struct AppListRow: View {
                             stateManager.upgradeHomebrewCask(token: token)
                         }
                     }
-                    .buttonStyle(.bordered)
-                    .tint(.blue)
+                    .buttonStyle(MacSecondaryButtonStyle())
                 }
 
                 Button {
@@ -659,8 +696,7 @@ struct AppListRow: View {
                     Image(systemName: "trash")
                         .font(.system(size: 12, weight: .semibold))
                 }
-                .buttonStyle(.bordered)
-                .tint(.red)
+                .buttonStyle(MacDestructiveButtonStyle())
             } else if managementState.isManaged {
                 Button {
                     withAnimation {
@@ -670,8 +706,7 @@ struct AppListRow: View {
                     Image(systemName: "trash")
                         .font(.system(size: 12, weight: .semibold))
                 }
-                .buttonStyle(.bordered)
-                .tint(.red)
+                .buttonStyle(MacDestructiveButtonStyle())
             } else {
                 Text("Detected only")
                     .font(.caption)
@@ -797,8 +832,7 @@ struct DeletedAppListRow: View {
                         stateManager.restoreApp(deletedApp: app)
                     }
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(.green)
+                .buttonStyle(MacPrimaryButtonStyle())
             }
         }
         .padding(.vertical, 8)

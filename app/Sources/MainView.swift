@@ -6,6 +6,8 @@ struct MainView: View {
     @State private var selection: SidebarItem = .home
     @State private var appsFilter: AppsScreen.FilterCategory = .all
     @State private var showsAppsTree = false
+    @State private var showsSettingsTree = false
+    @State private var settingsCategory: SettingsScreen.Category = .general
     @State private var hasPreloadedData = false
     @State private var isRebuilding = false
     @StateObject private var appStateManager = AppStateManager()
@@ -86,6 +88,8 @@ struct MainView: View {
                 items: visibleSidebarItems,
                 appsFilter: $appsFilter,
                 showsAppsTree: $showsAppsTree,
+                settingsCategory: $settingsCategory,
+                showsSettingsTree: $showsSettingsTree,
                 isRebuilding: isRebuilding,
                 rebuildAction: rebuildApp,
                 relaunchAction: relaunchApp
@@ -143,9 +147,9 @@ struct MainView: View {
         case .store:
             StoreScreen(storeManager: storeManager, stateManager: appStateManager)
         case .system:
-            SettingsScreen()
+            SettingsScreen(selectedCategory: $settingsCategory)
         case .settings:
-            SettingsScreen()
+            SettingsScreen(selectedCategory: $settingsCategory)
         }
     }
 
@@ -168,11 +172,13 @@ struct MainView: View {
         if selection == .tools && !showToolsTab {
             selection = .home
             showsAppsTree = false
+            showsSettingsTree = false
         }
 
         if selection == .binaries && !showBinariesTab {
             selection = .home
             showsAppsTree = false
+            showsSettingsTree = false
         }
     }
     
@@ -292,6 +298,8 @@ private struct MacSidebar: View {
     let items: [MainView.SidebarItem]
     @Binding var appsFilter: AppsScreen.FilterCategory
     @Binding var showsAppsTree: Bool
+    @Binding var settingsCategory: SettingsScreen.Category
+    @Binding var showsSettingsTree: Bool
     let isRebuilding: Bool
     let rebuildAction: () -> Void
     let relaunchAction: () -> Void
@@ -323,6 +331,12 @@ private struct MacSidebar: View {
                                 appsFilter: $appsFilter,
                                 showsAppsTree: $showsAppsTree
                             )
+                        } else if showsSettingsTree {
+                            SettingsTreeSidebar(
+                                selection: $selection,
+                                settingsCategory: $settingsCategory,
+                                showsSettingsTree: $showsSettingsTree
+                            )
                         } else {
                             ForEach(items, id: \.self) { item in
                                 SidebarNavButton(
@@ -332,9 +346,16 @@ private struct MacSidebar: View {
                                     if item == .apps {
                                         selection = .apps
                                         showsAppsTree = true
+                                        showsSettingsTree = false
+                                    } else if item == .system {
+                                        selection = .system
+                                        settingsCategory = .general
+                                        showsSettingsTree = true
+                                        showsAppsTree = false
                                     } else {
                                         selection = item
                                         showsAppsTree = false
+                                        showsSettingsTree = false
                                     }
                                 }
                             }
@@ -426,6 +447,58 @@ private struct AppsTreeSidebar: View {
     }
 }
 
+private struct SettingsTreeSidebar: View {
+    @Binding var selection: MainView.SidebarItem
+    @Binding var settingsCategory: SettingsScreen.Category
+    @Binding var showsSettingsTree: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Button {
+                showsSettingsTree = false
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 10, weight: .semibold))
+                    Text("Settings")
+                        .font(.system(size: 11.5, weight: .medium))
+                    Spacer()
+                }
+                .foregroundColor(Color.white.opacity(0.78))
+                .padding(.horizontal, 10)
+                .padding(.vertical, 4)
+                .background(
+                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                        .fill(Color.white.opacity(0.06))
+                )
+            }
+            .buttonStyle(.plain)
+            .padding(.bottom, 6)
+
+            ForEach(SettingsScreen.Category.Group.allCases, id: \.self) { group in
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(group.title.uppercased())
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundColor(.secondary)
+                        .padding(.horizontal, 10)
+                        .padding(.top, group == .preferences ? 0 : 8)
+                        .padding(.bottom, 4)
+
+                    ForEach(SettingsScreen.Category.allCases.filter { $0.group == group }) { category in
+                        SettingsSidebarButton(
+                            category: category,
+                            isSelected: settingsCategory == category
+                        ) {
+                            selection = .system
+                            settingsCategory = category
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 private struct AppFilterSidebarButton: View {
     let category: AppsScreen.FilterCategory
     let isSelected: Bool
@@ -443,12 +516,14 @@ private struct AppFilterSidebarButton: View {
 
                 Spacer()
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
             .background(
                 RoundedRectangle(cornerRadius: 11, style: .continuous)
                     .fill(isSelected ? Color(red: 0.27, green: 0.63, blue: 0.18) : Color.clear)
             )
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
     }
@@ -490,12 +565,44 @@ private struct SidebarNavButton: View {
 
                 Spacer()
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
             .background(
                 RoundedRectangle(cornerRadius: 11, style: .continuous)
                     .fill(isSelected ? Color(red: 0.27, green: 0.63, blue: 0.18) : Color.clear)
             )
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct SettingsSidebarButton: View {
+    let category: SettingsScreen.Category
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 12) {
+                SidebarMonoIcon(symbol: category.symbol, isSelected: isSelected)
+
+                Text(category.title)
+                    .font(.system(size: 12.5, weight: isSelected ? .semibold : .regular))
+                    .foregroundColor(.white)
+                    .lineLimit(1)
+
+                Spacer()
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(
+                RoundedRectangle(cornerRadius: 11, style: .continuous)
+                    .fill(isSelected ? Color(red: 0.27, green: 0.63, blue: 0.18) : Color.clear)
+            )
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
     }

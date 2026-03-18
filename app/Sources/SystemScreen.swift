@@ -45,12 +45,12 @@ struct SystemScreen: View {
                         Button("Refresh Data") {
                             snapshot = UserConfigExporter.loadSnapshot()
                         }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(MacSecondaryButtonStyle())
 
                         Button("Reveal") {
                             NSWorkspace.shared.activateFileViewerSelecting([userDataDirectoryURL])
                         }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(MacPrimaryButtonStyle())
                     }
                 }
             }
@@ -84,7 +84,7 @@ struct SystemScreen: View {
                             Button("Reveal") {
                                 NSWorkspace.shared.activateFileViewerSelecting([userDataDirectoryURL.appendingPathComponent(fileName)])
                             }
-                            .buttonStyle(.bordered)
+                            .buttonStyle(MacSecondaryButtonStyle())
                         }
                     }
                 }

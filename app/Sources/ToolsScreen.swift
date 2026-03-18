@@ -23,86 +23,15 @@ struct ToolsScreen: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            if let inventory {
-                VStack(alignment: .leading, spacing: 0) {
-                    MacSettingsCard {
-                        HStack(spacing: 12) {
-                            MacInlineSearchField(prompt: "Search tools...", text: $searchText)
-
-                            Button(action: refreshInventory) {
-                                if isRefreshing {
-                                    ProgressView()
-                                } else {
-                                    Image(systemName: "arrow.clockwise")
-                                        .font(.system(size: 13, weight: .semibold))
-                                }
-                            }
-                            .buttonStyle(.bordered)
-                            .disabled(isRefreshing)
-                        }
-
-                        ViewThatFits(in: .horizontal) {
-                            HStack(spacing: 18) {
-                                Text("User: \(inventory.username)")
-                                Text("Host: \(inventory.hostName)")
-                                Text("Last Refresh: \(inventory.generatedAt)")
-                                Spacer()
-                                Text("\(filteredTools.count) tools")
-                                    .foregroundColor(.secondary)
-                            }
-
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("User: \(inventory.username)")
-                                Text("Host: \(inventory.hostName)")
-                                Text("Last Refresh: \(inventory.generatedAt)")
-                                Text("\(filteredTools.count) tools")
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 24)
-                    .padding(.bottom, 16)
-
-                    if filteredTools.isEmpty {
-                        Spacer()
-                        MacSettingsEmptyState(
-                            symbol: "terminal",
-                            title: searchText.isEmpty ? "No tools found" : "No matching tools",
-                            message: searchText.isEmpty ? "Refresh the tool inventory to scan your current PATH." : "Try a different search term."
-                        )
-                        .frame(maxWidth: .infinity)
-                        Spacer()
-                    } else {
-                        List(filteredTools) { tool in
-                            ToolListRow(tool: tool)
-                        }
-                        .listStyle(.plain)
-                    }
-                }
-            } else if isRefreshing {
-                Spacer()
-                HStack {
-                    Spacer()
-                    ProgressView("Scanning terminal tools...")
-                    Spacer()
-                }
-                Spacer()
-            } else {
-                Spacer()
-                VStack(spacing: 12) {
-                    MacSettingsEmptyState(
-                        symbol: "terminal",
-                        title: "No tool inventory yet",
-                        message: "Refresh the tool inventory to generate terminal-tool data."
-                    )
-                }
-                .frame(maxWidth: .infinity)
-                Spacer()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                screenHeader(title: "Tools", subtitle: "Terminal tools visible from the current shell PATH.")
+                inventorySection
+                toolsContent
             }
+            .padding(.horizontal, 22)
+            .padding(.top, 24)
+            .padding(.bottom, 28)
         }
         .background(Color(NSColor.windowBackgroundColor))
         .onAppear {
@@ -118,6 +47,105 @@ struct ToolsScreen: View {
             dataWatcher?.stop()
             dataWatcher = nil
         }
+    }
+
+    @ViewBuilder
+    private var inventorySection: some View {
+        if let inventory {
+            MacSettingsSection(title: "Inventory") {
+                VStack(spacing: 0) {
+                    MacSettingsRow {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Search & Refresh")
+                                .font(.headline)
+                            MacInlineSearchField(prompt: "Search tools...", text: $searchText)
+                        }
+                    } trailing: {
+                        Button(action: refreshInventory) {
+                            if isRefreshing {
+                                ProgressView()
+                            } else {
+                                Image(systemName: "arrow.clockwise")
+                                    .font(.system(size: 13, weight: .semibold))
+                            }
+                        }
+                        .buttonStyle(MacSecondaryButtonStyle())
+                        .disabled(isRefreshing)
+                    }
+
+                    MacSettingsRow(showsDivider: false) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Environment")
+                                .font(.headline)
+                            Text("\(inventory.username) on \(inventory.hostName)")
+                                .foregroundColor(.secondary)
+                        }
+                    } trailing: {
+                        HStack(spacing: 16) {
+                            metricPill("\(filteredTools.count)", label: "Visible")
+                            metricPill("\(inventory.terminalTools.count)", label: "Indexed")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var toolsContent: some View {
+        if let _ = inventory {
+            if filteredTools.isEmpty {
+                MacSettingsCard {
+                    MacSettingsEmptyState(
+                        symbol: "terminal",
+                        title: searchText.isEmpty ? "No tools found" : "No matching tools",
+                        message: searchText.isEmpty ? "Refresh the tool inventory to scan your current PATH." : "Try a different search term."
+                    )
+                }
+            } else {
+                MacSettingsSection(title: "Installed Tools") {
+                    ForEach(Array(filteredTools.enumerated()), id: \.element.id) { index, tool in
+                        VStack(spacing: 0) {
+                            ToolListRow(tool: tool)
+
+                            if index < filteredTools.count - 1 {
+                                MacSettingsDivider()
+                            }
+                        }
+                    }
+                }
+            }
+        } else if isRefreshing {
+            MacSettingsCard {
+                MacSettingsEmptyState(
+                    symbol: "terminal",
+                    title: "Scanning terminal tools",
+                    message: "MacHelm is rebuilding the current tool inventory."
+                )
+            }
+        } else {
+            MacSettingsCard {
+                MacSettingsEmptyState(
+                    symbol: "terminal",
+                    title: "No tool inventory yet",
+                    message: "Refresh the tool inventory to generate terminal-tool data."
+                )
+            }
+        }
+    }
+
+    private func screenHeader(title: String, subtitle: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.system(size: 24, weight: .semibold))
+            Text(subtitle)
+                .font(.system(size: 13.5))
+                .foregroundColor(.secondary)
+        }
+    }
+
+    private func metricPill(_ value: String, label: String) -> some View {
+        MacMetricPill(value: value, label: label)
     }
 
     private var shouldAutoRefreshOnAppear: Bool {
@@ -180,8 +208,6 @@ private struct ToolListRow: View {
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
-        .listRowBackground(Color(NSColor.controlBackgroundColor))
-        .listRowSeparator(.hidden)
     }
 
     private var regularContent: some View {
@@ -307,13 +333,13 @@ private struct ToolListRow: View {
             Button("Reveal") {
                 NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: tool.path)])
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(MacSecondaryButtonStyle())
 
             Button("Copy Path") {
                 NSPasteboard.general.clearContents()
                 NSPasteboard.general.setString(tool.path, forType: .string)
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(MacPrimaryButtonStyle())
         }
     }
 
