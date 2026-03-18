@@ -10,23 +10,11 @@ struct MacSettingsPage<Content: View>: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
-                HStack(alignment: .top, spacing: 16) {
-                    SettingsSidebarIcon(symbol: symbol, color: symbolColor, size: 44)
-
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(title)
-                            .font(.system(size: 28, weight: .semibold))
-                        Text(subtitle)
-                            .font(.title3)
-                            .foregroundColor(.secondary)
-                    }
-                }
-
                 content
             }
             .frame(maxWidth: 920, alignment: .leading)
             .padding(.horizontal, 28)
-            .padding(.top, 28)
+            .padding(.top, 24)
             .padding(.bottom, 40)
         }
         .background(Color(NSColor.windowBackgroundColor))
@@ -230,5 +218,28 @@ struct MacSettingsEmptyState: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 48)
+    }
+}
+
+struct MacInlineSearchField: View {
+    let prompt: String
+    @Binding var text: String
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 13, weight: .medium))
+                .foregroundColor(.secondary)
+
+            TextField(prompt, text: $text)
+                .textFieldStyle(.plain)
+                .font(.system(size: 13, weight: .medium))
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(Color(NSColor.controlBackgroundColor))
+        )
     }
 }

@@ -329,6 +329,11 @@ enum UserConfigExporter {
         return loadJSON(from: deletedAppsFileURL(for: username)) ?? []
     }
 
+    static func loadInstalledApps(for username: String = NSUserName()) -> [InstalledAppSnapshot] {
+        migrateLegacyDataIfNeeded(for: username)
+        return loadJSON(from: appsFileURL(for: username)) ?? []
+    }
+
     static func loadBinaryInventory(for username: String = NSUserName()) -> BinaryInventorySnapshot? {
         migrateLegacyDataIfNeeded(for: username)
 

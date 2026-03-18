@@ -37,9 +37,13 @@ class AppStateManager: ObservableObject {
     @Published var processingUpgrades: Set<String> = []
     @Published var installedTokens: Set<String> = []
     @Published var outdatedTokens: Set<String> = []
+
+    private var deletedAppsWatcher: DirectoryWatcher?
+    private var deletedAppsReloadWorkItem: DispatchWorkItem?
     
     init() {
         loadState()
+        startWatchingDeletedAppsData()
         loadInstalledTokens()
         loadOutdatedTokens()
     }
@@ -563,6 +567,32 @@ class AppStateManager: ObservableObject {
     private func loadState() {
         deletedApps = UserConfigExporter.loadDeletedApps()
     }
+
+    private func startWatchingDeletedAppsData() {
+        let watcher = DirectoryWatcher(url: UserConfigExporter.userDirectoryURL()) { [weak self] in
+            self?.scheduleDeletedAppsReload()
+        }
+        watcher.start()
+        deletedAppsWatcher = watcher
+    }
+
+    private func scheduleDeletedAppsReload() {
+        deletedAppsReloadWorkItem?.cancel()
+
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            let reloadedApps = UserConfigExporter.loadDeletedApps()
+
+            DispatchQueue.main.async {
+                if self.deletedApps != reloadedApps {
+                    self.deletedApps = reloadedApps
+                }
+            }
+        }
+
+        deletedAppsReloadWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: workItem)
+    }
     
     private func runCommandInBackground(command: String, completion: ((Int32) -> Void)? = nil) {
         runCommandForOutput(command: command) { status, _ in
@@ -604,5 +634,10 @@ class AppStateManager: ObservableObject {
                 completion(-1, "")
             }
         }
+    }
+
+    deinit {
+        deletedAppsReloadWorkItem?.cancel()
+        deletedAppsWatcher?.stop()
     }
 }

@@ -2,6 +2,8 @@ import SwiftUI
 
 struct SystemScreen: View {
     @State private var snapshot = UserConfigExporter.loadSnapshot()
+    @State private var dataWatcher: DirectoryWatcher?
+    @State private var reloadWorkItem: DispatchWorkItem?
 
     private let userDataDirectoryURL = UserConfigExporter.userDirectoryURL()
     private let dataFiles = [
@@ -97,7 +99,37 @@ struct SystemScreen: View {
             }
         }
         .onAppear {
+            startWatchingDataDirectory()
             snapshot = UserConfigExporter.loadSnapshot()
         }
+        .onDisappear {
+            reloadWorkItem?.cancel()
+            dataWatcher?.stop()
+            dataWatcher = nil
+        }
+    }
+
+    private func startWatchingDataDirectory() {
+        guard dataWatcher == nil else { return }
+
+        let watcher = DirectoryWatcher(url: userDataDirectoryURL) {
+            scheduleSnapshotReload()
+        }
+        watcher.start()
+        dataWatcher = watcher
+    }
+
+    private func scheduleSnapshotReload() {
+        reloadWorkItem?.cancel()
+
+        let workItem = DispatchWorkItem {
+            let reloadedSnapshot = UserConfigExporter.loadSnapshot()
+            DispatchQueue.main.async {
+                snapshot = reloadedSnapshot
+            }
+        }
+
+        reloadWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: workItem)
     }
 }

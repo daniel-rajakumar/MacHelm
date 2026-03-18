@@ -1,11 +1,19 @@
 import SwiftUI
 
-struct NixApp: Identifiable {
-    let id = UUID()
+struct NixApp: Identifiable, Equatable {
+    let id: String
     let name: String
     let path: String
-    let icon: NSImage?
-    var installSource: String {
+    let installSource: String
+
+    init(name: String, path: String, installSource: String) {
+        self.id = path
+        self.name = name
+        self.path = path
+        self.installSource = installSource
+    }
+
+    static func detectInstallSource(name: String, path: String) -> String {
         let fileManager = FileManager.default
         
         // 0. Resolve symlink to get the real path on the system
@@ -101,6 +109,122 @@ struct NixApp: Identifiable {
         
         return "Others"
     }
+
+    static func == (lhs: NixApp, rhs: NixApp) -> Bool {
+        lhs.name == rhs.name
+            && lhs.path == rhs.path
+            && lhs.installSource == rhs.installSource
+    }
+}
+
+final class AppsScreenModel: ObservableObject {
+    static let defaultScanPaths = [
+        "/Applications",
+        "\(FileManager.default.homeDirectoryForCurrentUser.path)/Applications",
+        "/System/Applications",
+        "/System/Applications/Utilities",
+        "/Applications/Nix Apps",
+        "/Applications/Nix-Karabiner",
+        "\(FileManager.default.homeDirectoryForCurrentUser.path)/Applications/Home Manager Apps"
+    ]
+
+    @Published var apps: [NixApp] = []
+    @Published var isLoading = true
+
+    private var hasStarted = false
+    private var dataWatcher: DirectoryWatcher?
+    private var reloadWorkItem: DispatchWorkItem?
+
+    func start(scanPaths: [String]) {
+        guard !hasStarted else { return }
+        hasStarted = true
+        startWatchingUserData()
+
+        if !loadAppsFromSnapshot() {
+            loadApps(scanPaths: scanPaths)
+        }
+    }
+
+    func refresh(scanPaths: [String], completion: (() -> Void)? = nil) {
+        loadApps(scanPaths: scanPaths, completion: completion)
+    }
+
+    private func loadApps(scanPaths: [String], completion: (() -> Void)? = nil) {
+        let shouldShowLoading = apps.isEmpty
+        DispatchQueue.main.async {
+            self.isLoading = shouldShowLoading
+        }
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            var loadedApps: [NixApp] = []
+            let fileManager = FileManager.default
+
+            for scanPath in scanPaths {
+                guard let contents = try? fileManager.contentsOfDirectory(atPath: scanPath) else { continue }
+
+                let pathApps = contents.filter { $0.hasSuffix(".app") }.compactMap { appName -> NixApp? in
+                    let fullPath = (scanPath as NSString).appendingPathComponent(appName)
+                    let name = (appName as NSString).deletingPathExtension
+                    let installSource = NixApp.detectInstallSource(name: name, path: fullPath)
+                    return NixApp(name: name, path: fullPath, installSource: installSource)
+                }
+                loadedApps.append(contentsOf: pathApps)
+            }
+
+            let finalApps = loadedApps.sorted { $0.name.lowercased() < $1.name.lowercased() }
+
+            DispatchQueue.main.async {
+                self.apps = finalApps
+                self.isLoading = false
+                completion?()
+            }
+        }
+    }
+
+    private func startWatchingUserData() {
+        let userDirectoryURL = UserConfigExporter.userDirectoryURL()
+        let watcher = DirectoryWatcher(url: userDirectoryURL) { [weak self] in
+            self?.scheduleSnapshotReload()
+        }
+        watcher.start()
+        dataWatcher = watcher
+    }
+
+    private func scheduleSnapshotReload() {
+        reloadWorkItem?.cancel()
+
+        let workItem = DispatchWorkItem { [weak self] in
+            _ = self?.loadAppsFromSnapshot()
+        }
+
+        reloadWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: workItem)
+    }
+
+    @discardableResult
+    private func loadAppsFromSnapshot() -> Bool {
+        let persistedApps = UserConfigExporter.loadInstalledApps().map { snapshot in
+            return NixApp(
+                name: snapshot.name,
+                path: snapshot.path,
+                installSource: snapshot.installSource
+            )
+        }
+
+        guard !persistedApps.isEmpty else { return false }
+
+        DispatchQueue.main.async {
+            self.apps = persistedApps
+            self.isLoading = false
+        }
+
+        return true
+    }
+
+    deinit {
+        reloadWorkItem?.cancel()
+        dataWatcher?.stop()
+    }
 }
 
 struct AppsScreen: View {
@@ -116,259 +240,207 @@ struct AppsScreen: View {
         var id: String { self.rawValue }
     }
 
-    @StateObject private var stateManager = AppStateManager()
-    @State private var apps: [NixApp] = []
-    @State private var isLoading = true
-    @State private var watchers: [DirectoryWatcher] = []
-    @State private var selectedFilter: FilterCategory = .all
-    @StateObject private var storeManager = StoreManager()
+    @ObservedObject var stateManager: AppStateManager
+    @ObservedObject var storeManager: StoreManager
+    @ObservedObject var model: AppsScreenModel
+    @Binding var selectedFilter: FilterCategory
     @State private var searchText = ""
+    @State private var visibleAppRows: [AppRowItem] = []
+    @State private var visibleInstallableCasks: [BrewCask] = []
     
-    let scanPaths = [
-        "/Applications",
-        "\(FileManager.default.homeDirectoryForCurrentUser.path)/Applications",
-        "/System/Applications",
-        "/System/Applications/Utilities",
-        // Specific Nix App Directories
-        "/Applications/Nix Apps",
-        "/Applications/Nix-Karabiner",
-        "\(FileManager.default.homeDirectoryForCurrentUser.path)/Applications/Home Manager Apps"
-    ]
-    
-    var installableCasks: [BrewCask] {
-        let filtered = storeManager.casks.filter { cask in
-            if searchText.isEmpty { return true }
-            return cask.name.first?.localizedCaseInsensitiveContains(searchText) ?? false || 
-                   cask.token.localizedCaseInsensitiveContains(searchText) || 
-                   cask.desc?.localizedCaseInsensitiveContains(searchText) ?? false
-        }
-        return filtered.filter { !stateManager.installedTokens.contains($0.token) }
-    }
+    let scanPaths = AppsScreenModel.defaultScanPaths
 
-    var filteredApps: [NixApp] {
-        let searchedApps = apps.filter { app in
-            if searchText.isEmpty { return true }
-            return app.name.localizedCaseInsensitiveContains(searchText) || 
-                   app.path.localizedCaseInsensitiveContains(searchText) || 
-                   app.installSource.localizedCaseInsensitiveContains(searchText)
-        }
-        let undeletedApps = searchedApps.filter { !stateManager.isDeleted(appPath: $0.path) }
-        if selectedFilter == .all {
-            return undeletedApps
-        }
-        return undeletedApps.filter { $0.installSource == selectedFilter.rawValue }
+    private struct AppRowItem: Identifiable {
+        let app: NixApp
+        let matchingCask: BrewCask?
+        let managementState: ManagementState
+
+        var id: String { app.id }
     }
     
     var body: some View {
+        withBindings(appliedTo: baseContent)
+    }
+
+    private var baseContent: some View {
         VStack(alignment: .leading, spacing: 0) {
-            if !searchText.isEmpty {
-                // Search Results View (Lazy using List and Sections)
-                List {
-                    if !filteredApps.isEmpty {
-                        Section("Installed Apps") {
-                            ForEach(filteredApps) { app in
-                                AppListRow(app: app, stateManager: stateManager, storeManager: storeManager)
-                            }
-                        }
-                    }
-                    
-                    if !installableCasks.isEmpty {
-                        Section("Available to Install") {
-                            ForEach(installableCasks) { cask in
-                                StoreAppRow(cask: cask, stateManager: stateManager)
-                            }
-                        }
-                    }
-                    
-                    if filteredApps.isEmpty && installableCasks.isEmpty {
-                        Section {
-                            VStack {
-                                Spacer()
-                                Text("No apps match your search.")
-                                    .foregroundColor(.secondary)
-                                    .frame(maxWidth: .infinity)
-                                Spacer()
-                            }
-                            .listRowBackground(Color.clear)
-                            .frame(height: 300)
-                        }
-                    }
-                }
-                .listStyle(.inset)
-            } else {
-                // Normal Filtered View
-                VStack(alignment: .leading, spacing: 0) {
-                    HStack(alignment: .top, spacing: 16) {
-                        SettingsSidebarIcon(symbol: "square.grid.2x2.fill", color: .blue, size: 44)
-
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("Apps")
-                                .font(.system(size: 28, weight: .semibold))
-                            Text("Applications discovered across system, user, and managed locations")
-                                .font(.title3)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    .padding(.top, 24)
-                    .padding(.horizontal, 32)
-                    .padding(.bottom, 20)
-                    
-                    if isLoading {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            ProgressView("Scanning for apps...")
-                            Spacer()
-                        }
-                        Spacer()
-                    } else if apps.isEmpty {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            VStack(spacing: 16) {
-                                Image(systemName: "app.dashed")
-                                    .font(.system(size: 48))
-                                    .foregroundColor(.secondary)
-                                Text("No applications found")
-                                    .font(.headline)
-                                Text("This is unusual. Are the scan paths correct?")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
-                            Spacer()
-                        }
-                        Spacer()
-                    } else {
-                        MacSettingsCard {
-                            HStack(spacing: 18) {
-                                Text("\(filteredApps.count) visible apps")
-                                    .foregroundColor(.secondary)
-                                Text("\(stateManager.deletedApps.count) deleted")
-                                    .foregroundColor(.secondary)
-                                Spacer()
-
-                                Picker("Filter by Source", selection: $selectedFilter) {
-                                    ForEach(FilterCategory.allCases) { category in
-                                        Text(category.rawValue).tag(category)
-                                    }
-                                }
-                                .pickerStyle(.segmented)
-                            }
-                        }
-                        .padding(.horizontal, 32)
-                        .padding(.bottom, 16)
-                        
-                        if selectedFilter == .deleted {
-                            if stateManager.deletedApps.isEmpty {
-                                Spacer()
-                                Text("No deleted apps.")
-                                    .foregroundColor(.secondary)
-                                    .frame(maxWidth: .infinity)
-                                Spacer()
-                            } else {
-                                List(stateManager.deletedApps) { deletedApp in
-                                    DeletedAppListRow(app: deletedApp, stateManager: stateManager)
-                                }
-                                .listStyle(.plain)
-                            }
-                        } else {
-                            if filteredApps.isEmpty {
-                                Spacer()
-                                Text("No apps found for this category.")
-                                    .foregroundColor(.secondary)
-                                    .frame(maxWidth: .infinity)
-                                Spacer()
-                            } else {
-                                List(filteredApps) { app in
-                                    AppListRow(app: app, stateManager: stateManager, storeManager: storeManager)
-                                }
-                                .listStyle(.plain)
-                            }
-                        }
-                    }
-                }
-            }
+            controlsSection
+            contentSection
         }
         .background(Color(NSColor.windowBackgroundColor))
-        .toolbar {
-            ToolbarItem(placement: .automatic) {
-                Button(action: {
-                    loadApps()
-                }) {
-                    Label("Refresh", systemImage: "arrow.clockwise")
+    }
+
+    private func withBindings<Content: View>(appliedTo content: Content) -> some View {
+        let reloadBound = content.onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ReloadApps"))) { _ in
+            model.refresh(scanPaths: scanPaths) {
+                exportUserSnapshot()
+            }
+        }
+
+        let deletedAppsBound = reloadBound.onChange(of: stateManager.deletedApps) { _, _ in
+            exportUserSnapshot()
+            recomputeVisibleContent()
+        }
+
+        let installedTokensBound = deletedAppsBound.onChange(of: stateManager.installedTokens) { _, _ in
+            exportUserSnapshot()
+            recomputeVisibleContent()
+        }
+
+        let appsBound = installedTokensBound.onChange(of: model.apps) { _, _ in
+            exportUserSnapshot()
+            recomputeVisibleContent()
+        }
+
+        let searchBound = appsBound.onChange(of: searchText) { _, _ in
+            recomputeVisibleContent()
+        }
+
+        let filterBound = searchBound.onChange(of: selectedFilter) { _, _ in
+            recomputeVisibleContent()
+        }
+
+        let casksBound = filterBound.onChange(of: storeManager.casks) { _, _ in
+            recomputeVisibleContent()
+        }
+
+        return casksBound.onAppear {
+            recomputeVisibleContent()
+        }
+    }
+
+    @ViewBuilder
+    private var contentSection: some View {
+        if model.isLoading && model.apps.isEmpty {
+            Spacer()
+            HStack {
+                Spacer()
+                ProgressView("Scanning for apps...")
+                Spacer()
+            }
+            Spacer()
+        } else if model.apps.isEmpty {
+            Spacer()
+            HStack {
+                Spacer()
+                VStack(spacing: 16) {
+                    Image(systemName: "app.dashed")
+                        .font(.system(size: 48))
+                        .foregroundColor(.secondary)
+                    Text("No applications found")
+                        .font(.headline)
+                    Text("This is unusual. Are the scan paths correct?")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                 }
-                .keyboardShortcut("r", modifiers: .command)
+                Spacer()
+            }
+            Spacer()
+        } else if !searchText.isEmpty {
+            List {
+                if !visibleAppRows.isEmpty {
+                    Section("Installed Apps") {
+                        ForEach(visibleAppRows) { item in
+                            AppListRow(
+                                app: item.app,
+                                matchingCask: item.matchingCask,
+                                managementState: item.managementState,
+                                stateManager: stateManager
+                            )
+                        }
+                    }
+                }
+
+                if !visibleInstallableCasks.isEmpty {
+                    Section("Available to Install") {
+                        ForEach(visibleInstallableCasks) { cask in
+                            StoreAppRow(cask: cask, stateManager: stateManager)
+                        }
+                    }
+                }
+
+                if visibleAppRows.isEmpty && visibleInstallableCasks.isEmpty {
+                    Section {
+                        VStack {
+                            Spacer()
+                            Text("No apps match your search.")
+                                .foregroundColor(.secondary)
+                                .frame(maxWidth: .infinity)
+                            Spacer()
+                        }
+                        .listRowBackground(Color.clear)
+                        .frame(height: 300)
+                    }
+                }
+            }
+            .listStyle(.inset)
+        } else if selectedFilter == .deleted {
+            if stateManager.deletedApps.isEmpty {
+                Spacer()
+                Text("No deleted apps.")
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity)
+                Spacer()
+            } else {
+                List(stateManager.deletedApps) { deletedApp in
+                    DeletedAppListRow(app: deletedApp, stateManager: stateManager)
+                }
+                .listStyle(.plain)
+            }
+        } else if visibleAppRows.isEmpty {
+            Spacer()
+            Text("No apps found for this category.")
+                .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity)
+            Spacer()
+        } else {
+            List(visibleAppRows) { item in
+                AppListRow(
+                    app: item.app,
+                    matchingCask: item.matchingCask,
+                    managementState: item.managementState,
+                    stateManager: stateManager
+                )
+            }
+            .listStyle(.plain)
+        }
+    }
+
+    private var controlsSection: some View {
+        MacSettingsCard {
+            HStack(spacing: 12) {
+                MacInlineSearchField(prompt: "Search apps...", text: $searchText)
+
+                Button(action: {
+                    model.refresh(scanPaths: scanPaths) {
+                        exportUserSnapshot()
+                    }
+                    runAppBuildInBackground()
+                }) {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 13, weight: .semibold))
+                }
+                .buttonStyle(.bordered)
                 .help("Refresh App List")
             }
-        }
-        .searchable(text: $searchText, prompt: "Search apps...")
-        .onAppear {
-            setupWatchers()
-            loadApps()
-            storeManager.fetchCasks()
-        }
-        .onDisappear {
-            stopWatchers()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ReloadApps"))) { _ in
-            loadApps()
-        }
-        .onChange(of: stateManager.deletedApps) { _, _ in
-            exportUserSnapshot()
-        }
-        .onChange(of: stateManager.installedTokens) { _, _ in
-            exportUserSnapshot()
-        }
-    }
-    
-    func setupWatchers() {
-        watchers = scanPaths.map { path in
-            let url = URL(fileURLWithPath: path)
-            let watcher = DirectoryWatcher(url: url) {
-                DispatchQueue.main.async {
-                    loadApps()
-                }
+
+            HStack(spacing: 18) {
+                Text("\(visibleAppRows.count) visible apps")
+                    .foregroundColor(.secondary)
+                Text("\(stateManager.deletedApps.count) deleted")
+                    .foregroundColor(.secondary)
+                Spacer()
             }
-            watcher.start()
-            return watcher
+            .font(.subheadline)
+
         }
-    }
-    
-    func stopWatchers() {
-        watchers.forEach { $0.stop() }
-        watchers = []
-    }
-    
-    func loadApps() {
-        isLoading = apps.isEmpty // Only show loading if we don't have any apps yet
-        DispatchQueue.global(qos: .userInitiated).async {
-            var loadedApps: [NixApp] = []
-            let fileManager = FileManager.default
-            
-            for scanPath in self.scanPaths {
-                guard let contents = try? fileManager.contentsOfDirectory(atPath: scanPath) else { continue }
-                
-                let pathApps = contents.filter { $0.hasSuffix(".app") }.compactMap { appName -> NixApp? in
-                    let fullPath = (scanPath as NSString).appendingPathComponent(appName)
-                    let name = (appName as NSString).deletingPathExtension
-                    let icon = NSWorkspace.shared.icon(forFile: fullPath)
-                    return NixApp(name: name, path: fullPath, icon: icon)
-                }
-                loadedApps.append(contentsOf: pathApps)
-            }
-            
-            let finalApps = loadedApps.sorted { $0.name.lowercased() < $1.name.lowercased() }
-            
-            DispatchQueue.main.async {
-                self.apps = finalApps
-                self.isLoading = false
-                self.exportUserSnapshot()
-            }
-        }
+        .padding(.horizontal, 20)
+        .padding(.top, 24)
+        .padding(.bottom, 16)
     }
 
     func exportUserSnapshot() {
-        let apps = apps
+        let apps = model.apps
         let deletedApps = stateManager.deletedApps
         let installedTokens = stateManager.installedTokens
         let scanPaths = scanPaths
@@ -382,138 +454,94 @@ struct AppsScreen: View {
             )
         }
     }
+
+    private func runAppBuildInBackground() {
+        DispatchQueue.global(qos: .utility).async {
+            let task = Process()
+            task.executableURL = URL(fileURLWithPath: "/bin/zsh")
+            task.arguments = ["-lc", "cd /Users/danielrajakumar/code/MacHelm/app && swift build >/dev/null 2>&1"]
+
+            do {
+                try task.run()
+            } catch {
+                print("Failed to start background app build: \(error)")
+            }
+        }
+    }
+
+    private func matchingCask(for app: NixApp) -> BrewCask? {
+        let baseName = app.name.lowercased()
+        let alphanumericOnly = baseName.components(separatedBy: CharacterSet.alphanumerics.inverted).joined(separator: "-")
+
+        return storeManager.caskLookup[baseName] ?? storeManager.caskLookup[alphanumericOnly]
+    }
+
+    private func recomputeVisibleContent() {
+        let apps = model.apps
+        let deletedPaths = Set(stateManager.deletedApps.map(\.path))
+        let selectedFilter = selectedFilter
+        let searchText = searchText
+        let casks = storeManager.casks
+        let caskLookup = storeManager.caskLookup
+        let installedTokens = stateManager.installedTokens
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            let searchedApps = apps.filter { app in
+                if searchText.isEmpty { return true }
+                return app.name.localizedCaseInsensitiveContains(searchText)
+                    || app.path.localizedCaseInsensitiveContains(searchText)
+                    || app.installSource.localizedCaseInsensitiveContains(searchText)
+            }
+
+            let undeletedApps = searchedApps.filter { !deletedPaths.contains($0.path) }
+            let filteredApps = selectedFilter == .all
+                ? undeletedApps
+                : undeletedApps.filter { $0.installSource == selectedFilter.rawValue }
+
+            let appRows = filteredApps.map { app in
+                let baseName = app.name.lowercased()
+                let alphanumericOnly = baseName.components(separatedBy: CharacterSet.alphanumerics.inverted).joined(separator: "-")
+                let matchingCask = caskLookup[baseName] ?? caskLookup[alphanumericOnly]
+                return AppRowItem(
+                    app: app,
+                    matchingCask: matchingCask,
+                    managementState: ManagementResolver.appState(for: app, matchingCask: matchingCask)
+                )
+            }
+
+            let installableCasks = casks.filter { cask in
+                if !searchText.isEmpty {
+                    let matchesSearch = cask.name.first?.localizedCaseInsensitiveContains(searchText) ?? false
+                        || cask.token.localizedCaseInsensitiveContains(searchText)
+                        || cask.desc?.localizedCaseInsensitiveContains(searchText) ?? false
+                    if !matchesSearch {
+                        return false
+                    }
+                }
+
+                return !installedTokens.contains(cask.token)
+            }
+
+            DispatchQueue.main.async {
+                self.visibleAppRows = appRows
+                self.visibleInstallableCasks = Array(installableCasks.prefix(100))
+            }
+        }
+    }
 }
 
 struct AppListRow: View {
     let app: NixApp
+    let matchingCask: BrewCask?
+    let managementState: ManagementState
     @ObservedObject var stateManager: AppStateManager
-    @ObservedObject var storeManager: StoreManager
     
     @State private var isHovered = false
     
-    private var matchingCask: BrewCask? {
-        let baseName = app.name.lowercased()
-        let alphanumericOnly = baseName.components(separatedBy: CharacterSet.alphanumerics.inverted).joined(separator: "-")
-        
-        return storeManager.casks.first { cask in
-            cask.token == baseName || 
-            cask.token == alphanumericOnly ||
-            cask.name.contains { $0.lowercased() == baseName }
-        }
-    }
-
-    private var managementState: ManagementState {
-        ManagementResolver.appState(for: app, matchingCask: matchingCask)
-    }
-    
     var body: some View {
-        HStack(spacing: 16) {
-            if let icon = app.icon {
-                Image(nsImage: icon)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 48, height: 48)
-            } else {
-                Image(systemName: "app.fill")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 48, height: 48)
-                    .foregroundColor(.secondary)
-            }
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(app.name)
-                    .font(.headline)
-                
-                HStack(spacing: 6) {
-                    Image(systemName: getIconForSource(app.installSource))
-                        .foregroundColor(getColorForSource(app.installSource))
-                    Text(app.installSource)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    ManagementBadge(state: managementState)
-                }
-
-                Text(managementState.detail)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .lineLimit(1)
-            }
-            
-            Spacer()
-            
-            if stateManager.processingRemovals.contains(app.path) {
-                HStack(spacing: 4) {
-                    ProgressView()
-                        .scaleEffect(0.5)
-                        .frame(width: 16, height: 16)
-                    Text("Removing...")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                .padding(.trailing, 8)
-            } else if let matchingCask = matchingCask, stateManager.processingInstalls.contains(matchingCask.token) {
-                HStack(spacing: 4) {
-                    ProgressView()
-                        .scaleEffect(0.5)
-                        .frame(width: 16, height: 16)
-                    Text("Brewing...")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                .padding(.trailing, 8)
-            } else if let matchingCask = matchingCask, stateManager.processingUpgrades.contains(matchingCask.token) {
-                HStack(spacing: 4) {
-                    ProgressView()
-                        .scaleEffect(0.5)
-                        .frame(width: 16, height: 16)
-                    Text("Upgrading...")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                .padding(.trailing, 8)
-            } else if isHovered {
-                if app.installSource == "Homebrew" {
-                    if let token = matchingCask?.token, stateManager.outdatedTokens.contains(token) {
-                        Button("Upgrade") {
-                            withAnimation {
-                                stateManager.upgradeHomebrewCask(token: token)
-                            }
-                        }
-                        .buttonStyle(.bordered)
-                        .tint(.blue)
-                    }
-                    
-                    Button("Remove") {
-                        withAnimation {
-                            stateManager.deleteApp(app: app)
-                        }
-                    }
-                    .buttonStyle(.bordered)
-                    .tint(.red)
-                } else if managementState.isManaged {
-                    Button("Remove") {
-                        withAnimation {
-                            stateManager.deleteApp(app: app)
-                        }
-                    }
-                    .buttonStyle(.bordered)
-                    .tint(.red)
-                } else {
-                    Text("Detected only")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .padding(.trailing, 8)
-                }
-            }
-            
-            Button("Launch") {
-                NSWorkspace.shared.open(URL(fileURLWithPath: app.path))
-            }
-            .buttonStyle(.borderedProminent)
-            .disabled(stateManager.processingRemovals.contains(app.path) || (matchingCask != nil && (stateManager.processingInstalls.contains(matchingCask!.token) || stateManager.processingUpgrades.contains(matchingCask!.token))))
-            .opacity(isHovered ? 1.0 : 0.4)
-            .padding(.leading, 8)
+        ViewThatFits(in: .horizontal) {
+            regularContent
+            compactContent
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
@@ -527,6 +555,128 @@ struct AppListRow: View {
         }
         .onTapGesture {
             NSWorkspace.shared.open(URL(fileURLWithPath: app.path))
+        }
+    }
+
+    private var regularContent: some View {
+        HStack(spacing: 14) {
+            appIcon
+
+            appDetails
+
+            Spacer(minLength: 8)
+
+            actionCluster
+        }
+    }
+
+    private var compactContent: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top, spacing: 12) {
+                appIcon
+                appDetails
+            }
+
+            HStack(spacing: 8) {
+                actionCluster
+            }
+        }
+    }
+
+    private var appIcon: some View {
+        LazyAppIcon(path: app.path)
+        .frame(width: 40, height: 40)
+    }
+
+    private var appDetails: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(app.name)
+                .font(.headline)
+                .lineLimit(1)
+            
+            HStack(spacing: 6) {
+                Image(systemName: getIconForSource(app.installSource))
+                    .foregroundColor(getColorForSource(app.installSource))
+                Text(app.installSource)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                ManagementBadge(state: managementState)
+            }
+
+            Text(managementState.detail)
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .lineLimit(1)
+        }
+    }
+
+    @ViewBuilder
+    private var actionCluster: some View {
+        if stateManager.processingRemovals.contains(app.path) {
+            HStack(spacing: 4) {
+                ProgressView()
+                    .scaleEffect(0.5)
+                    .frame(width: 16, height: 16)
+                Text("Removing...")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+        } else if let matchingCask = matchingCask, stateManager.processingInstalls.contains(matchingCask.token) {
+            HStack(spacing: 4) {
+                ProgressView()
+                    .scaleEffect(0.5)
+                    .frame(width: 16, height: 16)
+                Text("Brewing...")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+        } else if let matchingCask = matchingCask, stateManager.processingUpgrades.contains(matchingCask.token) {
+            HStack(spacing: 4) {
+                ProgressView()
+                    .scaleEffect(0.5)
+                    .frame(width: 16, height: 16)
+                Text("Upgrading...")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+        } else if isHovered {
+            if app.installSource == "Homebrew" {
+                if let token = matchingCask?.token, stateManager.outdatedTokens.contains(token) {
+                    Button("Upgrade") {
+                        withAnimation {
+                            stateManager.upgradeHomebrewCask(token: token)
+                        }
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(.blue)
+                }
+
+                Button {
+                    withAnimation {
+                        stateManager.deleteApp(app: app)
+                    }
+                } label: {
+                    Image(systemName: "trash")
+                        .font(.system(size: 12, weight: .semibold))
+                }
+                .buttonStyle(.bordered)
+                .tint(.red)
+            } else if managementState.isManaged {
+                Button {
+                    withAnimation {
+                        stateManager.deleteApp(app: app)
+                    }
+                } label: {
+                    Image(systemName: "trash")
+                        .font(.system(size: 12, weight: .semibold))
+                }
+                .buttonStyle(.bordered)
+                .tint(.red)
+            } else {
+                Text("Detected only")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
         }
     }
     
@@ -548,6 +698,56 @@ struct AppListRow: View {
         case "System": return .primary
         default: return .secondary
         }
+    }
+}
+
+private struct LazyAppIcon: View {
+    let path: String
+
+    @State private var icon: NSImage?
+
+    var body: some View {
+        Group {
+            if let icon {
+                Image(nsImage: icon)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            } else {
+                Image(systemName: "app.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(.secondary)
+                    .padding(6)
+            }
+        }
+        .task(id: path) {
+            if let cached = AppIconCache.shared.image(for: path) {
+                icon = cached
+                return
+            }
+
+            DispatchQueue.main.async {
+                let loadedIcon = NSWorkspace.shared.icon(forFile: path)
+                AppIconCache.shared.setImage(loadedIcon, for: path)
+                icon = loadedIcon
+            }
+        }
+    }
+}
+
+private final class AppIconCache {
+    static let shared = AppIconCache()
+
+    private let cache = NSCache<NSString, NSImage>()
+
+    private init() {}
+
+    func image(for path: String) -> NSImage? {
+        cache.object(forKey: path as NSString)
+    }
+
+    func setImage(_ image: NSImage, for path: String) {
+        cache.setObject(image, forKey: path as NSString)
     }
 }
 
@@ -643,6 +843,11 @@ struct DeletedAppListRow: View {
 }
 
 #Preview {
-    AppsScreen()
+    AppsScreen(
+        stateManager: AppStateManager(),
+        storeManager: StoreManager(),
+        model: AppsScreenModel(),
+        selectedFilter: .constant(.all)
+    )
         .frame(width: 800, height: 600)
 }

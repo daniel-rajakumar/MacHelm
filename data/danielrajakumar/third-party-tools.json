@@ -1,38 +1,29 @@
 [
   {
-    "name": "apply_patch",
-    "path": "/Users/danielrajakumar/.codex/tmp/arg0/codex-arg0rBHltm/apply_patch",
-    "resolvedPath": "/Applications/Codex.app/Contents/Resources/codex",
-    "source": "Third-Party",
-    "pathEntry": "/Users/danielrajakumar/.codex/tmp/arg0/codex-arg0rBHltm",
-    "formulaName": null,
-    "installIntent": null
+    "name" : "corepack",
+    "path" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin\/corepack",
+    "pathEntry" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin",
+    "resolvedPath" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/lib\/node_modules\/corepack\/dist\/corepack.js",
+    "source" : "Third-Party"
   },
   {
-    "name": "applypatch",
-    "path": "/Users/danielrajakumar/.codex/tmp/arg0/codex-arg0rBHltm/applypatch",
-    "resolvedPath": "/Applications/Codex.app/Contents/Resources/codex",
-    "source": "Third-Party",
-    "pathEntry": "/Users/danielrajakumar/.codex/tmp/arg0/codex-arg0rBHltm",
-    "formulaName": null,
-    "installIntent": null
+    "name" : "node",
+    "path" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin\/node",
+    "pathEntry" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin",
+    "source" : "Third-Party"
   },
   {
-    "name": "codex-execve-wrapper",
-    "path": "/Users/danielrajakumar/.codex/tmp/arg0/codex-arg0rBHltm/codex-execve-wrapper",
-    "resolvedPath": "/Applications/Codex.app/Contents/Resources/codex",
-    "source": "Third-Party",
-    "pathEntry": "/Users/danielrajakumar/.codex/tmp/arg0/codex-arg0rBHltm",
-    "formulaName": null,
-    "installIntent": null
+    "name" : "npm",
+    "path" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin\/npm",
+    "pathEntry" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin",
+    "resolvedPath" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/lib\/node_modules\/npm\/bin\/npm-cli.js",
+    "source" : "Third-Party"
   },
   {
-    "name": "corepack",
-    "path": "/Users/danielrajakumar/.nvm/versions/node/v22.22.0/bin/corepack",
-    "resolvedPath": "/Users/danielrajakumar/.nvm/versions/node/v22.22.0/lib/node_modules/corepack/dist/corepack.js",
-    "source": "Third-Party",
-    "pathEntry": "/Users/danielrajakumar/.nvm/versions/node/v22.22.0/bin",
-    "formulaName": null,
-    "installIntent": null
+    "name" : "npx",
+    "path" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin\/npx",
+    "pathEntry" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin",
+    "resolvedPath" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/lib\/node_modules\/npm\/bin\/npx-cli.js",
+    "source" : "Third-Party"
   }
 ]

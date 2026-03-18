@@ -1,10 +1,13 @@
 import SwiftUI
 
 struct BinariesScreen: View {
+    private static var lastAutoRefreshAt: Date?
     @AppStorage("machelm.autoRefreshBinariesOnOpen") private var autoRefreshOnOpen = true
     @State private var inventory = UserConfigExporter.loadBinaryInventory()
     @State private var searchText = ""
     @State private var isRefreshing = false
+    @State private var dataWatcher: DirectoryWatcher?
+    @State private var reloadWorkItem: DispatchWorkItem?
 
     private var filteredBinaries: [FilesystemBinarySnapshot] {
         let binaries = inventory?.binaries ?? []
@@ -21,39 +24,52 @@ struct BinariesScreen: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .top, spacing: 16) {
-                SettingsSidebarIcon(symbol: "doc.text.magnifyingglass", color: .indigo, size: 44)
-
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Binaries")
-                        .font(.system(size: 28, weight: .semibold))
-                    Text("Executable files discovered across common binary and application roots")
-                        .font(.title3)
-                        .foregroundColor(.secondary)
-                }
-            }
-            .padding(.top, 24)
-            .padding(.horizontal, 32)
-            .padding(.bottom, 20)
-
             if let inventory {
                 VStack(alignment: .leading, spacing: 0) {
                     MacSettingsCard {
-                        HStack(spacing: 18) {
-                            Text("User: \(inventory.username)")
-                            Text("Host: \(inventory.hostName)")
-                            Text("Last Refresh: \(inventory.generatedAt)")
-                            Spacer()
-                            Text("\(inventory.scanRoots.count) scan roots")
-                                .foregroundColor(.secondary)
-                            Text("\(filteredBinaries.count) binaries")
-                                .foregroundColor(.secondary)
+                        HStack(spacing: 12) {
+                            MacInlineSearchField(prompt: "Search binaries...", text: $searchText)
+
+                            Button(action: refreshInventory) {
+                                if isRefreshing {
+                                    ProgressView()
+                                } else {
+                                    Image(systemName: "arrow.clockwise")
+                                        .font(.system(size: 13, weight: .semibold))
+                                }
+                            }
+                            .buttonStyle(.bordered)
+                            .disabled(isRefreshing)
+                        }
+
+                        ViewThatFits(in: .horizontal) {
+                            HStack(spacing: 18) {
+                                Text("User: \(inventory.username)")
+                                Text("Host: \(inventory.hostName)")
+                                Text("Last Refresh: \(inventory.generatedAt)")
+                                Spacer()
+                                Text("\(inventory.scanRoots.count) scan roots")
+                                    .foregroundColor(.secondary)
+                                Text("\(filteredBinaries.count) binaries")
+                                    .foregroundColor(.secondary)
+                            }
+
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("User: \(inventory.username)")
+                                Text("Host: \(inventory.hostName)")
+                                Text("Last Refresh: \(inventory.generatedAt)")
+                                Text("\(inventory.scanRoots.count) scan roots")
+                                    .foregroundColor(.secondary)
+                                Text("\(filteredBinaries.count) binaries")
+                                    .foregroundColor(.secondary)
+                            }
                         }
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                     }
-                    .padding(.horizontal, 32)
-                        .padding(.bottom, 16)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 24)
+                    .padding(.bottom, 16)
 
                     if filteredBinaries.isEmpty {
                         Spacer()
@@ -93,32 +109,30 @@ struct BinariesScreen: View {
             }
         }
         .background(Color(NSColor.windowBackgroundColor))
-        .toolbar {
-            ToolbarItem(placement: .automatic) {
-                Button(action: refreshInventory) {
-                    if isRefreshing {
-                        ProgressView()
-                    } else {
-                        Label("Refresh", systemImage: "arrow.clockwise")
-                    }
-                }
-                .keyboardShortcut("r", modifiers: .command)
-                .help("Refresh Binary Inventory")
-                .disabled(isRefreshing)
-            }
-        }
-        .searchable(text: $searchText, prompt: "Search binaries...")
         .onAppear {
-            if inventory == nil || autoRefreshOnOpen {
+            startWatchingDataDirectory()
+            if inventory == nil || shouldAutoRefreshOnAppear {
                 refreshInventory()
             } else {
                 inventory = UserConfigExporter.loadBinaryInventory()
             }
         }
+        .onDisappear {
+            reloadWorkItem?.cancel()
+            dataWatcher?.stop()
+            dataWatcher = nil
+        }
+    }
+
+    private var shouldAutoRefreshOnAppear: Bool {
+        guard autoRefreshOnOpen else { return false }
+        guard let lastAutoRefreshAt = Self.lastAutoRefreshAt else { return true }
+        return Date().timeIntervalSince(lastAutoRefreshAt) > 180
     }
 
     private func refreshInventory() {
         isRefreshing = true
+        Self.lastAutoRefreshAt = Date()
 
         DispatchQueue.global(qos: .userInitiated).async {
             UserConfigExporter.refreshFilesystemBinaries()
@@ -130,22 +144,82 @@ struct BinariesScreen: View {
             }
         }
     }
+
+    private func startWatchingDataDirectory() {
+        guard dataWatcher == nil else { return }
+
+        let watcher = DirectoryWatcher(url: UserConfigExporter.userDirectoryURL()) {
+            scheduleInventoryReload()
+        }
+        watcher.start()
+        dataWatcher = watcher
+    }
+
+    private func scheduleInventoryReload() {
+        reloadWorkItem?.cancel()
+
+        let workItem = DispatchWorkItem {
+            let reloadedInventory = UserConfigExporter.loadBinaryInventory()
+            DispatchQueue.main.async {
+                inventory = reloadedInventory
+            }
+        }
+
+        reloadWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: workItem)
+    }
 }
 
 private struct BinaryListRow: View {
     let binary: FilesystemBinarySnapshot
 
     var body: some View {
+        ViewThatFits(in: .horizontal) {
+            regularContent
+            compactContent
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 16)
+        .listRowBackground(Color(NSColor.controlBackgroundColor))
+        .listRowSeparator(.hidden)
+    }
+
+    private var regularContent: some View {
         HStack(spacing: 16) {
-            Image(systemName: iconName(for: binary.source))
-                .font(.title2)
-                .foregroundColor(color(for: binary.source))
-                .frame(width: 32)
+            iconView
+            detailsView
+            Spacer()
+            actionButtons
+        }
+    }
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text(binary.name)
-                    .font(.headline)
+    private var compactContent: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top, spacing: 12) {
+                iconView
+                detailsView
+            }
 
+            HStack(spacing: 8) {
+                Spacer()
+                actionButtons
+            }
+        }
+    }
+
+    private var iconView: some View {
+        Image(systemName: iconName(for: binary.source))
+            .font(.title3)
+            .foregroundColor(color(for: binary.source))
+            .frame(width: 26)
+    }
+
+    private var detailsView: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(binary.name)
+                .font(.headline)
+
+            ViewThatFits(in: .horizontal) {
                 HStack(spacing: 6) {
                     Text(binary.source)
                         .font(.subheadline)
@@ -158,21 +232,33 @@ private struct BinaryListRow: View {
                         .lineLimit(1)
                 }
 
-                Text(binary.path)
-                    .font(.system(.caption, design: .monospaced))
-                    .foregroundColor(.secondary)
-                    .lineLimit(1)
-
-                if let resolvedPath = binary.resolvedPath, resolvedPath != binary.path {
-                    Text(resolvedPath)
-                        .font(.system(.caption, design: .monospaced))
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(binary.source)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Text(binary.scanRoot)
+                        .font(.subheadline)
                         .foregroundColor(.secondary)
                         .lineLimit(1)
                 }
             }
 
-            Spacer()
+            Text(binary.path)
+                .font(.system(.caption, design: .monospaced))
+                .foregroundColor(.secondary)
+                .lineLimit(1)
 
+            if let resolvedPath = binary.resolvedPath, resolvedPath != binary.path {
+                Text(resolvedPath)
+                    .font(.system(.caption, design: .monospaced))
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+            }
+        }
+    }
+
+    private var actionButtons: some View {
+        HStack(spacing: 8) {
             Button("Reveal") {
                 NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: binary.path)])
             }
@@ -184,10 +270,6 @@ private struct BinaryListRow: View {
             }
             .buttonStyle(.borderedProminent)
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 16)
-        .listRowBackground(Color(NSColor.controlBackgroundColor))
-        .listRowSeparator(.hidden)
     }
 
     private func iconName(for source: String) -> String {

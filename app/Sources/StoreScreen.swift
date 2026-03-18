@@ -1,27 +1,12 @@
 import SwiftUI
 
 struct StoreScreen: View {
-    @StateObject private var storeManager = StoreManager()
-    @StateObject private var stateManager = AppStateManager()
+    @ObservedObject var storeManager: StoreManager
+    @ObservedObject var stateManager: AppStateManager
     
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 0) {
-                HStack(alignment: .top, spacing: 16) {
-                    SettingsSidebarIcon(symbol: "bag.fill", color: .pink, size: 44)
-
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Store")
-                            .font(.system(size: 28, weight: .semibold))
-                        Text("Discover and install Homebrew packages")
-                            .font(.title3)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                .padding(.top, 24)
-                .padding(.horizontal, 32)
-                .padding(.bottom, 20)
-                
                 if storeManager.isLoading && storeManager.casks.isEmpty {
                     Spacer()
                     HStack {
@@ -38,24 +23,40 @@ struct StoreScreen: View {
                     Spacer()
                 } else {
                     MacSettingsCard {
+                        HStack(spacing: 12) {
+                            MacInlineSearchField(
+                                prompt: "Search Homebrew (e.g., spotify, vscode...)",
+                                text: $storeManager.searchText
+                            )
+
+                            if storeManager.isLoading {
+                                ProgressView()
+                                    .frame(width: 28)
+                            } else {
+                                Image(systemName: "shippingbox")
+                                    .foregroundColor(.secondary)
+                                    .frame(width: 28)
+                            }
+                        }
+
                         HStack(spacing: 18) {
                             Text("\(storeManager.filteredCasks.count) available casks")
                             Text("\(stateManager.installedTokens.count) installed tokens")
                             Spacer()
                             Text("Homebrew catalog")
                                 .foregroundColor(.secondary)
-                        }
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
                     }
-                    .padding(.horizontal, 32)
-                    .padding(.bottom, 16)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                }
+                .padding(.horizontal, 32)
+                .padding(.top, 24)
+                .padding(.bottom, 16)
 
                     List(storeManager.filteredCasks) { cask in
                         StoreAppRow(cask: cask, stateManager: stateManager)
                     }
                     .listStyle(.plain)
-                    .searchable(text: $storeManager.searchText, prompt: "Search Homebrew (e.g., spotify, vscode...)")
                 }
             }
             .background(Color(NSColor.windowBackgroundColor))

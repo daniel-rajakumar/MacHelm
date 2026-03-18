@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-struct BrewCask: Codable, Identifiable {
+struct BrewCask: Codable, Identifiable, Equatable {
     var id: String { token }
     let token: String
     let name: [String]
@@ -23,6 +23,7 @@ class StoreManager: ObservableObject {
     @Published var searchText: String = ""
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
+    @Published private(set) var caskLookup: [String: BrewCask] = [:]
     
     private var cancellables = Set<AnyCancellable>()
     private let apiURL = "https://formulae.brew.sh/api/cask.json"
@@ -89,6 +90,7 @@ class StoreManager: ObservableObject {
                 do {
                     let decodedCasks = try JSONDecoder().decode([BrewCask].self, from: data)
                     self?.casks = decodedCasks
+                    self?.caskLookup = self?.buildCaskLookup(from: decodedCasks) ?? [:]
                     self?.performSearch(query: self?.searchText ?? "")
                 } catch {
                     self?.errorMessage = "Failed to decode response: \(error.localizedDescription)"
@@ -96,5 +98,24 @@ class StoreManager: ObservableObject {
                 }
             }
         }.resume()
+    }
+
+    private func buildCaskLookup(from casks: [BrewCask]) -> [String: BrewCask] {
+        var lookup: [String: BrewCask] = [:]
+
+        for cask in casks {
+            lookup[cask.token.lowercased()] = cask
+
+            for name in cask.name {
+                let normalizedName = name.lowercased()
+                let alphanumericOnly = normalizedName.components(separatedBy: CharacterSet.alphanumerics.inverted).joined(separator: "-")
+                lookup[normalizedName] = cask
+                if !alphanumericOnly.isEmpty {
+                    lookup[alphanumericOnly] = cask
+                }
+            }
+        }
+
+        return lookup
     }
 }
