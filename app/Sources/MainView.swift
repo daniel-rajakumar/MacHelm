@@ -83,7 +83,10 @@ struct MainView: View {
                 selection: $selection,
                 items: SidebarItem.allCases,
                 appsFilter: $appsFilter,
-                showsAppsTree: $showsAppsTree
+                showsAppsTree: $showsAppsTree,
+                isRebuilding: isRebuilding,
+                rebuildAction: rebuildApp,
+                relaunchAction: relaunchApp
             )
             .frame(width: 215)
             .clipped()
@@ -95,6 +98,7 @@ struct MainView: View {
                 .zIndex(0)
         }
         .background(Color(red: 0.118, green: 0.118, blue: 0.122))
+        .background(WindowChromeConfigurator())
         .ignoresSafeArea(.container, edges: .top)
         .frame(
             minWidth: 720,
@@ -108,26 +112,6 @@ struct MainView: View {
             hasPreloadedData = true
             appsModel.start(scanPaths: AppsScreenModel.defaultScanPaths)
             storeManager.fetchCasks()
-        }
-        .toolbar {
-            ToolbarItemGroup(placement: .primaryAction) {
-                Button(action: rebuildApp) {
-                    if isRebuilding {
-                        ProgressView()
-                            .controlSize(.small)
-                    } else {
-                        Image(systemName: "hammer")
-                    }
-                }
-                .help(isRebuilding ? "Rebuilding MacHelm..." : "Rebuild MacHelm")
-                .disabled(isRebuilding)
-
-                Button(action: relaunchApp) {
-                    Image(systemName: "arrow.clockwise")
-                }
-                .help("Relaunch MacHelm")
-                .disabled(isRebuilding)
-            }
         }
     }
 
@@ -229,26 +213,69 @@ struct MainView: View {
     }
 }
 
+private struct WindowChromeConfigurator: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSView {
+        let view = NSView()
+
+        DispatchQueue.main.async {
+            configureWindow(for: view)
+        }
+
+        return view
+    }
+
+    func updateNSView(_ nsView: NSView, context: Context) {
+        DispatchQueue.main.async {
+            configureWindow(for: nsView)
+        }
+    }
+
+    private func configureWindow(for view: NSView) {
+        guard let window = view.window else { return }
+        guard
+            let closeButton = window.standardWindowButton(.closeButton),
+            let miniaturizeButton = window.standardWindowButton(.miniaturizeButton),
+            let zoomButton = window.standardWindowButton(.zoomButton),
+            let titlebarView = closeButton.superview
+        else {
+            return
+        }
+
+        let buttonY = titlebarView.bounds.height - closeButton.frame.height - 21
+        let startX: CGFloat = 24
+        let spacing: CGFloat = 24
+
+        closeButton.setFrameOrigin(NSPoint(x: startX, y: buttonY))
+        miniaturizeButton.setFrameOrigin(NSPoint(x: startX + spacing, y: buttonY))
+        zoomButton.setFrameOrigin(NSPoint(x: startX + (spacing * 2), y: buttonY))
+    }
+}
+
 private struct MacSidebar: View {
     @Binding var selection: MainView.SidebarItem
     let items: [MainView.SidebarItem]
     @Binding var appsFilter: AppsScreen.FilterCategory
     @Binding var showsAppsTree: Bool
+    let isRebuilding: Bool
+    let rebuildAction: () -> Void
+    let relaunchAction: () -> Void
 
     var body: some View {
         ZStack {
             Color(red: 0.117, green: 0.117, blue: 0.12)
 
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .fill(Color(red: 0.121, green: 0.121, blue: 0.124))
-                .padding(.horizontal, 8)
-                .padding(.top, 8)
+                .padding(.leading, 10)
+                .padding(.trailing, 8)
+                .padding(.top, 10)
                 .padding(.bottom, 8)
 
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .stroke(Color.white.opacity(0.12), lineWidth: 1)
-                .padding(.horizontal, 8)
-                .padding(.top, 8)
+                .padding(.leading, 10)
+                .padding(.trailing, 8)
+                .padding(.top, 10)
                 .padding(.bottom, 8)
 
             ScrollView(.vertical, showsIndicators: false) {
@@ -277,10 +304,43 @@ private struct MacSidebar: View {
                             }
                         }
                     }
-                    .padding(.top, 56)
+                    .padding(.top, 48)
                 }
                 .padding(.horizontal, 18)
                 .padding(.bottom, 24)
+            }
+
+            VStack {
+                HStack(spacing: 10) {
+                    Spacer()
+
+                    Button(action: rebuildAction) {
+                        if isRebuilding {
+                            ProgressView()
+                                .controlSize(.small)
+                        } else {
+                            Image(systemName: "hammer")
+                                .font(.system(size: 11, weight: .semibold))
+                        }
+                    }
+                    .help(isRebuilding ? "Rebuilding MacHelm..." : "Rebuild MacHelm")
+                    .disabled(isRebuilding)
+                    .controlSize(.small)
+                    .buttonStyle(.plain)
+
+                    Button(action: relaunchAction) {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.system(size: 11, weight: .semibold))
+                    }
+                    .help("Relaunch MacHelm")
+                    .disabled(isRebuilding)
+                    .controlSize(.small)
+                    .buttonStyle(.plain)
+                }
+                .padding(.top, 16)
+                .padding(.trailing, 18)
+
+                Spacer()
             }
         }
         .ignoresSafeArea(.container, edges: .top)
