@@ -294,12 +294,18 @@ private struct WindowChromeConfigurator: NSViewRepresentable {
 }
 
 private struct MacSidebar: View {
+    private enum NavigationDirection {
+        case forward
+        case backward
+    }
+
     @Binding var selection: MainView.SidebarItem
     let items: [MainView.SidebarItem]
     @Binding var appsFilter: AppsScreen.FilterCategory
     @Binding var showsAppsTree: Bool
     @Binding var settingsCategory: SettingsScreen.Category
     @Binding var showsSettingsTree: Bool
+    @State private var navigationDirection: NavigationDirection = .forward
     let isRebuilding: Bool
     let rebuildAction: () -> Void
     let relaunchAction: () -> Void
@@ -324,41 +330,66 @@ private struct MacSidebar: View {
 
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 0) {
-                    VStack(alignment: .leading, spacing: 4) {
+                    ZStack(alignment: .topLeading) {
                         if showsAppsTree {
                             AppsTreeSidebar(
                                 selection: $selection,
                                 appsFilter: $appsFilter,
-                                showsAppsTree: $showsAppsTree
+                                showsAppsTree: $showsAppsTree,
+                                goBack: {
+                                    navigationDirection = .backward
+                                    withAnimation(sidebarTransitionAnimation) {
+                                        showsAppsTree = false
+                                    }
+                                }
                             )
+                            .transition(sidebarTransition)
                         } else if showsSettingsTree {
                             SettingsTreeSidebar(
                                 selection: $selection,
                                 settingsCategory: $settingsCategory,
-                                showsSettingsTree: $showsSettingsTree
-                            )
-                        } else {
-                            ForEach(items, id: \.self) { item in
-                                SidebarNavButton(
-                                    item: item,
-                                    isSelected: selection == item
-                                ) {
-                                    if item == .apps {
-                                        selection = .apps
-                                        showsAppsTree = true
-                                        showsSettingsTree = false
-                                    } else if item == .system {
-                                        selection = .system
-                                        settingsCategory = .general
-                                        showsSettingsTree = true
-                                        showsAppsTree = false
-                                    } else {
-                                        selection = item
-                                        showsAppsTree = false
+                                showsSettingsTree: $showsSettingsTree,
+                                goBack: {
+                                    navigationDirection = .backward
+                                    withAnimation(sidebarTransitionAnimation) {
                                         showsSettingsTree = false
                                     }
                                 }
+                            )
+                            .transition(sidebarTransition)
+                        } else {
+                            VStack(alignment: .leading, spacing: 4) {
+                                ForEach(items, id: \.self) { item in
+                                    SidebarNavButton(
+                                        item: item,
+                                        isSelected: selection == item
+                                    ) {
+                                        if item == .apps {
+                                            navigationDirection = .forward
+                                            withAnimation(sidebarTransitionAnimation) {
+                                                selection = .apps
+                                                showsAppsTree = true
+                                                showsSettingsTree = false
+                                            }
+                                        } else if item == .system {
+                                            navigationDirection = .forward
+                                            withAnimation(sidebarTransitionAnimation) {
+                                                selection = .system
+                                                settingsCategory = .general
+                                                showsSettingsTree = true
+                                                showsAppsTree = false
+                                            }
+                                        } else {
+                                            withAnimation(sidebarTransitionAnimation) {
+                                                selection = item
+                                                showsAppsTree = false
+                                                showsSettingsTree = false
+                                            }
+                                        }
+                                    }
+                                }
                             }
+                            .transition(sidebarTransition)
                         }
                     }
                     .padding(.top, 48)
@@ -402,18 +433,36 @@ private struct MacSidebar: View {
         }
         .ignoresSafeArea(.container, edges: .top)
     }
+
+    private var sidebarTransitionAnimation: Animation {
+        .spring(response: 0.28, dampingFraction: 0.9)
+    }
+
+    private var sidebarTransition: AnyTransition {
+        switch navigationDirection {
+        case .forward:
+            return .asymmetric(
+                insertion: .move(edge: .trailing).combined(with: .opacity),
+                removal: .move(edge: .leading).combined(with: .opacity)
+            )
+        case .backward:
+            return .asymmetric(
+                insertion: .move(edge: .leading).combined(with: .opacity),
+                removal: .move(edge: .trailing).combined(with: .opacity)
+            )
+        }
+    }
 }
 
 private struct AppsTreeSidebar: View {
     @Binding var selection: MainView.SidebarItem
     @Binding var appsFilter: AppsScreen.FilterCategory
     @Binding var showsAppsTree: Bool
+    let goBack: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Button {
-                showsAppsTree = false
-            } label: {
+            Button(action: goBack) {
                 HStack(spacing: 8) {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 10, weight: .semibold))
@@ -451,12 +500,11 @@ private struct SettingsTreeSidebar: View {
     @Binding var selection: MainView.SidebarItem
     @Binding var settingsCategory: SettingsScreen.Category
     @Binding var showsSettingsTree: Bool
+    let goBack: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Button {
-                showsSettingsTree = false
-            } label: {
+            Button(action: goBack) {
                 HStack(spacing: 8) {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 10, weight: .semibold))
