@@ -104,12 +104,14 @@ struct BinariesScreen: View {
                 }
             } else {
                 MacSettingsSection(title: "Discovered Binaries") {
-                    ForEach(Array(filteredBinaries.enumerated()), id: \.element.id) { index, binary in
-                        VStack(spacing: 0) {
-                            BinaryListRow(binary: binary)
+                    LazyVStack(spacing: 0) {
+                        ForEach(Array(filteredBinaries.enumerated()), id: \.element.id) { index, binary in
+                            VStack(spacing: 0) {
+                                BinaryListRow(binary: binary)
 
-                            if index < filteredBinaries.count - 1 {
-                                MacSettingsDivider()
+                                if index < filteredBinaries.count - 1 {
+                                    MacSettingsDivider()
+                                }
                             }
                         }
                     }

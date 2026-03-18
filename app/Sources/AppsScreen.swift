@@ -434,17 +434,19 @@ struct AppsScreen: View {
 
     private func appRowsSection(title: String, rows: [AppRowItem]) -> some View {
         MacSettingsSection(title: title) {
-            ForEach(Array(rows.enumerated()), id: \.element.id) { index, item in
-                VStack(spacing: 0) {
-                    AppListRow(
-                        app: item.app,
-                        matchingCask: item.matchingCask,
-                        managementState: item.managementState,
-                        stateManager: stateManager
-                    )
+            LazyVStack(spacing: 0) {
+                ForEach(Array(rows.enumerated()), id: \.element.id) { index, item in
+                    VStack(spacing: 0) {
+                        AppListRow(
+                            app: item.app,
+                            matchingCask: item.matchingCask,
+                            managementState: item.managementState,
+                            stateManager: stateManager
+                        )
 
-                    if index < rows.count - 1 {
-                        MacSettingsDivider()
+                        if index < rows.count - 1 {
+                            MacSettingsDivider()
+                        }
                     }
                 }
             }
@@ -453,12 +455,14 @@ struct AppsScreen: View {
 
     private func storeRowsSection(title: String, casks: [BrewCask]) -> some View {
         MacSettingsSection(title: title) {
-            ForEach(Array(casks.enumerated()), id: \.element.id) { index, cask in
-                VStack(spacing: 0) {
-                    StoreAppRow(cask: cask, stateManager: stateManager)
+            LazyVStack(spacing: 0) {
+                ForEach(Array(casks.enumerated()), id: \.element.id) { index, cask in
+                    VStack(spacing: 0) {
+                        StoreAppRow(cask: cask, stateManager: stateManager)
 
-                    if index < casks.count - 1 {
-                        MacSettingsDivider()
+                        if index < casks.count - 1 {
+                            MacSettingsDivider()
+                        }
                     }
                 }
             }
@@ -467,12 +471,14 @@ struct AppsScreen: View {
 
     private var deletedAppsSection: some View {
         MacSettingsSection(title: "Deleted Apps") {
-            ForEach(Array(stateManager.deletedApps.enumerated()), id: \.element.id) { index, deletedApp in
-                VStack(spacing: 0) {
-                    DeletedAppListRow(app: deletedApp, stateManager: stateManager)
+            LazyVStack(spacing: 0) {
+                ForEach(Array(stateManager.deletedApps.enumerated()), id: \.element.id) { index, deletedApp in
+                    VStack(spacing: 0) {
+                        DeletedAppListRow(app: deletedApp, stateManager: stateManager)
 
-                    if index < stateManager.deletedApps.count - 1 {
-                        MacSettingsDivider()
+                        if index < stateManager.deletedApps.count - 1 {
+                            MacSettingsDivider()
+                        }
                     }
                 }
             }
@@ -587,9 +593,7 @@ struct AppListRow: View {
         .padding(.horizontal, 16)
         .contentShape(Rectangle())
         .onHover { hovering in
-            withAnimation(.easeInOut(duration: 0.2)) {
-                isHovered = hovering
-            }
+            isHovered = hovering
         }
         .onTapGesture {
             NSWorkspace.shared.open(URL(fileURLWithPath: app.path))

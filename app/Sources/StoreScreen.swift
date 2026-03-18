@@ -89,12 +89,14 @@ struct StoreScreen: View {
             }
         } else {
             MacSettingsSection(title: "Homebrew Casks") {
-                ForEach(Array(storeManager.filteredCasks.enumerated()), id: \.element.id) { index, cask in
-                    VStack(spacing: 0) {
-                        StoreAppRow(cask: cask, stateManager: stateManager)
+                LazyVStack(spacing: 0) {
+                    ForEach(Array(storeManager.filteredCasks.enumerated()), id: \.element.id) { index, cask in
+                        VStack(spacing: 0) {
+                            StoreAppRow(cask: cask, stateManager: stateManager)
 
-                        if index < storeManager.filteredCasks.count - 1 {
-                            MacSettingsDivider()
+                            if index < storeManager.filteredCasks.count - 1 {
+                                MacSettingsDivider()
+                            }
                         }
                     }
                 }

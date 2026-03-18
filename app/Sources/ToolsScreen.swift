@@ -104,12 +104,14 @@ struct ToolsScreen: View {
                 }
             } else {
                 MacSettingsSection(title: "Installed Tools") {
-                    ForEach(Array(filteredTools.enumerated()), id: \.element.id) { index, tool in
-                        VStack(spacing: 0) {
-                            ToolListRow(tool: tool)
+                    LazyVStack(spacing: 0) {
+                        ForEach(Array(filteredTools.enumerated()), id: \.element.id) { index, tool in
+                            VStack(spacing: 0) {
+                                ToolListRow(tool: tool)
 
-                            if index < filteredTools.count - 1 {
-                                MacSettingsDivider()
+                                if index < filteredTools.count - 1 {
+                                    MacSettingsDivider()
+                                }
                             }
                         }
                     }
