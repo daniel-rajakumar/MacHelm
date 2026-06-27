@@ -3,10 +3,19 @@ import SwiftUI
 struct MainView: View {
     @AppStorage("machelm.showToolsTab") private var showToolsTab = true
     @AppStorage("machelm.showBinariesTab") private var showBinariesTab = true
+    @AppStorage("machelm.sidebar.selection") private var persistedSelectionRawValue = SidebarItem.home.rawValue
+    @AppStorage("machelm.sidebar.appsFilter") private var persistedAppsFilterRawValue = AppsScreen.FilterCategory.all.rawValue
+    @AppStorage("machelm.sidebar.showsAppsTree") private var persistedShowsAppsTree = false
+    @AppStorage("machelm.sidebar.showsWindowsTree") private var persistedShowsWindowsTree = false
+    @AppStorage("machelm.sidebar.showsSettingsTree") private var persistedShowsSettingsTree = false
+    @AppStorage("machelm.sidebar.windowsSection") private var persistedWindowsSectionRawValue = WindowsScreen.Section.overview.rawValue
+    @AppStorage("machelm.sidebar.settingsCategory") private var persistedSettingsCategoryRawValue = SettingsScreen.Category.general.rawValue
     @State private var selection: SidebarItem = .home
     @State private var appsFilter: AppsScreen.FilterCategory = .all
     @State private var showsAppsTree = false
+    @State private var showsWindowsTree = false
     @State private var showsSettingsTree = false
+    @State private var windowsSection: WindowsScreen.Section = .overview
     @State private var settingsCategory: SettingsScreen.Category = .general
     @State private var hasPreloadedData = false
     @State private var isRebuilding = false
@@ -116,6 +125,8 @@ struct MainView: View {
                 items: visibleSidebarItems,
                 appsFilter: $appsFilter,
                 showsAppsTree: $showsAppsTree,
+                windowsSection: $windowsSection,
+                showsWindowsTree: $showsWindowsTree,
                 settingsCategory: $settingsCategory,
                 showsSettingsTree: $showsSettingsTree,
                 isRebuilding: isRebuilding,
@@ -144,6 +155,7 @@ struct MainView: View {
         .onAppear {
             guard !hasPreloadedData else { return }
             hasPreloadedData = true
+            restoreNavigationState()
             normalizeSelection()
             appsModel.start(scanPaths: AppsScreenModel.defaultScanPaths)
             storeManager.fetchCasks()
@@ -153,6 +165,27 @@ struct MainView: View {
         }
         .onChange(of: showBinariesTab) {
             normalizeSelection()
+        }
+        .onChange(of: selection) {
+            persistNavigationState()
+        }
+        .onChange(of: appsFilter) {
+            persistNavigationState()
+        }
+        .onChange(of: showsAppsTree) {
+            persistNavigationState()
+        }
+        .onChange(of: showsWindowsTree) {
+            persistNavigationState()
+        }
+        .onChange(of: showsSettingsTree) {
+            persistNavigationState()
+        }
+        .onChange(of: windowsSection) {
+            persistNavigationState()
+        }
+        .onChange(of: settingsCategory) {
+            persistNavigationState()
         }
     }
 
@@ -168,7 +201,7 @@ struct MainView: View {
         case .keyboard:
             KeyboardScreen()
         case .windows:
-            WindowsScreen()
+            WindowsScreen(selectedSection: $windowsSection)
         case .apps:
             AppsScreen(
                 stateManager: appStateManager,
@@ -205,17 +238,64 @@ struct MainView: View {
     }
 
     private func normalizeSelection() {
+        if selection == .settings {
+            selection = .system
+        }
+
         if selection == .tools && !showToolsTab {
             selection = .home
             showsAppsTree = false
+            showsWindowsTree = false
             showsSettingsTree = false
         }
 
         if selection == .binaries && !showBinariesTab {
             selection = .home
             showsAppsTree = false
+            showsWindowsTree = false
             showsSettingsTree = false
         }
+
+        if selection != .apps {
+            showsAppsTree = false
+        }
+
+        if selection != .windows {
+            showsWindowsTree = false
+        }
+
+        if selection != .system && selection != .settings {
+            showsSettingsTree = false
+        }
+
+        if showsAppsTree {
+            showsWindowsTree = false
+            showsSettingsTree = false
+        } else if showsWindowsTree {
+            showsSettingsTree = false
+        }
+
+        persistNavigationState()
+    }
+
+    private func restoreNavigationState() {
+        selection = SidebarItem(rawValue: persistedSelectionRawValue) ?? .home
+        appsFilter = AppsScreen.FilterCategory(rawValue: persistedAppsFilterRawValue) ?? .all
+        windowsSection = WindowsScreen.Section(rawValue: persistedWindowsSectionRawValue) ?? .overview
+        settingsCategory = SettingsScreen.Category(rawValue: persistedSettingsCategoryRawValue) ?? .general
+        showsAppsTree = persistedShowsAppsTree
+        showsWindowsTree = persistedShowsWindowsTree
+        showsSettingsTree = persistedShowsSettingsTree
+    }
+
+    private func persistNavigationState() {
+        persistedSelectionRawValue = selection.rawValue
+        persistedAppsFilterRawValue = appsFilter.rawValue
+        persistedShowsAppsTree = showsAppsTree
+        persistedShowsWindowsTree = showsWindowsTree
+        persistedShowsSettingsTree = showsSettingsTree
+        persistedWindowsSectionRawValue = windowsSection.rawValue
+        persistedSettingsCategoryRawValue = settingsCategory.rawValue
     }
     
     private func rebuildApp() {
@@ -339,6 +419,8 @@ private struct MacSidebar: View {
     let items: [MainView.SidebarItem]
     @Binding var appsFilter: AppsScreen.FilterCategory
     @Binding var showsAppsTree: Bool
+    @Binding var windowsSection: WindowsScreen.Section
+    @Binding var showsWindowsTree: Bool
     @Binding var settingsCategory: SettingsScreen.Category
     @Binding var showsSettingsTree: Bool
     @State private var navigationDirection: NavigationDirection = .forward
@@ -380,6 +462,19 @@ private struct MacSidebar: View {
                                 }
                             )
                             .transition(sidebarTransition)
+                        } else if showsWindowsTree {
+                            WindowsTreeSidebar(
+                                selection: $selection,
+                                windowsSection: $windowsSection,
+                                showsWindowsTree: $showsWindowsTree,
+                                goBack: {
+                                    navigationDirection = .backward
+                                    withAnimation(sidebarTransitionAnimation) {
+                                        showsWindowsTree = false
+                                    }
+                                }
+                            )
+                            .transition(sidebarTransition)
                         } else if showsSettingsTree {
                             SettingsTreeSidebar(
                                 selection: $selection,
@@ -405,6 +500,16 @@ private struct MacSidebar: View {
                                             withAnimation(sidebarTransitionAnimation) {
                                                 selection = .apps
                                                 showsAppsTree = true
+                                                showsWindowsTree = false
+                                                showsSettingsTree = false
+                                            }
+                                        } else if item == .windows {
+                                            navigationDirection = .forward
+                                            withAnimation(sidebarTransitionAnimation) {
+                                                selection = .windows
+                                                windowsSection = .overview
+                                                showsWindowsTree = true
+                                                showsAppsTree = false
                                                 showsSettingsTree = false
                                             }
                                         } else if item == .system {
@@ -414,11 +519,13 @@ private struct MacSidebar: View {
                                                 settingsCategory = .general
                                                 showsSettingsTree = true
                                                 showsAppsTree = false
+                                                showsWindowsTree = false
                                             }
                                         } else {
                                             withAnimation(sidebarTransitionAnimation) {
                                                 selection = item
                                                 showsAppsTree = false
+                                                showsWindowsTree = false
                                                 showsSettingsTree = false
                                             }
                                         }
@@ -583,6 +690,57 @@ private struct SettingsTreeSidebar: View {
     }
 }
 
+private struct WindowsTreeSidebar: View {
+    @Binding var selection: MainView.SidebarItem
+    @Binding var windowsSection: WindowsScreen.Section
+    @Binding var showsWindowsTree: Bool
+    let goBack: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Button(action: goBack) {
+                HStack(spacing: 8) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 10, weight: .semibold))
+                    Text("Windows")
+                        .font(.system(size: 11.5, weight: .medium))
+                    Spacer()
+                }
+                .foregroundColor(Color.white.opacity(0.78))
+                .padding(.horizontal, 10)
+                .padding(.vertical, 4)
+                .background(
+                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                        .fill(Color.white.opacity(0.06))
+                )
+            }
+            .buttonStyle(.plain)
+            .padding(.bottom, 6)
+
+            ForEach(WindowsScreen.Section.Group.allCases, id: \.self) { group in
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(group.title.uppercased())
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundColor(.secondary)
+                        .padding(.horizontal, 10)
+                        .padding(.top, group == .macOS ? 0 : 8)
+                        .padding(.bottom, 4)
+
+                    ForEach(WindowsScreen.Section.allCases.filter { $0.group == group }) { section in
+                        WindowsSidebarButton(
+                            section: section,
+                            isSelected: windowsSection == section
+                        ) {
+                            selection = .windows
+                            windowsSection = section
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 private struct AppFilterSidebarButton: View {
     let category: AppsScreen.FilterCategory
     let isSelected: Bool
@@ -616,8 +774,6 @@ private struct AppFilterSidebarButton: View {
         switch category {
         case .all:
             return "square.grid.2x2.fill"
-        case .nix:
-            return "cube.box.fill"
         case .homebrew:
             return "mug.fill"
         case .macStore:
@@ -673,6 +829,36 @@ private struct SettingsSidebarButton: View {
                 SidebarMonoIcon(symbol: category.symbol, isSelected: isSelected)
 
                 Text(category.title)
+                    .font(.system(size: 12.5, weight: isSelected ? .semibold : .regular))
+                    .foregroundColor(.white)
+                    .lineLimit(1)
+
+                Spacer()
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(
+                RoundedRectangle(cornerRadius: 11, style: .continuous)
+                    .fill(isSelected ? Color(red: 0.27, green: 0.63, blue: 0.18) : Color.clear)
+            )
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct WindowsSidebarButton: View {
+    let section: WindowsScreen.Section
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 12) {
+                SidebarMonoIcon(symbol: section.symbol, isSelected: isSelected)
+
+                Text(section.title)
                     .font(.system(size: 12.5, weight: isSelected ? .semibold : .regular))
                     .foregroundColor(.white)
                     .lineLimit(1)

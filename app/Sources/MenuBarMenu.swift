@@ -73,45 +73,31 @@ struct ActionButtons: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            Button(action: runRebuild) {
+            Button(action: applyWorkspace) {
                 HStack {
                     Image(systemName: "arrow.triangle.2.circlepath")
-                    Text("Run Rebuild")
+                    Text("Apply Config")
                 }
                 .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
             .disabled(isRunning)
-
-            Button(action: updateFlake) {
-                HStack {
-                    Image(systemName: "arrow.down.circle")
-                    Text("Update Flake")
-                }
-                .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.bordered)
-            .disabled(isRunning)
         }
     }
 
-    func runRebuild() {
+    func applyWorkspace() {
         isRunning = true
-        statusMessage = "Rebuilding System..."
+        statusMessage = "Applying Workspace..."
         
         var args: [String] = []
         #if DEBUG
         args.append("--debug")
         #endif
         
-        NixRunner.runScript(named: "rebuild-dashboard.sh", arguments: args) { success in
+        SystemTaskRunner.runScript(named: "apply-dashboard.sh", arguments: args) { success in
             isRunning = false
-            statusMessage = success ? "Rebuild Complete" : "Rebuild Failed"
+            statusMessage = success ? "Apply Complete" : "Apply Failed"
         }
-    }
-
-    func updateFlake() {
-        // Implement flake update logic
     }
 }
 

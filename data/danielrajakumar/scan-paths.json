@@ -1,9 +1,6 @@
 [
-  "\/Applications",
-  "\/Applications\/Nix Apps",
-  "\/Applications\/Nix-Karabiner",
-  "\/System\/Applications",
-  "\/System\/Applications\/Utilities",
-  "\/Users\/danielrajakumar\/Applications",
-  "\/Users\/danielrajakumar\/Applications\/Home Manager Apps"
+  "/Applications",
+  "/System/Applications",
+  "/System/Applications/Utilities",
+  "/Users/danielrajakumar/Applications"
 ]

@@ -76,7 +76,7 @@
         },
         {
           "kind" : "file",
-          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/NixRunner.swift"
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/RepoConfig.swift"
         },
         {
           "kind" : "file",
@@ -93,6 +93,10 @@
         {
           "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/SystemScreen.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/SystemTaskRunner.swift"
         },
         {
           "kind" : "file",
@@ -132,11 +136,12 @@
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/MainView.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/ManagementStatus.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/MenuBarMenu.swift.o",
-        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/NixRunner.swift.o",
+        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/RepoConfig.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SettingsScreen.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/StoreManager.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/StoreScreen.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemScreen.swift.o",
+        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemTaskRunner.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/ToolsScreen.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/UserConfigExporter.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/WindowsScreen.swift.o"
@@ -162,6 +167,7 @@
         "-entry-point-function-name",
         "-Xfrontend",
         "MacHelm_main",
+        "-color-diagnostics",
         "-swift-version",
         "5",
         "-plugin-path",
@@ -252,7 +258,7 @@
         },
         {
           "kind" : "file",
-          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/NixRunner.swift.o"
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/RepoConfig.swift.o"
         },
         {
           "kind" : "file",
@@ -269,6 +275,10 @@
         {
           "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemScreen.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemTaskRunner.swift.o"
         },
         {
           "kind" : "file",
@@ -302,11 +312,12 @@
         "/Users/danielrajakumar/code/MacHelm/app/Sources/MainView.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/ManagementStatus.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/MenuBarMenu.swift",
-        "/Users/danielrajakumar/code/MacHelm/app/Sources/NixRunner.swift",
+        "/Users/danielrajakumar/code/MacHelm/app/Sources/RepoConfig.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/SettingsScreen.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/StoreManager.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/StoreScreen.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/SystemScreen.swift",
+        "/Users/danielrajakumar/code/MacHelm/app/Sources/SystemTaskRunner.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/ToolsScreen.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/UserConfigExporter.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/WindowsScreen.swift"
@@ -339,11 +350,12 @@
       "/Users/danielrajakumar/code/MacHelm/app/Sources/MainView.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/ManagementStatus.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/MenuBarMenu.swift",
-      "/Users/danielrajakumar/code/MacHelm/app/Sources/NixRunner.swift",
+      "/Users/danielrajakumar/code/MacHelm/app/Sources/RepoConfig.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/SettingsScreen.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/StoreManager.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/StoreScreen.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/SystemScreen.swift",
+      "/Users/danielrajakumar/code/MacHelm/app/Sources/SystemTaskRunner.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/ToolsScreen.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/UserConfigExporter.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/WindowsScreen.swift",
@@ -369,6 +381,7 @@
       "-entry-point-function-name",
       "-Xfrontend",
       "MacHelm_main",
+      "-color-diagnostics",
       "-swift-version",
       "5",
       "-plugin-path",
@@ -498,7 +511,7 @@
         },
         {
           "kind" : "file",
-          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/NixRunner.swift"
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/RepoConfig.swift"
         },
         {
           "kind" : "file",
@@ -515,6 +528,10 @@
         {
           "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/SystemScreen.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/SystemTaskRunner.swift"
         },
         {
           "kind" : "file",
@@ -592,7 +609,7 @@
         },
         {
           "kind" : "file",
-          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/NixRunner.swift.o"
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/RepoConfig.swift.o"
         },
         {
           "kind" : "file",
@@ -609,6 +626,10 @@
         {
           "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemScreen.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemTaskRunner.swift.o"
         },
         {
           "kind" : "file",

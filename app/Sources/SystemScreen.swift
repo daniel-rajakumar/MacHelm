@@ -16,7 +16,6 @@ struct SystemScreen: View {
         "homebrew-formulae.json",
         "homebrew-manual-formulae.json",
         "homebrew-dependency-formulae.json",
-        "nix-tools.json",
         "third-party-tools.json",
         "shell-paths.json",
         "filesystem-binaries.json",
@@ -65,7 +64,6 @@ struct SystemScreen: View {
                     MacSettingsStatItem(title: "Homebrew Formulae", value: "\(snapshot.installedHomebrewFormulae.count)", subtitle: "CLI packages from brew", symbol: "shippingbox"),
                     MacSettingsStatItem(title: "Brew Manual", value: "\(snapshot.manualHomebrewFormulae.count)", subtitle: "Requested by user", symbol: "hand.tap.fill"),
                     MacSettingsStatItem(title: "Brew Dependencies", value: "\(snapshot.dependencyHomebrewFormulae.count)", subtitle: "Pulled in by brew", symbol: "arrow.triangle.branch"),
-                    MacSettingsStatItem(title: "Nix Tools", value: "\(snapshot.nixTools.count)", subtitle: "CLI tools from Nix paths", symbol: "cube.box.fill"),
                     MacSettingsStatItem(title: "Third-Party Tools", value: "\(snapshot.thirdPartyTools.count)", subtitle: "Non-system CLI tools", symbol: "wand.and.stars")
                 ])
 

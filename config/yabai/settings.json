@@ -1,15 +1,78 @@
 {
-  "autoBalance" : false,
-  "floatActivityMonitor" : true,
-  "floatArchiveUtility" : true,
-  "floatFinder" : true,
-  "floatSystemSettings" : true,
-  "focusFollowsMouse" : false,
+  "activeWindowOpacity" : 1,
+  "activityMonitorRule" : {
+    "appPattern" : "^Activity Monitor$",
+    "enabled" : true,
+    "label" : "machelm-float-activity-monitor",
+    "manage" : false,
+    "name" : "Activity Monitor",
+    "titlePattern" : ""
+  },
+  "archiveUtilityRule" : {
+    "appPattern" : "^Archive Utility$",
+    "enabled" : true,
+    "label" : "machelm-float-archive-utility",
+    "manage" : false,
+    "name" : "Archive Utility",
+    "titlePattern" : ""
+  },
+  "autoBalance" : "off",
+  "bottomPadding" : 12,
+  "customRules" : [
+    {
+      "appPattern" : "^MacHelm$",
+      "enabled" : true,
+      "id" : "A22E384C-D32F-4CFA-8A39-8684AFAEF2E0",
+      "label" : "machelm-custom-rule-machelm-custom-rule-9716BFAC-E139-425B-9200-4AA8A8C3CD21-machelm-machelm-custom-rule-9716bfac-e139-425b-9200-4aa8a8c3cd21-machelm",
+      "manage" : true,
+      "name" : "machelm",
+      "titlePattern" : ""
+    }
+  ],
+  "debugOutput" : false,
+  "displayArrangementOrder" : "default",
+  "externalBarBottomPadding" : 0,
+  "externalBarMode" : "off",
+  "externalBarTopPadding" : 0,
+  "finderRule" : {
+    "appPattern" : "^Finder$",
+    "enabled" : true,
+    "label" : "machelm-float-finder",
+    "manage" : true,
+    "name" : "Finder",
+    "titlePattern" : ""
+  },
+  "focusFollowsMouse" : "off",
+  "insertFeedbackColor" : "0xffd75f5f",
   "layout" : "bsp",
+  "leftPadding" : 12,
+  "menubarOpacity" : 1,
+  "mouseAction1" : "move",
+  "mouseAction2" : "resize",
+  "mouseDropAction" : "swap",
   "mouseFollowsFocus" : false,
   "mouseModifier" : "fn",
-  "outerPadding" : 12,
+  "normalWindowOpacity" : 0.9,
+  "rightPadding" : 12,
   "splitRatio" : 0.5,
+  "splitType" : "auto",
+  "systemSettingsRule" : {
+    "appPattern" : "^System Settings$",
+    "enabled" : true,
+    "label" : "machelm-float-system-settings",
+    "manage" : true,
+    "name" : "System Settings",
+    "titlePattern" : ""
+  },
+  "topPadding" : 12,
+  "windowAnimationDuration" : 0,
+  "windowAnimationEasing" : "ease_out_expo",
   "windowGap" : 10,
-  "windowPlacement" : "second_child"
+  "windowInsertionPoint" : "focused",
+  "windowOpacity" : false,
+  "windowOpacityDuration" : 0,
+  "windowOriginDisplay" : "default",
+  "windowPlacement" : "second_child",
+  "windowShadow" : "on",
+  "windowZoomPersist" : false
 }

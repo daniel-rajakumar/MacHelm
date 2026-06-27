@@ -1,0 +1,14 @@
+[
+  "/usr/bin",
+  "/bin",
+  "/usr/sbin",
+  "/sbin",
+  "/usr/local/bin",
+  "/usr/local/sbin",
+  "/opt/homebrew/bin",
+  "/opt/homebrew/sbin",
+  "/Applications",
+  "$HOME/Applications",
+  "/System/Applications",
+  "/System/Applications/Utilities"
+]

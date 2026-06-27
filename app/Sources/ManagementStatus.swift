@@ -56,27 +56,10 @@ struct ManagementBadge: View {
 }
 
 enum ManagementResolver {
-    private static let repoNixFiles = [
-        "/Users/danielrajakumar/code/MacHelm/hosts/daniel.nix",
-        "/Users/danielrajakumar/code/MacHelm/hosts/macbook.nix"
-    ]
-    private static let cacheQueue = DispatchQueue(label: "machelm.management-resolver.cache")
-    private static var cachedRepoPackageTokens: Set<String>?
-
-    static func invalidateRepoPackageCache() {
-        cacheQueue.sync {
-            cachedRepoPackageTokens = nil
-        }
-    }
-
-    static func appState(for app: NixApp, matchingCask: BrewCask?) -> ManagementState {
+    static func appState(for app: InstalledApp, matchingCask: BrewCask?) -> ManagementState {
         switch app.installSource {
         case "Homebrew":
             return .managed("Managed through Homebrew")
-        case "Nix":
-            return activeRepoPackageTokens().isDisjoint(with: appPackageCandidates(for: app))
-                ? .detected("Detected from Nix, but not declared in this repo")
-                : .managed("Managed by this repo's Nix configuration")
         case "Others":
             return .managed("Managed as a manually installed app on disk")
         case "System":
@@ -97,110 +80,10 @@ enum ManagementResolver {
                 return .managed("Managed by Homebrew as a \(installIntent.lowercased()) formula")
             }
             return .managed("Managed by Homebrew")
-        case "Nix":
-            return activeRepoPackageTokens().isDisjoint(with: toolPackageCandidates(for: tool))
-                ? .detected("Detected from Nix paths, but not declared in this repo")
-                : .managed("Managed by this repo's Nix configuration")
         case "System":
             return .detected("Built into macOS")
         default:
             return .detected("Detected from the filesystem")
         }
-    }
-
-    private static func activeRepoPackageTokens() -> Set<String> {
-        if let cached = cacheQueue.sync(execute: { cachedRepoPackageTokens }) {
-            return cached
-        }
-
-        var tokens = Set<String>()
-
-        for path in repoNixFiles {
-            guard let content = try? String(contentsOfFile: path) else { continue }
-
-            for line in content.components(separatedBy: .newlines) {
-                let trimmed = line.trimmingCharacters(in: .whitespaces)
-                guard !trimmed.hasPrefix("#") else { continue }
-
-                let codePart = trimmed
-                    .components(separatedBy: "#")
-                    .first?
-                    .trimmingCharacters(in: .whitespaces) ?? ""
-
-                guard !codePart.isEmpty else { continue }
-
-                let nsRange = NSRange(codePart.startIndex..<codePart.endIndex, in: codePart)
-                let regex = try? NSRegularExpression(pattern: #"pkgs\.([A-Za-z0-9+._-]+)"#)
-                let matches = regex?.matches(in: codePart, range: nsRange) ?? []
-
-                for match in matches {
-                    guard let tokenRange = Range(match.range(at: 1), in: codePart) else { continue }
-                    tokens.insert(normalizedPackageIdentifier(String(codePart[tokenRange])))
-                }
-
-                if codePart.range(of: #"^[A-Za-z0-9+._-]+$"#, options: .regularExpression) != nil {
-                    tokens.insert(normalizedPackageIdentifier(codePart))
-                }
-            }
-        }
-
-        cacheQueue.sync {
-            cachedRepoPackageTokens = tokens
-        }
-
-        return tokens
-    }
-
-    private static func appPackageCandidates(for app: NixApp) -> Set<String> {
-        var candidates = Set<String>()
-        let resolvedPath = URL(fileURLWithPath: app.path).resolvingSymlinksInPath().path
-
-        candidates.insert(normalizedPackageIdentifier(app.name))
-        candidates.insert(normalizedPackageIdentifier(((resolvedPath as NSString).deletingPathExtension as NSString).lastPathComponent))
-
-        if let storePackage = storePackageName(from: resolvedPath) {
-            candidates.insert(normalizedPackageIdentifier(storePackage))
-        }
-
-        return candidates.filter { !$0.isEmpty }
-    }
-
-    private static func toolPackageCandidates(for tool: TerminalToolSnapshot) -> Set<String> {
-        var candidates = Set<String>()
-        candidates.insert(normalizedPackageIdentifier(tool.name))
-
-        if let formulaName = tool.formulaName {
-            candidates.insert(normalizedPackageIdentifier(formulaName))
-        }
-
-        if let resolvedPath = tool.resolvedPath, let storePackage = storePackageName(from: resolvedPath) {
-            candidates.insert(normalizedPackageIdentifier(storePackage))
-        }
-
-        return candidates.filter { !$0.isEmpty }
-    }
-
-    private static func storePackageName(from path: String) -> String? {
-        let components = URL(fileURLWithPath: path).pathComponents
-        guard let storeComponent = components.first(where: { $0.contains("-") && !$0.hasPrefix("/") }) else {
-            return nil
-        }
-
-        let parts = storeComponent.split(separator: "-", omittingEmptySubsequences: false)
-        guard parts.count >= 2 else { return nil }
-
-        let packageWithVersion = parts.dropFirst().joined(separator: "-")
-        if let versionRange = packageWithVersion.range(of: #"-\d"#, options: .regularExpression) {
-            return String(packageWithVersion[..<versionRange.lowerBound])
-        }
-
-        return packageWithVersion
-    }
-
-    private static func normalizedPackageIdentifier(_ value: String) -> String {
-        value
-            .lowercased()
-            .components(separatedBy: CharacterSet.alphanumerics.inverted)
-            .joined()
     }
 }

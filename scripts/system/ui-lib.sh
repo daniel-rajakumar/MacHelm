@@ -1,16 +1,12 @@
 #!/usr/bin/env bash
 
-# MacHelm UI Library - Utility functions for a premium TUI
-
-# Colors
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 BOLD='\033[1m'
 
-# Icons
 CHECK_ICON="✔"
 INFO_ICON="ℹ"
 WARN_ICON="⚠"
@@ -19,7 +15,7 @@ ROCKET_ICON="🚀"
 
 print_header() {
     local title=$1
-    if [ "$DEBUG" = true ]; then
+    if [ "${DEBUG:-false}" = true ]; then
         echo -e "${YELLOW}${BOLD}[ DEBUG MODE ACTIVE ]${NC}"
     fi
     echo -e "${BOLD}${BLUE}========================================${NC}"

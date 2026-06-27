@@ -349,8 +349,6 @@ private struct ToolListRow: View {
         switch source {
         case "Homebrew":
             return "shippingbox.fill"
-        case "Nix":
-            return "cube.box.fill"
         case "System":
             return "apple.terminal"
         default:
@@ -362,8 +360,6 @@ private struct ToolListRow: View {
         switch source {
         case "Homebrew":
             return .orange
-        case "Nix":
-            return .blue
         case "System":
             return .green
         default:

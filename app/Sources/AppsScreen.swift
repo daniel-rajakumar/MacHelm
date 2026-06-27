@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct NixApp: Identifiable, Equatable {
+struct InstalledApp: Identifiable, Equatable {
     let id: String
     let name: String
     let path: String
@@ -23,19 +23,13 @@ struct NixApp: Identifiable, Equatable {
             print("DEBUG: Safari detection - Original: \(path), Resolved: \(actualPath)")
         }
 
-        // 1. Nix check: based on directory path
-        let isNix = actualPath.contains("Nix Apps") || actualPath.contains("Nix-Karabiner") || actualPath.contains("Home Manager Apps") || actualPath.contains("/nix/store")
-        if isNix {
-            return "Nix"
-        }
-        
-        // 2. Mac App Store check: presence of _MASReceipt
+        // 1. Mac App Store check: presence of _MASReceipt
         let isMacStore = fileManager.fileExists(atPath: actualPath + "/Contents/_MASReceipt/receipt")
         if isMacStore {
             return "Mac Store"
         }
         
-        // 3. Homebrew check: Check if symlink or if cask directory exists
+        // 2. Homebrew check: Check if symlink or if cask directory exists
         var isHomebrew = false
         if actualPath.contains("homebrew") || actualPath.contains("Caskroom") {
             isHomebrew = true
@@ -102,7 +96,7 @@ struct NixApp: Identifiable, Equatable {
             return "Homebrew"
         }
         
-        // 4. System check
+        // 3. System check
         if actualPath.hasPrefix("/System/") || actualPath.contains("/Applications/Utilities") {
             return "System"
         }
@@ -110,7 +104,7 @@ struct NixApp: Identifiable, Equatable {
         return "Others"
     }
 
-    static func == (lhs: NixApp, rhs: NixApp) -> Bool {
+    static func == (lhs: InstalledApp, rhs: InstalledApp) -> Bool {
         lhs.name == rhs.name
             && lhs.path == rhs.path
             && lhs.installSource == rhs.installSource
@@ -118,17 +112,9 @@ struct NixApp: Identifiable, Equatable {
 }
 
 final class AppsScreenModel: ObservableObject {
-    static let defaultScanPaths = [
-        "/Applications",
-        "\(FileManager.default.homeDirectoryForCurrentUser.path)/Applications",
-        "/System/Applications",
-        "/System/Applications/Utilities",
-        "/Applications/Nix Apps",
-        "/Applications/Nix-Karabiner",
-        "\(FileManager.default.homeDirectoryForCurrentUser.path)/Applications/Home Manager Apps"
-    ]
+    static let defaultScanPaths = RepoConfig.appScanPaths()
 
-    @Published var apps: [NixApp] = []
+    @Published var apps: [InstalledApp] = []
     @Published var isLoading = true
 
     private var hasStarted = false
@@ -156,17 +142,17 @@ final class AppsScreenModel: ObservableObject {
         }
 
         DispatchQueue.global(qos: .userInitiated).async {
-            var loadedApps: [NixApp] = []
+            var loadedApps: [InstalledApp] = []
             let fileManager = FileManager.default
 
             for scanPath in scanPaths {
                 guard let contents = try? fileManager.contentsOfDirectory(atPath: scanPath) else { continue }
 
-                let pathApps = contents.filter { $0.hasSuffix(".app") }.compactMap { appName -> NixApp? in
+                let pathApps = contents.filter { $0.hasSuffix(".app") }.compactMap { appName -> InstalledApp? in
                     let fullPath = (scanPath as NSString).appendingPathComponent(appName)
                     let name = (appName as NSString).deletingPathExtension
-                    let installSource = NixApp.detectInstallSource(name: name, path: fullPath)
-                    return NixApp(name: name, path: fullPath, installSource: installSource)
+                    let installSource = InstalledApp.detectInstallSource(name: name, path: fullPath)
+                    return InstalledApp(name: name, path: fullPath, installSource: installSource)
                 }
                 loadedApps.append(contentsOf: pathApps)
             }
@@ -204,7 +190,7 @@ final class AppsScreenModel: ObservableObject {
     @discardableResult
     private func loadAppsFromSnapshot() -> Bool {
         let persistedApps = UserConfigExporter.loadInstalledApps().map { snapshot in
-            return NixApp(
+            return InstalledApp(
                 name: snapshot.name,
                 path: snapshot.path,
                 installSource: snapshot.installSource
@@ -230,7 +216,6 @@ final class AppsScreenModel: ObservableObject {
 struct AppsScreen: View {
     enum FilterCategory: String, CaseIterable, Identifiable {
         case all = "All"
-        case nix = "Nix"
         case homebrew = "Homebrew"
         case macStore = "Mac Store"
         case system = "System"
@@ -251,7 +236,7 @@ struct AppsScreen: View {
     let scanPaths = AppsScreenModel.defaultScanPaths
 
     private struct AppRowItem: Identifiable {
-        let app: NixApp
+        let app: InstalledApp
         let matchingCask: BrewCask?
         let managementState: ManagementState
 
@@ -515,7 +500,7 @@ struct AppsScreen: View {
         }
     }
 
-    private func matchingCask(for app: NixApp) -> BrewCask? {
+    private func matchingCask(for app: InstalledApp) -> BrewCask? {
         let baseName = app.name.lowercased()
         let alphanumericOnly = baseName.components(separatedBy: CharacterSet.alphanumerics.inverted).joined(separator: "-")
 
@@ -577,7 +562,7 @@ struct AppsScreen: View {
 }
 
 struct AppListRow: View {
-    let app: NixApp
+    let app: InstalledApp
     let matchingCask: BrewCask?
     let managementState: ManagementState
     @ObservedObject var stateManager: AppStateManager
@@ -721,7 +706,6 @@ struct AppListRow: View {
     
     private func getIconForSource(_ source: String) -> String {
         switch source {
-        case "Nix": return "cube.box.fill"
         case "Homebrew": return "mug.fill"
         case "Mac Store": return "bag.fill"
         case "System": return "applelogo"
@@ -731,7 +715,6 @@ struct AppListRow: View {
     
     private func getColorForSource(_ source: String) -> Color {
         switch source {
-        case "Nix": return .blue
         case "Homebrew": return .orange
         case "Mac Store": return .indigo
         case "System": return .primary
@@ -848,7 +831,6 @@ struct DeletedAppListRow: View {
     
     private func getIconForSource(_ source: String) -> String {
         switch source {
-        case "Nix": return "cube.box.fill"
         case "Homebrew": return "mug.fill"
         case "Mac Store": return "bag.fill"
         case "System": return "applelogo"
@@ -858,7 +840,6 @@ struct DeletedAppListRow: View {
     
     private func getColorForSource(_ source: String) -> Color {
         switch source {
-        case "Nix": return .blue
         case "Homebrew": return .orange
         case "Mac Store": return .indigo
         case "System": return .primary
@@ -868,7 +849,7 @@ struct DeletedAppListRow: View {
 
     private var managementState: ManagementState {
         switch app.installSource {
-        case "Homebrew", "Nix":
+        case "Homebrew":
             return .managed("MacHelm previously removed this from a managed source")
         case "System":
             return .detected("Built into macOS")

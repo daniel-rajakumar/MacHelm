@@ -93,12 +93,12 @@
     "swift-dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/MenuBarMenu.swiftdeps",
     "diagnostics": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/MenuBarMenu.dia"
   },
-  "/Users/danielrajakumar/code/MacHelm/app/Sources/NixRunner.swift": {
-    "dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/NixRunner.d",
-    "object": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/NixRunner.swift.o",
-    "swiftmodule": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/NixRunner~partial.swiftmodule",
-    "swift-dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/NixRunner.swiftdeps",
-    "diagnostics": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/NixRunner.dia"
+  "/Users/danielrajakumar/code/MacHelm/app/Sources/RepoConfig.swift": {
+    "dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/RepoConfig.d",
+    "object": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/RepoConfig.swift.o",
+    "swiftmodule": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/RepoConfig~partial.swiftmodule",
+    "swift-dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/RepoConfig.swiftdeps",
+    "diagnostics": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/RepoConfig.dia"
   },
   "/Users/danielrajakumar/code/MacHelm/app/Sources/SettingsScreen.swift": {
     "dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SettingsScreen.d",
@@ -127,6 +127,13 @@
     "swiftmodule": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemScreen~partial.swiftmodule",
     "swift-dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemScreen.swiftdeps",
     "diagnostics": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemScreen.dia"
+  },
+  "/Users/danielrajakumar/code/MacHelm/app/Sources/SystemTaskRunner.swift": {
+    "dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemTaskRunner.d",
+    "object": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemTaskRunner.swift.o",
+    "swiftmodule": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemTaskRunner~partial.swiftmodule",
+    "swift-dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemTaskRunner.swiftdeps",
+    "diagnostics": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemTaskRunner.dia"
   },
   "/Users/danielrajakumar/code/MacHelm/app/Sources/ToolsScreen.swift": {
     "dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/ToolsScreen.d",

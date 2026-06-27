@@ -11,11 +11,12 @@
 /Users/danielrajakumar/code/MacHelm/app/Sources/MainView.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/ManagementStatus.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/MenuBarMenu.swift
-/Users/danielrajakumar/code/MacHelm/app/Sources/NixRunner.swift
+/Users/danielrajakumar/code/MacHelm/app/Sources/RepoConfig.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/SettingsScreen.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/StoreManager.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/StoreScreen.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/SystemScreen.swift
+/Users/danielrajakumar/code/MacHelm/app/Sources/SystemTaskRunner.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/ToolsScreen.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/UserConfigExporter.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/WindowsScreen.swift

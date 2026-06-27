@@ -76,7 +76,6 @@ struct ToolInventorySnapshot {
     let installedHomebrewFormulae: [String]
     let manualHomebrewFormulae: [String]
     let dependencyHomebrewFormulae: [String]
-    let nixTools: [TerminalToolSnapshot]
     let thirdPartyTools: [TerminalToolSnapshot]
 }
 
@@ -111,7 +110,6 @@ struct UserConfigSnapshot: Codable {
     let installedHomebrewFormulae: [String]
     let manualHomebrewFormulae: [String]
     let dependencyHomebrewFormulae: [String]
-    let nixTools: [TerminalToolSnapshot]
     let thirdPartyTools: [TerminalToolSnapshot]
 
     enum CodingKeys: String, CodingKey {
@@ -128,7 +126,6 @@ struct UserConfigSnapshot: Codable {
         case installedHomebrewFormulae
         case manualHomebrewFormulae
         case dependencyHomebrewFormulae
-        case nixTools
         case thirdPartyTools
     }
 
@@ -146,7 +143,6 @@ struct UserConfigSnapshot: Codable {
         installedHomebrewFormulae: [String],
         manualHomebrewFormulae: [String],
         dependencyHomebrewFormulae: [String],
-        nixTools: [TerminalToolSnapshot],
         thirdPartyTools: [TerminalToolSnapshot]
     ) {
         self.username = username
@@ -162,7 +158,6 @@ struct UserConfigSnapshot: Codable {
         self.installedHomebrewFormulae = installedHomebrewFormulae
         self.manualHomebrewFormulae = manualHomebrewFormulae
         self.dependencyHomebrewFormulae = dependencyHomebrewFormulae
-        self.nixTools = nixTools
         self.thirdPartyTools = thirdPartyTools
     }
 
@@ -181,13 +176,12 @@ struct UserConfigSnapshot: Codable {
         installedHomebrewFormulae = try container.decodeIfPresent([String].self, forKey: .installedHomebrewFormulae) ?? []
         manualHomebrewFormulae = try container.decodeIfPresent([String].self, forKey: .manualHomebrewFormulae) ?? []
         dependencyHomebrewFormulae = try container.decodeIfPresent([String].self, forKey: .dependencyHomebrewFormulae) ?? []
-        nixTools = try container.decodeIfPresent([TerminalToolSnapshot].self, forKey: .nixTools) ?? []
         thirdPartyTools = try container.decodeIfPresent([TerminalToolSnapshot].self, forKey: .thirdPartyTools) ?? []
     }
 }
 
 enum UserConfigExporter {
-    private static let repoRoot = "/Users/danielrajakumar/code/MacHelm"
+    private static let repoRoot = RepoConfig.repoRoot
 
     static func dataDirectoryURL() -> URL {
         URL(fileURLWithPath: repoRoot).appendingPathComponent("data", isDirectory: true)
@@ -237,10 +231,6 @@ enum UserConfigExporter {
         userDirectoryURL(for: username).appendingPathComponent("homebrew-dependency-formulae.json")
     }
 
-    static func nixToolsFileURL(for username: String = NSUserName()) -> URL {
-        userDirectoryURL(for: username).appendingPathComponent("nix-tools.json")
-    }
-
     static func thirdPartyToolsFileURL(for username: String = NSUserName()) -> URL {
         userDirectoryURL(for: username).appendingPathComponent("third-party-tools.json")
     }
@@ -268,7 +258,6 @@ enum UserConfigExporter {
             let terminalTools: [TerminalToolSnapshot] = loadJSON(from: terminalToolsFileURL(for: username)),
             let shellPaths: [String] = loadJSON(from: shellPathsFileURL(for: username)),
             let installedHomebrewFormulae: [String] = loadJSON(from: homebrewFormulaeFileURL(for: username)),
-            let nixTools: [TerminalToolSnapshot] = loadJSON(from: nixToolsFileURL(for: username)),
             let thirdPartyTools: [TerminalToolSnapshot] = loadJSON(from: thirdPartyToolsFileURL(for: username))
         else {
             return nil
@@ -288,7 +277,6 @@ enum UserConfigExporter {
             installedHomebrewFormulae: installedHomebrewFormulae,
             manualHomebrewFormulae: manualHomebrewFormulae,
             dependencyHomebrewFormulae: dependencyHomebrewFormulae,
-            nixTools: nixTools,
             thirdPartyTools: thirdPartyTools
         )
     }
@@ -304,7 +292,6 @@ enum UserConfigExporter {
             let terminalTools: [TerminalToolSnapshot] = loadJSON(from: terminalToolsFileURL(for: username)),
             let shellPaths: [String] = loadJSON(from: shellPathsFileURL(for: username)),
             let installedHomebrewFormulae: [String] = loadJSON(from: homebrewFormulaeFileURL(for: username)),
-            let nixTools: [TerminalToolSnapshot] = loadJSON(from: nixToolsFileURL(for: username)),
             let thirdPartyTools: [TerminalToolSnapshot] = loadJSON(from: thirdPartyToolsFileURL(for: username))
         else {
             return nil
@@ -319,7 +306,6 @@ enum UserConfigExporter {
             installedHomebrewFormulae: installedHomebrewFormulae,
             manualHomebrewFormulae: manualHomebrewFormulae,
             dependencyHomebrewFormulae: dependencyHomebrewFormulae,
-            nixTools: nixTools,
             thirdPartyTools: thirdPartyTools
         )
     }
@@ -364,7 +350,7 @@ enum UserConfigExporter {
     }
 
     static func writeSnapshot(
-        apps: [NixApp],
+        apps: [InstalledApp],
         deletedApps: [DeletedApp],
         installedTokens: Set<String>,
         scanPaths: [String],
@@ -414,7 +400,6 @@ enum UserConfigExporter {
             try writeJSON(terminalInventory.homebrewFormulae, to: homebrewFormulaeFileURL(for: username))
             try writeJSON(terminalInventory.manualHomebrewFormulae, to: homebrewManualFormulaeFileURL(for: username))
             try writeJSON(terminalInventory.dependencyHomebrewFormulae, to: homebrewDependencyFormulaeFileURL(for: username))
-            try writeJSON(terminalInventory.nixTools, to: nixToolsFileURL(for: username))
             try writeJSON(terminalInventory.thirdPartyTools, to: thirdPartyToolsFileURL(for: username))
         } catch {
             print("Failed to write user config snapshot: \(error)")
@@ -441,7 +426,6 @@ enum UserConfigExporter {
             try writeJSON(terminalInventory.homebrewFormulae, to: homebrewFormulaeFileURL(for: username))
             try writeJSON(terminalInventory.manualHomebrewFormulae, to: homebrewManualFormulaeFileURL(for: username))
             try writeJSON(terminalInventory.dependencyHomebrewFormulae, to: homebrewDependencyFormulaeFileURL(for: username))
-            try writeJSON(terminalInventory.nixTools, to: nixToolsFileURL(for: username))
             try writeJSON(terminalInventory.thirdPartyTools, to: thirdPartyToolsFileURL(for: username))
         } catch {
             print("Failed to refresh terminal inventory: \(error)")
@@ -547,7 +531,6 @@ enum UserConfigExporter {
             try writeJSON(legacySnapshot.installedHomebrewFormulae, to: homebrewFormulaeFileURL(for: username))
             try writeJSON(legacySnapshot.manualHomebrewFormulae, to: homebrewManualFormulaeFileURL(for: username))
             try writeJSON(legacySnapshot.dependencyHomebrewFormulae, to: homebrewDependencyFormulaeFileURL(for: username))
-            try writeJSON(legacySnapshot.nixTools, to: nixToolsFileURL(for: username))
             try writeJSON(legacySnapshot.thirdPartyTools, to: thirdPartyToolsFileURL(for: username))
 
             try? fileManager.removeItem(at: legacySnapshotURL)
@@ -565,7 +548,6 @@ enum UserConfigExporter {
         homebrewFormulae: [String],
         manualHomebrewFormulae: [String],
         dependencyHomebrewFormulae: [String],
-        nixTools: [TerminalToolSnapshot],
         thirdPartyTools: [TerminalToolSnapshot]
     ) {
         let shellPaths = normalizedShellPaths()
@@ -576,9 +558,6 @@ enum UserConfigExporter {
             dependencyFormulae: Set(homebrewFormulaInventory.dependencyFormulae)
         )
 
-        let nixTools = terminalTools
-            .filter { $0.source == "Nix" }
-            .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
         let thirdPartyTools = terminalTools
             .filter { $0.source == "Third-Party" }
             .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
@@ -589,7 +568,6 @@ enum UserConfigExporter {
             homebrewFormulaInventory.formulae,
             homebrewFormulaInventory.manualFormulae,
             homebrewFormulaInventory.dependencyFormulae,
-            nixTools,
             thirdPartyTools
         )
     }
@@ -598,7 +576,7 @@ enum UserConfigExporter {
         binaries: [FilesystemBinarySnapshot],
         scanRoots: [String]
     ) {
-        let scanRoots = filesystemBinaryRoots(for: username)
+        let scanRoots = filesystemBinaryRoots()
         var binariesByPath: [String: FilesystemBinarySnapshot] = [:]
         let fileManager = FileManager.default
 
@@ -621,28 +599,8 @@ enum UserConfigExporter {
         )
     }
 
-    private static func filesystemBinaryRoots(for username: String) -> [String] {
-        let home = FileManager.default.homeDirectoryForCurrentUser.path
-        let perUserProfile = "/etc/profiles/per-user/\(username)/bin"
-
-        return [
-            "/usr/bin",
-            "/bin",
-            "/usr/sbin",
-            "/sbin",
-            "/usr/local/bin",
-            "/usr/local/sbin",
-            "/opt/homebrew/bin",
-            "/opt/homebrew/sbin",
-            "\(home)/.nix-profile/bin",
-            perUserProfile,
-            "/run/current-system/sw/bin",
-            "/nix/var/nix/profiles/default/bin",
-            "/Applications",
-            "\(home)/Applications",
-            "/System/Applications",
-            "/System/Applications/Utilities"
-        ]
+    private static func filesystemBinaryRoots() -> [String] {
+        RepoConfig.binaryScanRoots()
     }
 
     private static func collectDirectoryBinaries(
@@ -782,16 +740,6 @@ enum UserConfigExporter {
                 || $0.hasPrefix("/usr/local/sbin/")
         }) {
             return "Homebrew"
-        }
-
-        if candidates.contains(where: {
-            $0.contains("/nix/store/")
-                || $0.contains("/.nix-profile/")
-                || $0.contains("/etc/profiles/per-user/")
-                || $0.contains("/run/current-system/sw/")
-                || $0.contains("/nix/var/nix/profiles/")
-        }) {
-            return "Nix"
         }
 
         return "Third-Party"

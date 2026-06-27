@@ -10,7 +10,6 @@ Each user gets their own folder:
 - `data/<username>/homebrew-formulae.json`
 - `data/<username>/homebrew-manual-formulae.json`
 - `data/<username>/homebrew-dependency-formulae.json`
-- `data/<username>/nix-tools.json`
 - `data/<username>/third-party-tools.json`
 - `data/<username>/shell-paths.json`
 - `data/<username>/filesystem-binaries.json`
