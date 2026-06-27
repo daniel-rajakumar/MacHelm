@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+CONFIG_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
+GENERATED_CONFIG="$CONFIG_DIR/generated.yabairc"
+
+if [ -f "$GENERATED_CONFIG" ]; then
+  . "$GENERATED_CONFIG"
+fi

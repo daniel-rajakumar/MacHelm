@@ -1,0 +1,15 @@
+{
+  "autoBalance" : false,
+  "floatActivityMonitor" : true,
+  "floatArchiveUtility" : true,
+  "floatFinder" : true,
+  "floatSystemSettings" : true,
+  "focusFollowsMouse" : false,
+  "layout" : "bsp",
+  "mouseFollowsFocus" : false,
+  "mouseModifier" : "fn",
+  "outerPadding" : 12,
+  "splitRatio" : 0.5,
+  "windowGap" : 10,
+  "windowPlacement" : "second_child"
+}

@@ -1,8 +1,11 @@
 /Users/danielrajakumar/code/MacHelm/app/Sources/AppStateManager.swift
+/Users/danielrajakumar/code/MacHelm/app/Sources/AppearanceScreen.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/AppsScreen.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/BinariesScreen.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/DirectoryWatcher.swift
+/Users/danielrajakumar/code/MacHelm/app/Sources/DockScreen.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/HomeScreen.swift
+/Users/danielrajakumar/code/MacHelm/app/Sources/KeyboardScreen.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/MacHelmApp.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/MacSettingsStyle.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/MainView.swift
@@ -15,3 +18,4 @@
 /Users/danielrajakumar/code/MacHelm/app/Sources/SystemScreen.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/ToolsScreen.swift
 /Users/danielrajakumar/code/MacHelm/app/Sources/UserConfigExporter.swift
+/Users/danielrajakumar/code/MacHelm/app/Sources/WindowsScreen.swift

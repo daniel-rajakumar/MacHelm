@@ -16,6 +16,10 @@ struct MainView: View {
 
     enum SidebarItem: String, CaseIterable, Hashable {
         case home
+        case dock
+        case appearance
+        case keyboard
+        case windows
         case apps
         case tools
         case binaries
@@ -27,6 +31,14 @@ struct MainView: View {
             switch self {
             case .home:
                 return "Home"
+            case .dock:
+                return "Dock"
+            case .appearance:
+                return "Appearance"
+            case .keyboard:
+                return "Keyboard"
+            case .windows:
+                return "Windows"
             case .apps:
                 return "Apps"
             case .tools:
@@ -46,6 +58,14 @@ struct MainView: View {
             switch self {
             case .home:
                 return "house.fill"
+            case .dock:
+                return "dock.rectangle"
+            case .appearance:
+                return "circle.lefthalf.filled.inverse"
+            case .keyboard:
+                return "keyboard"
+            case .windows:
+                return "macwindow.on.rectangle"
             case .apps:
                 return "square.grid.2x2.fill"
             case .tools:
@@ -65,6 +85,14 @@ struct MainView: View {
             switch self {
             case .home:
                 return .orange
+            case .dock:
+                return .green
+            case .appearance:
+                return Color(red: 0.76, green: 0.45, blue: 0.20)
+            case .keyboard:
+                return .yellow
+            case .windows:
+                return Color(red: 0.20, green: 0.58, blue: 0.86)
             case .apps:
                 return .blue
             case .tools:
@@ -133,6 +161,14 @@ struct MainView: View {
         switch selection {
         case .home:
             HomeScreen()
+        case .dock:
+            DockScreen()
+        case .appearance:
+            AppearanceScreen()
+        case .keyboard:
+            KeyboardScreen()
+        case .windows:
+            WindowsScreen()
         case .apps:
             AppsScreen(
                 stateManager: appStateManager,

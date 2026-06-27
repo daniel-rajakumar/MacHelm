@@ -28,6 +28,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/AppearanceScreen.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/AppsScreen.swift"
         },
         {
@@ -40,7 +44,15 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/DockScreen.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/HomeScreen.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/KeyboardScreen.swift"
         },
         {
           "kind" : "file",
@@ -92,6 +104,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/WindowsScreen.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
         },
         {
@@ -104,10 +120,13 @@
       "moduleOutputPath" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/Modules/MacHelm.swiftmodule",
       "objects" : [
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppStateManager.swift.o",
+        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppearanceScreen.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppsScreen.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/BinariesScreen.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DirectoryWatcher.swift.o",
+        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DockScreen.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/HomeScreen.swift.o",
+        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/KeyboardScreen.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/MacHelmApp.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/MacSettingsStyle.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/MainView.swift.o",
@@ -119,7 +138,8 @@
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/StoreScreen.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/SystemScreen.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/ToolsScreen.swift.o",
-        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/UserConfigExporter.swift.o"
+        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/UserConfigExporter.swift.o",
+        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/WindowsScreen.swift.o"
       ],
       "otherArguments" : [
         "-target",
@@ -184,6 +204,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppearanceScreen.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppsScreen.swift.o"
         },
         {
@@ -196,7 +220,15 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DockScreen.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/HomeScreen.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/KeyboardScreen.swift.o"
         },
         {
           "kind" : "file",
@@ -248,16 +280,23 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/WindowsScreen.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/Modules/MacHelm.swiftmodule"
         }
       ],
       "prepareForIndexing" : false,
       "sources" : [
         "/Users/danielrajakumar/code/MacHelm/app/Sources/AppStateManager.swift",
+        "/Users/danielrajakumar/code/MacHelm/app/Sources/AppearanceScreen.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/AppsScreen.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/BinariesScreen.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/DirectoryWatcher.swift",
+        "/Users/danielrajakumar/code/MacHelm/app/Sources/DockScreen.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/HomeScreen.swift",
+        "/Users/danielrajakumar/code/MacHelm/app/Sources/KeyboardScreen.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/MacHelmApp.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/MacSettingsStyle.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/MainView.swift",
@@ -269,7 +308,8 @@
         "/Users/danielrajakumar/code/MacHelm/app/Sources/StoreScreen.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/SystemScreen.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/ToolsScreen.swift",
-        "/Users/danielrajakumar/code/MacHelm/app/Sources/UserConfigExporter.swift"
+        "/Users/danielrajakumar/code/MacHelm/app/Sources/UserConfigExporter.swift",
+        "/Users/danielrajakumar/code/MacHelm/app/Sources/WindowsScreen.swift"
       ],
       "tempsPath" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build",
       "wholeModuleOptimization" : false
@@ -287,10 +327,13 @@
       "app",
       "-c",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/AppStateManager.swift",
+      "/Users/danielrajakumar/code/MacHelm/app/Sources/AppearanceScreen.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/AppsScreen.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/BinariesScreen.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/DirectoryWatcher.swift",
+      "/Users/danielrajakumar/code/MacHelm/app/Sources/DockScreen.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/HomeScreen.swift",
+      "/Users/danielrajakumar/code/MacHelm/app/Sources/KeyboardScreen.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/MacHelmApp.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/MacSettingsStyle.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/MainView.swift",
@@ -303,6 +346,7 @@
       "/Users/danielrajakumar/code/MacHelm/app/Sources/SystemScreen.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/ToolsScreen.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/UserConfigExporter.swift",
+      "/Users/danielrajakumar/code/MacHelm/app/Sources/WindowsScreen.swift",
       "-I",
       "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/Modules",
       "-target",
@@ -406,6 +450,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/AppearanceScreen.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/AppsScreen.swift"
         },
         {
@@ -418,7 +466,15 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/DockScreen.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/HomeScreen.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/KeyboardScreen.swift"
         },
         {
           "kind" : "file",
@@ -467,6 +523,10 @@
         {
           "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/UserConfigExporter.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/WindowsScreen.swift"
         }
       ],
       "outputFilePath" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/sources"
@@ -484,6 +544,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppearanceScreen.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/AppsScreen.swift.o"
         },
         {
@@ -496,7 +560,15 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DockScreen.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/HomeScreen.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/KeyboardScreen.swift.o"
         },
         {
           "kind" : "file",
@@ -545,6 +617,10 @@
         {
           "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/UserConfigExporter.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/WindowsScreen.swift.o"
         }
       ],
       "outputFilePath" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.product/Objects.LinkFileList"

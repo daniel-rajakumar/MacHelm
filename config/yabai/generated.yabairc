@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+
+YABAI_BIN="${YABAI_BIN:-$(command -v yabai || true)}"
+
+if [ -z "$YABAI_BIN" ]; then
+  exit 0
+fi
+
+"$YABAI_BIN" -m config layout bsp
+"$YABAI_BIN" -m config auto_balance off
+"$YABAI_BIN" -m config split_ratio 0.50
+"$YABAI_BIN" -m config window_placement second_child
+"$YABAI_BIN" -m config mouse_follows_focus off
+"$YABAI_BIN" -m config focus_follows_mouse off
+
+"$YABAI_BIN" -m config mouse_modifier fn
+"$YABAI_BIN" -m config mouse_action1 move
+"$YABAI_BIN" -m config mouse_action2 resize
+"$YABAI_BIN" -m config mouse_drop_action swap
+
+"$YABAI_BIN" -m config top_padding 12
+"$YABAI_BIN" -m config bottom_padding 12
+"$YABAI_BIN" -m config left_padding 12
+"$YABAI_BIN" -m config right_padding 12
+"$YABAI_BIN" -m config window_gap 10
+
+"$YABAI_BIN" -m rule --add app="^System Settings$" manage=off
+"$YABAI_BIN" -m rule --add app="^Finder$" manage=off
+"$YABAI_BIN" -m rule --add app="^Activity Monitor$" manage=off
+"$YABAI_BIN" -m rule --add app="^Archive Utility$" manage=off

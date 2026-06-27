@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }: {
   home.username = "danielrajakumar";
   home.homeDirectory = "/Users/danielrajakumar";
   home.stateVersion = "23.11";
@@ -9,6 +9,7 @@
     pkgs.fzf
     pkgs.ripgrep
     pkgs.starship
+    pkgs.yabai
   ];
 
   # Dotfiles / Program configurations
@@ -31,5 +32,27 @@
     enable = true;
     settings.user.email = "daniel@example.com";
     settings.user.name = "Daniel Rajakumar";
+  };
+
+  home.file.".config/yabai/yabairc" = {
+    source = ../config/yabai/yabairc;
+    executable = true;
+  };
+
+  home.file.".config/yabai/generated.yabairc" = {
+    source = ../config/yabai/generated.yabairc;
+    executable = true;
+  };
+
+  home.file.".config/yabai/settings.json" = {
+    source = ../config/yabai/settings.json;
+  };
+
+  home.file.".yabairc" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env sh
+      exec "${config.home.homeDirectory}/.config/yabai/yabairc"
+    '';
   };
 }
