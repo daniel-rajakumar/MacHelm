@@ -22,10 +22,10 @@
     {
       "appPattern" : "^MacHelm$",
       "enabled" : true,
-      "id" : "A22E384C-D32F-4CFA-8A39-8684AFAEF2E0",
+      "id" : "5C16778D-59D2-4306-A372-A9165737DC34",
       "label" : "machelm-custom-rule-machelm-custom-rule-9716BFAC-E139-425B-9200-4AA8A8C3CD21-machelm-machelm-custom-rule-9716bfac-e139-425b-9200-4aa8a8c3cd21-machelm",
       "manage" : true,
-      "name" : "machelm",
+      "name" : "machelm-custom-rule-machelm-custom-rule-9716BFAC-E139-425B-9200-4AA8A8C3CD21-machelm-machelm-custom-rule-9716bfac-e139-425b-9200-4aa8a8c3cd21-machelm",
       "titlePattern" : ""
     }
   ],
@@ -50,7 +50,7 @@
   "mouseAction1" : "move",
   "mouseAction2" : "resize",
   "mouseDropAction" : "swap",
-  "mouseFollowsFocus" : false,
+  "mouseFollowsFocus" : true,
   "mouseModifier" : "fn",
   "normalWindowOpacity" : 0.9,
   "rightPadding" : 12,

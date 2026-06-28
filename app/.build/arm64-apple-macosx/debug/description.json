@@ -48,6 +48,14 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/GitHubSyncManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/GitHubSyncScreen.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/HomeScreen.swift"
         },
         {
@@ -129,6 +137,8 @@
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/BinariesScreen.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DirectoryWatcher.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DockScreen.swift.o",
+        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/GitHubSyncManager.swift.o",
+        "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/GitHubSyncScreen.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/HomeScreen.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/KeyboardScreen.swift.o",
         "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/MacHelmApp.swift.o",
@@ -167,7 +177,6 @@
         "-entry-point-function-name",
         "-Xfrontend",
         "MacHelm_main",
-        "-color-diagnostics",
         "-swift-version",
         "5",
         "-plugin-path",
@@ -227,6 +236,14 @@
         {
           "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DockScreen.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/GitHubSyncManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/GitHubSyncScreen.swift.o"
         },
         {
           "kind" : "file",
@@ -305,6 +322,8 @@
         "/Users/danielrajakumar/code/MacHelm/app/Sources/BinariesScreen.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/DirectoryWatcher.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/DockScreen.swift",
+        "/Users/danielrajakumar/code/MacHelm/app/Sources/GitHubSyncManager.swift",
+        "/Users/danielrajakumar/code/MacHelm/app/Sources/GitHubSyncScreen.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/HomeScreen.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/KeyboardScreen.swift",
         "/Users/danielrajakumar/code/MacHelm/app/Sources/MacHelmApp.swift",
@@ -343,6 +362,8 @@
       "/Users/danielrajakumar/code/MacHelm/app/Sources/BinariesScreen.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/DirectoryWatcher.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/DockScreen.swift",
+      "/Users/danielrajakumar/code/MacHelm/app/Sources/GitHubSyncManager.swift",
+      "/Users/danielrajakumar/code/MacHelm/app/Sources/GitHubSyncScreen.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/HomeScreen.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/KeyboardScreen.swift",
       "/Users/danielrajakumar/code/MacHelm/app/Sources/MacHelmApp.swift",
@@ -381,7 +402,6 @@
       "-entry-point-function-name",
       "-Xfrontend",
       "MacHelm_main",
-      "-color-diagnostics",
       "-swift-version",
       "5",
       "-plugin-path",
@@ -483,6 +503,14 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/GitHubSyncManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/GitHubSyncScreen.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/Sources/HomeScreen.swift"
         },
         {
@@ -578,6 +606,14 @@
         {
           "kind" : "file",
           "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DockScreen.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/GitHubSyncManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/GitHubSyncScreen.swift.o"
         },
         {
           "kind" : "file",

@@ -1,29 +1,3 @@
 [
-  {
-    "name" : "corepack",
-    "path" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin\/corepack",
-    "pathEntry" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin",
-    "resolvedPath" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/lib\/node_modules\/corepack\/dist\/corepack.js",
-    "source" : "Third-Party"
-  },
-  {
-    "name" : "node",
-    "path" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin\/node",
-    "pathEntry" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin",
-    "source" : "Third-Party"
-  },
-  {
-    "name" : "npm",
-    "path" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin\/npm",
-    "pathEntry" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin",
-    "resolvedPath" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/lib\/node_modules\/npm\/bin\/npm-cli.js",
-    "source" : "Third-Party"
-  },
-  {
-    "name" : "npx",
-    "path" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin\/npx",
-    "pathEntry" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin",
-    "resolvedPath" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/lib\/node_modules\/npm\/bin\/npx-cli.js",
-    "source" : "Third-Party"
-  }
+
 ]

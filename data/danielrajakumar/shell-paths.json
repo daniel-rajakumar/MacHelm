@@ -1,5 +1,6 @@
 [
-  "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin",
   "\/usr\/bin",
-  "\/bin"
+  "\/bin",
+  "\/usr\/sbin",
+  "\/sbin"
 ]

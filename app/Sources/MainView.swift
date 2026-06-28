@@ -17,22 +17,25 @@ struct MainView: View {
     @State private var showsSettingsTree = false
     @State private var windowsSection: WindowsScreen.Section = .overview
     @State private var settingsCategory: SettingsScreen.Category = .general
+    @State private var sidebarSearchText = ""
     @State private var hasPreloadedData = false
     @State private var isRebuilding = false
     @StateObject private var appStateManager = AppStateManager()
     @StateObject private var storeManager = StoreManager()
     @StateObject private var appsModel = AppsScreenModel()
+    @StateObject private var syncManager = GitHubSyncManager()
 
     enum SidebarItem: String, CaseIterable, Hashable {
         case home
-        case dock
-        case appearance
-        case keyboard
-        case windows
         case apps
+        case store
         case tools
         case binaries
-        case store
+        case windows
+        case keyboard
+        case sync
+        case dock
+        case appearance
         case system
         case settings
 
@@ -48,6 +51,8 @@ struct MainView: View {
                 return "Keyboard"
             case .windows:
                 return "Windows"
+            case .sync:
+                return "Sync"
             case .apps:
                 return "Apps"
             case .tools:
@@ -75,6 +80,8 @@ struct MainView: View {
                 return "keyboard"
             case .windows:
                 return "macwindow.on.rectangle"
+            case .sync:
+                return "arrow.triangle.2.circlepath"
             case .apps:
                 return "square.grid.2x2.fill"
             case .tools:
@@ -102,6 +109,8 @@ struct MainView: View {
                 return .yellow
             case .windows:
                 return Color(red: 0.20, green: 0.58, blue: 0.86)
+            case .sync:
+                return .teal
             case .apps:
                 return .blue
             case .tools:
@@ -129,11 +138,12 @@ struct MainView: View {
                 showsWindowsTree: $showsWindowsTree,
                 settingsCategory: $settingsCategory,
                 showsSettingsTree: $showsSettingsTree,
+                searchText: $sidebarSearchText,
+                syncManager: syncManager,
                 isRebuilding: isRebuilding,
-                rebuildAction: rebuildApp,
-                relaunchAction: relaunchApp
+                updateAction: updateApp
             )
-            .frame(width: 215)
+            .frame(width: 222)
             .clipped()
             .zIndex(1)
 
@@ -142,13 +152,13 @@ struct MainView: View {
                 .clipped()
                 .zIndex(0)
         }
-        .background(Color(red: 0.118, green: 0.118, blue: 0.122))
+        .background(Color(NSColor.windowBackgroundColor))
         .background(WindowChromeConfigurator())
         .ignoresSafeArea(.container, edges: .top)
         .frame(
             minWidth: 720,
             idealWidth: 720,
-            maxWidth: 720,
+            maxWidth: 860,
             minHeight: 660,
             idealHeight: 740
         )
@@ -215,10 +225,12 @@ struct MainView: View {
             BinariesScreen()
         case .store:
             StoreScreen(storeManager: storeManager, stateManager: appStateManager)
+        case .sync:
+            SettingsScreen(selectedCategory: .constant(.github), syncManager: syncManager)
         case .system:
-            SettingsScreen(selectedCategory: $settingsCategory)
+            SettingsScreen(selectedCategory: $settingsCategory, syncManager: syncManager)
         case .settings:
-            SettingsScreen(selectedCategory: $settingsCategory)
+            SettingsScreen(selectedCategory: $settingsCategory, syncManager: syncManager)
         }
     }
 
@@ -229,7 +241,7 @@ struct MainView: View {
                 return showToolsTab
             case .binaries:
                 return showBinariesTab
-            case .settings:
+            case .dock, .appearance, .settings:
                 return false
             default:
                 return true
@@ -240,6 +252,13 @@ struct MainView: View {
     private func normalizeSelection() {
         if selection == .settings {
             selection = .system
+        }
+
+        if selection == .dock || selection == .appearance {
+            selection = .home
+            showsAppsTree = false
+            showsWindowsTree = false
+            showsSettingsTree = false
         }
 
         if selection == .tools && !showToolsTab {
@@ -298,75 +317,49 @@ struct MainView: View {
         persistedSettingsCategoryRawValue = settingsCategory.rawValue
     }
     
-    private func rebuildApp() {
+    private func updateApp() {
         guard !isRebuilding else { return }
         isRebuilding = true
 
-        let appDirectory = "/Users/danielrajakumar/code/MacHelm/app"
-        let buildTask = Process()
-        buildTask.executableURL = URL(fileURLWithPath: "/bin/zsh")
-        buildTask.arguments = ["-lc", "cd '\(appDirectory)' && swift build >/tmp/machelm-rebuild.log 2>&1"]
+        let repoDirectory = "/Users/danielrajakumar/code/MacHelm"
+        let updateTask = Process()
+        updateTask.executableURL = URL(fileURLWithPath: "/bin/zsh")
+        updateTask.arguments = ["-lc", "cd '\(repoDirectory)' && ./scripts/build-app-bundle.sh >/tmp/machelm-update.log 2>&1"]
 
-        buildTask.terminationHandler = { process in
+        updateTask.terminationHandler = { process in
             DispatchQueue.main.async {
                 isRebuilding = false
                 if process.terminationStatus != 0 {
-                    print("Background rebuild failed; see /tmp/machelm-rebuild.log")
-                }
-            }
-        }
-
-        do {
-            try buildTask.run()
-        } catch {
-            isRebuilding = false
-            print("Failed to start background rebuild: \(error)")
-        }
-    }
-
-    private func relaunchApp() {
-        guard !isRebuilding else { return }
-
-        if Bundle.main.bundleURL.pathExtension == "app" {
-            let configuration = NSWorkspace.OpenConfiguration()
-            configuration.activates = true
-            configuration.createsNewApplicationInstance = true
-
-            NSWorkspace.shared.openApplication(
-                at: Bundle.main.bundleURL,
-                configuration: configuration
-            ) { _, error in
-                if let error {
-                    print("Failed to relaunch app bundle: \(error)")
+                    print("App update failed; see /tmp/machelm-update.log")
                     return
                 }
 
-                DispatchQueue.main.async {
-                    NSApplication.shared.terminate(nil)
+                let configuration = NSWorkspace.OpenConfiguration()
+                configuration.activates = true
+                configuration.createsNewApplicationInstance = true
+                let bundleURL = URL(fileURLWithPath: "/Users/danielrajakumar/Applications/MacHelm.app")
+
+                NSWorkspace.shared.openApplication(
+                    at: bundleURL,
+                    configuration: configuration
+                ) { _, error in
+                    if let error {
+                        print("Failed to relaunch updated app: \(error)")
+                        return
+                    }
+
+                    DispatchQueue.main.async {
+                        NSApplication.shared.terminate(nil)
+                    }
                 }
             }
-            return
         }
 
-        let executablePath = Bundle.main.executablePath ?? "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm"
-        let logPath = "/tmp/machelm-relaunch.log"
-        FileManager.default.createFile(atPath: logPath, contents: nil)
-        let relaunchTask = Process()
-        relaunchTask.executableURL = URL(fileURLWithPath: "/usr/bin/nohup")
-        relaunchTask.arguments = [
-            executablePath
-        ]
-        relaunchTask.standardOutput = FileHandle(forWritingAtPath: logPath)
-        relaunchTask.standardError = FileHandle(forWritingAtPath: logPath)
-
         do {
-            try relaunchTask.run()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
-                NSApplication.shared.terminate(nil)
-            }
+            try updateTask.run()
         } catch {
-            print("Failed to relaunch debug build: \(error)")
-            return
+            isRebuilding = false
+            print("Failed to start app update: \(error)")
         }
     }
 }
@@ -409,6 +402,18 @@ private struct WindowChromeConfigurator: NSViewRepresentable {
     }
 }
 
+private struct SidebarVisualEffectView: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSVisualEffectView {
+        let view = NSVisualEffectView()
+        view.material = .sidebar
+        view.blendingMode = .behindWindow
+        view.state = .followsWindowActiveState
+        return view
+    }
+
+    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {}
+}
+
 private struct MacSidebar: View {
     private enum NavigationDirection {
         case forward
@@ -423,31 +428,22 @@ private struct MacSidebar: View {
     @Binding var showsWindowsTree: Bool
     @Binding var settingsCategory: SettingsScreen.Category
     @Binding var showsSettingsTree: Bool
+    @Binding var searchText: String
+    @ObservedObject var syncManager: GitHubSyncManager
     @State private var navigationDirection: NavigationDirection = .forward
     let isRebuilding: Bool
-    let rebuildAction: () -> Void
-    let relaunchAction: () -> Void
+    let updateAction: () -> Void
 
     var body: some View {
         ZStack {
-            Color(red: 0.117, green: 0.117, blue: 0.12)
-
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Color(red: 0.121, green: 0.121, blue: 0.124))
-                .padding(.leading, 10)
-                .padding(.trailing, 8)
-                .padding(.top, 10)
-                .padding(.bottom, 8)
-
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .stroke(Color.white.opacity(0.12), lineWidth: 1)
-                .padding(.leading, 10)
-                .padding(.trailing, 8)
-                .padding(.top, 10)
-                .padding(.bottom, 8)
+            SidebarVisualEffectView()
+                .ignoresSafeArea()
 
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 0) {
+                    MacInlineSearchField(prompt: "Search", text: $searchText)
+                        .padding(.bottom, 12)
+
                     ZStack(alignment: .topLeading) {
                         if showsAppsTree {
                             AppsTreeSidebar(
@@ -490,44 +486,42 @@ private struct MacSidebar: View {
                             .transition(sidebarTransition)
                         } else {
                             VStack(alignment: .leading, spacing: 4) {
-                                ForEach(items, id: \.self) { item in
+                                ForEach(filteredItems, id: \.self) { item in
                                     SidebarNavButton(
                                         item: item,
-                                        isSelected: selection == item
+                                        isSelected: selection == item && !(item == .system && settingsCategory == .github)
                                     ) {
                                         if item == .apps {
                                             navigationDirection = .forward
+                                            selection = .apps
                                             withAnimation(sidebarTransitionAnimation) {
-                                                selection = .apps
                                                 showsAppsTree = true
                                                 showsWindowsTree = false
                                                 showsSettingsTree = false
                                             }
                                         } else if item == .windows {
                                             navigationDirection = .forward
+                                            selection = .windows
+                                            windowsSection = .overview
                                             withAnimation(sidebarTransitionAnimation) {
-                                                selection = .windows
-                                                windowsSection = .overview
                                                 showsWindowsTree = true
                                                 showsAppsTree = false
                                                 showsSettingsTree = false
                                             }
                                         } else if item == .system {
                                             navigationDirection = .forward
+                                            selection = .system
+                                            settingsCategory = .general
                                             withAnimation(sidebarTransitionAnimation) {
-                                                selection = .system
-                                                settingsCategory = .general
                                                 showsSettingsTree = true
                                                 showsAppsTree = false
                                                 showsWindowsTree = false
                                             }
                                         } else {
-                                            withAnimation(sidebarTransitionAnimation) {
-                                                selection = item
-                                                showsAppsTree = false
-                                                showsWindowsTree = false
-                                                showsSettingsTree = false
-                                            }
+                                            selection = item
+                                            showsAppsTree = false
+                                            showsWindowsTree = false
+                                            showsSettingsTree = false
                                         }
                                     }
                                 }
@@ -535,43 +529,52 @@ private struct MacSidebar: View {
                             .transition(sidebarTransition)
                         }
                     }
-                    .padding(.top, 48)
+                    .padding(.top, 0)
                 }
-                .padding(.horizontal, 18)
-                .padding(.bottom, 24)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 96)
             }
+            .padding(.top, 52)
 
             VStack {
                 HStack(spacing: 10) {
                     Spacer()
 
-                    Button(action: rebuildAction) {
+                    Button(action: updateAction) {
                         if isRebuilding {
                             ProgressView()
                                 .controlSize(.small)
                         } else {
-                            Image(systemName: "hammer")
-                                .font(.system(size: 11, weight: .semibold))
+                            Image(systemName: "arrow.clockwise")
+                                .font(.system(size: 12, weight: .semibold))
                         }
                     }
-                    .help(isRebuilding ? "Rebuilding MacHelm..." : "Rebuild MacHelm")
-                    .disabled(isRebuilding)
-                    .controlSize(.small)
-                    .buttonStyle(.plain)
-
-                    Button(action: relaunchAction) {
-                        Image(systemName: "arrow.clockwise")
-                            .font(.system(size: 11, weight: .semibold))
-                    }
-                    .help("Relaunch MacHelm")
+                    .help(isRebuilding ? "Updating MacHelm..." : "Update App")
                     .disabled(isRebuilding)
                     .controlSize(.small)
                     .buttonStyle(.plain)
                 }
-                .padding(.top, 21)
-                .padding(.trailing, 18)
+                .padding(.top, 18)
+                .padding(.trailing, 14)
 
                 Spacer()
+            }
+
+            VStack {
+                Spacer()
+
+                GitHubAccountSidebarButton(
+                    syncManager: syncManager,
+                    isSelected: selection == .sync || (selection == .system && settingsCategory == .github)
+                ) {
+                    navigationDirection = .forward
+                    selection = .sync
+                    showsSettingsTree = false
+                    showsAppsTree = false
+                    showsWindowsTree = false
+                }
+                .padding(.horizontal, 12)
+                .padding(.bottom, 14)
             }
         }
         .ignoresSafeArea(.container, edges: .top)
@@ -579,6 +582,12 @@ private struct MacSidebar: View {
 
     private var sidebarTransitionAnimation: Animation {
         .spring(response: 0.28, dampingFraction: 0.9)
+    }
+
+    private var filteredItems: [MainView.SidebarItem] {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else { return items }
+        return items.filter { $0.title.localizedCaseInsensitiveContains(query) }
     }
 
     private var sidebarTransition: AnyTransition {
@@ -609,16 +618,16 @@ private struct AppsTreeSidebar: View {
                 HStack(spacing: 8) {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 10, weight: .semibold))
-                    Text("App")
+                    Text("Apps")
                         .font(.system(size: 11.5, weight: .medium))
                     Spacer()
                 }
-                .foregroundColor(Color.white.opacity(0.78))
+                .foregroundColor(.secondary)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
                 .background(
                     RoundedRectangle(cornerRadius: 9, style: .continuous)
-                        .fill(Color.white.opacity(0.06))
+                        .fill(Color.primary.opacity(0.06))
                 )
             }
             .buttonStyle(.plain)
@@ -639,6 +648,97 @@ private struct AppsTreeSidebar: View {
     }
 }
 
+private struct GitHubAccountSidebarButton: View {
+    @ObservedObject var syncManager: GitHubSyncManager
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 11) {
+                avatar
+
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(primaryText)
+                        .font(.system(size: 13.5, weight: .semibold))
+                        .foregroundColor(.primary)
+                        .lineLimit(1)
+
+                    Text(secondaryText)
+                        .font(.system(size: 12.5, weight: .semibold))
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+                }
+
+                Spacer(minLength: 0)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 8)
+            .background(
+                RoundedRectangle(cornerRadius: 7, style: .continuous)
+                    .fill(isSelected ? Color.primary.opacity(0.12) : Color.clear)
+            )
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .help("GitHub account")
+    }
+
+    @ViewBuilder
+    private var avatar: some View {
+        if let avatarURL = syncManager.avatarURL {
+            AsyncImage(url: avatarURL) { phase in
+                switch phase {
+                case .success(let image):
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 44, height: 44)
+                        .clipShape(Circle())
+                default:
+                    avatarPlaceholder
+                }
+            }
+        } else {
+            avatarPlaceholder
+        }
+    }
+
+    private var avatarPlaceholder: some View {
+        ZStack {
+            Circle()
+                .fill(Color.primary.opacity(0.1))
+            Image(systemName: syncManager.authState == .signedIn ? "person.crop.circle.fill" : "person.crop.circle.badge.plus")
+                .font(.system(size: 24, weight: .regular))
+                .foregroundColor(.secondary)
+        }
+        .frame(width: 44, height: 44)
+    }
+
+    private var primaryText: String {
+        switch syncManager.authState {
+        case .signedIn:
+            return syncManager.displayName ?? syncManager.username ?? "GitHub User"
+        case .authorizing:
+            return "GitHub"
+        case .signedOut:
+            return "GitHub"
+        }
+    }
+
+    private var secondaryText: String {
+        switch syncManager.authState {
+        case .signedIn:
+            return "GitHub Account"
+        case .authorizing:
+            return "Authorizing..."
+        case .signedOut:
+            return "Sign in"
+        }
+    }
+}
+
 private struct SettingsTreeSidebar: View {
     @Binding var selection: MainView.SidebarItem
     @Binding var settingsCategory: SettingsScreen.Category
@@ -655,12 +755,12 @@ private struct SettingsTreeSidebar: View {
                         .font(.system(size: 11.5, weight: .medium))
                     Spacer()
                 }
-                .foregroundColor(Color.white.opacity(0.78))
+                .foregroundColor(.secondary)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
                 .background(
                     RoundedRectangle(cornerRadius: 9, style: .continuous)
-                        .fill(Color.white.opacity(0.06))
+                        .fill(Color.primary.opacity(0.06))
                 )
             }
             .buttonStyle(.plain)
@@ -706,12 +806,12 @@ private struct WindowsTreeSidebar: View {
                         .font(.system(size: 11.5, weight: .medium))
                     Spacer()
                 }
-                .foregroundColor(Color.white.opacity(0.78))
+                .foregroundColor(.secondary)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
                 .background(
                     RoundedRectangle(cornerRadius: 9, style: .continuous)
-                        .fill(Color.white.opacity(0.06))
+                        .fill(Color.primary.opacity(0.06))
                 )
             }
             .buttonStyle(.plain)
@@ -752,18 +852,18 @@ private struct AppFilterSidebarButton: View {
                 SidebarMonoIcon(symbol: iconName, isSelected: isSelected)
 
                 Text(category.rawValue)
-                    .font(.system(size: 12.5, weight: isSelected ? .semibold : .regular))
-                    .foregroundColor(.white)
+                    .font(.system(size: 13, weight: isSelected ? .medium : .regular))
+                    .foregroundColor(.primary)
                     .lineLimit(1)
 
                 Spacer()
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 10)
+            .padding(.horizontal, 8)
             .padding(.vertical, 5)
             .background(
-                RoundedRectangle(cornerRadius: 11, style: .continuous)
-                    .fill(isSelected ? Color(red: 0.27, green: 0.63, blue: 0.18) : Color.clear)
+                RoundedRectangle(cornerRadius: 7, style: .continuous)
+                    .fill(isSelected ? Color.primary.opacity(0.12) : Color.clear)
             )
             .contentShape(Rectangle())
         }
@@ -797,20 +897,20 @@ private struct SidebarNavButton: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 12) {
-                SidebarMonoIcon(symbol: item.symbol, isSelected: isSelected)
+                SettingsSidebarIcon(symbol: item.symbol, color: item.color, size: 26)
 
                 Text(item.title)
-                    .font(.system(size: 12.5, weight: isSelected ? .semibold : .regular))
-                    .foregroundColor(.white)
+                    .font(.system(size: 13, weight: isSelected ? .medium : .regular))
+                    .foregroundColor(.primary)
 
                 Spacer()
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 10)
+            .padding(.horizontal, 8)
             .padding(.vertical, 5)
             .background(
-                RoundedRectangle(cornerRadius: 11, style: .continuous)
-                    .fill(isSelected ? Color(red: 0.27, green: 0.63, blue: 0.18) : Color.clear)
+                RoundedRectangle(cornerRadius: 7, style: .continuous)
+                    .fill(isSelected ? Color.primary.opacity(0.12) : Color.clear)
             )
             .contentShape(Rectangle())
         }
@@ -829,18 +929,18 @@ private struct SettingsSidebarButton: View {
                 SidebarMonoIcon(symbol: category.symbol, isSelected: isSelected)
 
                 Text(category.title)
-                    .font(.system(size: 12.5, weight: isSelected ? .semibold : .regular))
-                    .foregroundColor(.white)
+                    .font(.system(size: 13, weight: isSelected ? .medium : .regular))
+                    .foregroundColor(.primary)
                     .lineLimit(1)
 
                 Spacer()
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 10)
+            .padding(.horizontal, 8)
             .padding(.vertical, 5)
             .background(
-                RoundedRectangle(cornerRadius: 11, style: .continuous)
-                    .fill(isSelected ? Color(red: 0.27, green: 0.63, blue: 0.18) : Color.clear)
+                RoundedRectangle(cornerRadius: 7, style: .continuous)
+                    .fill(isSelected ? Color.primary.opacity(0.12) : Color.clear)
             )
             .contentShape(Rectangle())
         }
@@ -859,18 +959,18 @@ private struct WindowsSidebarButton: View {
                 SidebarMonoIcon(symbol: section.symbol, isSelected: isSelected)
 
                 Text(section.title)
-                    .font(.system(size: 12.5, weight: isSelected ? .semibold : .regular))
-                    .foregroundColor(.white)
+                    .font(.system(size: 13, weight: isSelected ? .medium : .regular))
+                    .foregroundColor(.primary)
                     .lineLimit(1)
 
                 Spacer()
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 10)
+            .padding(.horizontal, 8)
             .padding(.vertical, 5)
             .background(
-                RoundedRectangle(cornerRadius: 11, style: .continuous)
-                    .fill(isSelected ? Color(red: 0.27, green: 0.63, blue: 0.18) : Color.clear)
+                RoundedRectangle(cornerRadius: 7, style: .continuous)
+                    .fill(isSelected ? Color.primary.opacity(0.12) : Color.clear)
             )
             .contentShape(Rectangle())
         }
@@ -885,7 +985,7 @@ private struct SidebarMonoIcon: View {
     var body: some View {
         Image(systemName: symbol)
             .font(.system(size: 14, weight: .medium))
-            .foregroundColor(isSelected ? .white : Color.white.opacity(0.78))
+            .foregroundColor(isSelected ? .primary : .secondary)
             .frame(width: 18, height: 18)
             .symbolRenderingMode(.monochrome)
     }

@@ -616,6 +616,18 @@ final class WindowSettingsController: ObservableObject {
         writeWindowManager(value.rawValue, forKey: "AppWindowGroupingBehavior")
     }
 
+    func applyYabaiMouseFollowsFocus(_ value: Bool) {
+        updateYabaiSettings { settings in
+            settings.mouseFollowsFocus = value
+        }
+    }
+
+    func applyYabaiFocusFollowsMouse(_ value: YabaiManagedSettings.FocusFollowsMouseMode) {
+        updateYabaiSettings { settings in
+            settings.focusFollowsMouse = value
+        }
+    }
+
     var repoSettingsPath: String {
         repoYabaiSettingsURL.path
     }
@@ -723,6 +735,20 @@ final class WindowSettingsController: ObservableObject {
             print("Failed to save yabai settings: \(error)")
             isSavingYabaiSettings = false
         }
+    }
+
+    private func updateYabaiSettings(_ mutate: (inout YabaiManagedSettings) -> Void) {
+        let oldSettings = yabaiSettings
+        var newSettings = oldSettings
+        mutate(&newSettings)
+        guard newSettings != oldSettings else { return }
+
+        pendingYabaiLiveOperations = liveYabaiOperationsForChange(from: oldSettings, to: newSettings)
+        suppressAutomaticYabaiSync = true
+        yabaiSettings = newSettings
+        suppressAutomaticYabaiSync = false
+        hasUnsavedYabaiChanges = newSettings != persistedYabaiSettings
+        scheduleYabaiSettingsSync(delay: 0.05, liveOperations: pendingYabaiLiveOperations)
     }
 
     private func writeDock(_ value: Any, forKey key: String) {
@@ -1119,17 +1145,33 @@ final class WindowSettingsController: ObservableObject {
             let task = Process()
             task.executableURL = URL(fileURLWithPath: "/bin/zsh")
             task.arguments = ["-lc", "export PATH=\"\(RepoConfig.commandSearchPathString()):$PATH\"; \(command)"]
+            let errorPipe = Pipe()
+            task.standardError = errorPipe
+            var commandFailedMessage: String?
 
             do {
                 try task.run()
                 task.waitUntilExit()
+                let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+                let errorOutput = String(data: errorData, encoding: .utf8)?
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+
+                if task.terminationStatus != 0 {
+                    commandFailedMessage = errorOutput?.isEmpty == false
+                        ? "Command failed: \(errorOutput!)"
+                        : "Command failed"
+                }
             } catch {
-                print("Failed to run yabai command: \(error)")
+                commandFailedMessage = "Command failed: \(error.localizedDescription)"
             }
 
             DispatchQueue.main.async {
                 self.isRunningYabaiCommand = false
-                self.refreshYabaiStatus()
+                if let commandFailedMessage {
+                    self.yabaiStatusMessage = commandFailedMessage
+                } else {
+                    self.refreshYabaiStatus()
+                }
 
                 if self.hasUnsavedYabaiChanges {
                     self.scheduleYabaiSettingsSync(delay: 0.2, liveOperations: self.pendingYabaiLiveOperations)
@@ -2083,7 +2125,7 @@ struct WindowsScreen: View {
                     description: "Move the pointer to the focused window when focus changes.",
                     isOn: Binding(
                         get: { controller.yabaiSettings.mouseFollowsFocus },
-                        set: { controller.yabaiSettings.mouseFollowsFocus = $0 }
+                        set: { controller.applyYabaiMouseFollowsFocus($0) }
                     )
                 )
 
@@ -2097,7 +2139,7 @@ struct WindowsScreen: View {
                 } trailing: {
                     Picker("", selection: Binding(
                         get: { controller.yabaiSettings.focusFollowsMouse },
-                        set: { controller.yabaiSettings.focusFollowsMouse = $0 }
+                        set: { controller.applyYabaiFocusFollowsMouse($0) }
                     )) {
                         ForEach(YabaiManagedSettings.FocusFollowsMouseMode.allCases) { mode in
                             Text(mode.title).tag(mode)

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SystemScreen: View {
-    @State private var snapshot = UserConfigExporter.loadSnapshot()
+    @State private var snapshot: UserConfigSnapshot?
     @State private var dataWatcher: DirectoryWatcher?
     @State private var reloadWorkItem: DispatchWorkItem?
 
@@ -42,7 +42,7 @@ struct SystemScreen: View {
                 } trailing: {
                     HStack(spacing: 10) {
                         Button("Refresh Data") {
-                            snapshot = UserConfigExporter.loadSnapshot()
+                            loadSnapshot()
                         }
                         .buttonStyle(MacSecondaryButtonStyle())
 
@@ -98,7 +98,7 @@ struct SystemScreen: View {
         }
         .onAppear {
             startWatchingDataDirectory()
-            snapshot = UserConfigExporter.loadSnapshot()
+            loadSnapshot()
         }
         .onDisappear {
             reloadWorkItem?.cancel()
@@ -115,6 +115,15 @@ struct SystemScreen: View {
         }
         watcher.start()
         dataWatcher = watcher
+    }
+
+    private func loadSnapshot() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            let reloadedSnapshot = UserConfigExporter.loadSnapshot()
+            DispatchQueue.main.async {
+                snapshot = reloadedSnapshot
+            }
+        }
     }
 
     private func scheduleSnapshotReload() {

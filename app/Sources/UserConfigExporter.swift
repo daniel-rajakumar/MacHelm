@@ -349,6 +349,33 @@ enum UserConfigExporter {
         }
     }
 
+    static func saveSyncedSnapshot(_ snapshot: UserConfigSnapshot, for username: String = NSUserName()) {
+        do {
+            try ensureUserDirectoryExists(for: username)
+            try writeJSON(
+                UserMetadataSnapshot(
+                    username: snapshot.username,
+                    hostName: snapshot.hostName,
+                    generatedAt: snapshot.generatedAt,
+                    homeDirectory: snapshot.homeDirectory
+                ),
+                to: metadataFileURL(for: username)
+            )
+            try writeJSON(snapshot.installedApps, to: appsFileURL(for: username))
+            try writeJSON(snapshot.deletedApps, to: deletedAppsFileURL(for: username))
+            try writeJSON(snapshot.installedHomebrewCasks, to: homebrewCasksFileURL(for: username))
+            try writeJSON(snapshot.scanPaths, to: scanPathsFileURL(for: username))
+            try writeJSON(snapshot.terminalTools, to: terminalToolsFileURL(for: username))
+            try writeJSON(snapshot.shellPaths, to: shellPathsFileURL(for: username))
+            try writeJSON(snapshot.installedHomebrewFormulae, to: homebrewFormulaeFileURL(for: username))
+            try writeJSON(snapshot.manualHomebrewFormulae, to: homebrewManualFormulaeFileURL(for: username))
+            try writeJSON(snapshot.dependencyHomebrewFormulae, to: homebrewDependencyFormulaeFileURL(for: username))
+            try writeJSON(snapshot.thirdPartyTools, to: thirdPartyToolsFileURL(for: username))
+        } catch {
+            print("Failed to write synced user config snapshot: \(error)")
+        }
+    }
+
     static func writeSnapshot(
         apps: [InstalledApp],
         deletedApps: [DeletedApp],

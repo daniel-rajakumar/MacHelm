@@ -3,7 +3,7 @@ import SwiftUI
 struct ToolsScreen: View {
     private static var lastAutoRefreshAt: Date?
     @AppStorage("machelm.autoRefreshToolsOnOpen") private var autoRefreshOnOpen = true
-    @State private var inventory = UserConfigExporter.loadToolInventory()
+    @State private var inventory: ToolInventorySnapshot?
     @State private var searchText = ""
     @State private var isRefreshing = false
     @State private var dataWatcher: DirectoryWatcher?
@@ -36,10 +36,10 @@ struct ToolsScreen: View {
         .background(Color(NSColor.windowBackgroundColor))
         .onAppear {
             startWatchingDataDirectory()
-            if inventory == nil || shouldAutoRefreshOnAppear {
-                refreshInventory()
-            } else {
-                inventory = UserConfigExporter.loadToolInventory()
+            loadInventory {
+                if inventory == nil || shouldAutoRefreshOnAppear {
+                    refreshInventory()
+                }
             }
         }
         .onDisappear {
@@ -167,6 +167,16 @@ struct ToolsScreen: View {
             DispatchQueue.main.async {
                 inventory = reloadedInventory
                 isRefreshing = false
+            }
+        }
+    }
+
+    private func loadInventory(completion: (() -> Void)? = nil) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            let reloadedInventory = UserConfigExporter.loadToolInventory()
+            DispatchQueue.main.async {
+                inventory = reloadedInventory
+                completion?()
             }
         }
     }

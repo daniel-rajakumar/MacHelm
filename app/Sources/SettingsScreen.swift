@@ -22,6 +22,7 @@ struct SettingsScreen: View {
         case general
         case refresh
         case sidebar
+        case github
         case data
         case support
 
@@ -35,6 +36,8 @@ struct SettingsScreen: View {
                 return "Refresh"
             case .sidebar:
                 return "Sidebar"
+            case .github:
+                return "GitHub"
             case .data:
                 return "Data"
             case .support:
@@ -50,6 +53,8 @@ struct SettingsScreen: View {
                 return "arrow.clockwise"
             case .sidebar:
                 return "sidebar.left"
+            case .github:
+                return "person.crop.circle"
             case .data:
                 return "externaldrive"
             case .support:
@@ -57,11 +62,28 @@ struct SettingsScreen: View {
             }
         }
 
+        var iconColor: Color {
+            switch self {
+            case .general:
+                return Color(red: 0.72, green: 0.72, blue: 0.74)
+            case .refresh:
+                return .blue
+            case .sidebar:
+                return .indigo
+            case .github:
+                return Color(red: 0.18, green: 0.18, blue: 0.2)
+            case .data:
+                return .teal
+            case .support:
+                return .orange
+            }
+        }
+
         var group: Group {
             switch self {
             case .general, .refresh, .sidebar:
                 return .preferences
-            case .data:
+            case .github, .data:
                 return .workspace
             case .support:
                 return .system
@@ -76,6 +98,8 @@ struct SettingsScreen: View {
                 return "Control automatic inventory refresh for tools and binaries."
             case .sidebar:
                 return "Choose which management tabs are visible in the main sidebar."
+            case .github:
+                return "Sync your MacHelm configuration across Macs with GitHub."
             case .data:
                 return "Inspect repo-backed data paths and current exported inventory."
             case .support:
@@ -85,11 +109,12 @@ struct SettingsScreen: View {
     }
 
     @Binding var selectedCategory: Category
+    var syncManager: GitHubSyncManager? = nil
     @AppStorage("machelm.autoRefreshToolsOnOpen") private var autoRefreshToolsOnOpen = true
     @AppStorage("machelm.autoRefreshBinariesOnOpen") private var autoRefreshBinariesOnOpen = true
     @AppStorage("machelm.showToolsTab") private var showToolsTab = true
     @AppStorage("machelm.showBinariesTab") private var showBinariesTab = true
-    @State private var snapshot = UserConfigExporter.loadSnapshot()
+    @State private var snapshot: UserConfigSnapshot?
     @State private var dataWatcher: DirectoryWatcher?
     @State private var reloadWorkItem: DispatchWorkItem?
 
@@ -98,26 +123,21 @@ struct SettingsScreen: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 28) {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(selectedCategory.title)
-                        .font(.system(size: 24, weight: .semibold))
-                    Text(selectedCategory.subtitle)
-                        .font(.system(size: 13.5))
-                        .foregroundColor(.secondary)
-                }
+            VStack(alignment: .leading, spacing: 22) {
+                SettingsCategoryHeader(category: selectedCategory)
 
                 currentCategoryView
             }
-            .padding(.horizontal, 22)
-            .padding(.top, 24)
-            .padding(.bottom, 30)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 28)
+            .padding(.top, 28)
+            .padding(.bottom, 34)
+            .frame(maxWidth: 640, alignment: .leading)
+            .frame(maxWidth: .infinity)
         }
         .background(Color(NSColor.windowBackgroundColor))
         .onAppear {
             startWatchingDataDirectory()
-            snapshot = UserConfigExporter.loadSnapshot()
+            loadSnapshot()
         }
         .onDisappear {
             reloadWorkItem?.cancel()
@@ -135,6 +155,13 @@ struct SettingsScreen: View {
             refreshSettingsView
         case .sidebar:
             sidebarSettingsView
+        case .github:
+            if let syncManager = syncManager {
+                GitHubSyncScreen(syncManager: syncManager)
+            } else {
+                Text("Sync manager unavailable.")
+                    .foregroundColor(.secondary)
+            }
         case .data:
             dataSettingsView
         case .support:
@@ -143,7 +170,7 @@ struct SettingsScreen: View {
     }
 
     private var generalSettingsView: some View {
-        VStack(alignment: .leading, spacing: 24) {
+        VStack(alignment: .leading, spacing: 18) {
             SettingsDetailSection(title: "Overview") {
                 SettingsInfoRow(
                     title: "Current user",
@@ -183,7 +210,7 @@ struct SettingsScreen: View {
     }
 
     private var refreshSettingsView: some View {
-        VStack(alignment: .leading, spacing: 24) {
+        VStack(alignment: .leading, spacing: 18) {
             SettingsDetailSection(title: "Automatic Refresh") {
                 SettingsToggleDetailRow(
                     title: "Refresh Tools Automatically",
@@ -217,7 +244,7 @@ struct SettingsScreen: View {
     }
 
     private var sidebarSettingsView: some View {
-        VStack(alignment: .leading, spacing: 24) {
+        VStack(alignment: .leading, spacing: 18) {
             SettingsDetailSection(title: "Main Sidebar") {
                 SettingsToggleDetailRow(
                     title: "Show Tools Tab",
@@ -236,7 +263,7 @@ struct SettingsScreen: View {
     }
 
     private var dataSettingsView: some View {
-        VStack(alignment: .leading, spacing: 24) {
+        VStack(alignment: .leading, spacing: 18) {
             SettingsDetailSection(title: "Data Paths") {
                 SettingsActionRow(
                     title: "Shared data folder",
@@ -286,14 +313,14 @@ struct SettingsScreen: View {
     }
 
     private var supportSettingsView: some View {
-        VStack(alignment: .leading, spacing: 24) {
+        VStack(alignment: .leading, spacing: 18) {
             SettingsDetailSection(title: "Quick Actions") {
                 SettingsActionRow(
                     title: "Refresh snapshot",
                     description: "Reload the current repo-backed user snapshot from disk.",
                     buttonTitle: "Reload"
                 ) {
-                    snapshot = UserConfigExporter.loadSnapshot()
+                    loadSnapshot()
                 }
 
                 SettingsActionRow(
@@ -335,6 +362,15 @@ struct SettingsScreen: View {
         [showToolsTab, showBinariesTab].filter { $0 }.count
     }
 
+    private func loadSnapshot() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            let reloadedSnapshot = UserConfigExporter.loadSnapshot()
+            DispatchQueue.main.async {
+                snapshot = reloadedSnapshot
+            }
+        }
+    }
+
     private func startWatchingDataDirectory() {
         guard dataWatcher == nil else { return }
 
@@ -360,24 +396,51 @@ struct SettingsScreen: View {
     }
 }
 
-private struct SettingsDetailSection<Content: View>: View {
+struct SettingsDetailSection<Content: View>: View {
     let title: String
     @ViewBuilder let content: Content
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title.uppercased())
+        VStack(alignment: .leading, spacing: 7) {
+            Text(title)
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundColor(.secondary)
+                .padding(.horizontal, 2)
 
             VStack(spacing: 0) {
                 content
             }
             .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(Color(NSColor.controlBackgroundColor))
             )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(Color.primary.opacity(0.06), lineWidth: 1)
+            )
         }
+    }
+}
+
+private struct SettingsCategoryHeader: View {
+    let category: SettingsScreen.Category
+
+    var body: some View {
+        VStack(spacing: 8) {
+            SettingsSidebarIcon(symbol: category.symbol, color: category.iconColor, size: 52)
+
+            Text(category.title)
+                .font(.system(size: 24, weight: .semibold))
+
+            Text(category.subtitle)
+                .font(.system(size: 13))
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.top, 2)
+        .padding(.bottom, 2)
     }
 }
 
@@ -393,9 +456,9 @@ private struct SettingsToggleDetailRow: View {
                 HStack(alignment: .center, spacing: 14) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.system(size: 13.5, weight: .regular))
                         Text(description)
-                            .font(.system(size: 13))
+                            .font(.system(size: 12.5))
                             .foregroundColor(.secondary)
                     }
 
@@ -409,9 +472,9 @@ private struct SettingsToggleDetailRow: View {
                 VStack(alignment: .leading, spacing: 12) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.system(size: 13.5, weight: .regular))
                         Text(description)
-                            .font(.system(size: 13))
+                            .font(.system(size: 12.5))
                             .foregroundColor(.secondary)
                     }
 
@@ -423,8 +486,8 @@ private struct SettingsToggleDetailRow: View {
                     }
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 14)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
 
             if showsDivider {
                 MacSettingsDivider()
@@ -445,35 +508,35 @@ private struct SettingsInfoRow: View {
                 HStack(alignment: .center, spacing: 14) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.system(size: 13.5, weight: .regular))
                         Text(description)
-                            .font(.system(size: 13))
+                            .font(.system(size: 12.5))
                             .foregroundColor(.secondary)
                     }
 
                     Spacer(minLength: 12)
 
                     Text(value)
-                        .font(.system(size: 13, weight: .medium))
+                        .font(.system(size: 13, weight: .regular))
                         .foregroundColor(.secondary)
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.system(size: 13.5, weight: .regular))
                         Text(description)
-                            .font(.system(size: 13))
+                            .font(.system(size: 12.5))
                             .foregroundColor(.secondary)
                     }
 
                     Text(value)
-                        .font(.system(size: 13, weight: .medium))
+                        .font(.system(size: 13, weight: .regular))
                         .foregroundColor(.secondary)
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 14)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
 
             if showsDivider {
                 MacSettingsDivider()
@@ -495,9 +558,9 @@ private struct SettingsActionRow: View {
                 HStack(alignment: .center, spacing: 14) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.system(size: 13.5, weight: .regular))
                         Text(description)
-                            .font(.system(size: 13))
+                            .font(.system(size: 12.5))
                             .foregroundColor(.secondary)
                             .textSelection(.enabled)
                     }
@@ -511,9 +574,9 @@ private struct SettingsActionRow: View {
                 VStack(alignment: .leading, spacing: 12) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.system(size: 13.5, weight: .regular))
                         Text(description)
-                            .font(.system(size: 13))
+                            .font(.system(size: 12.5))
                             .foregroundColor(.secondary)
                             .textSelection(.enabled)
                     }
@@ -525,8 +588,8 @@ private struct SettingsActionRow: View {
                     }
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 14)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
 
             if showsDivider {
                 MacSettingsDivider()

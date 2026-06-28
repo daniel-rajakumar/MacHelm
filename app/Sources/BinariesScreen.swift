@@ -3,7 +3,7 @@ import SwiftUI
 struct BinariesScreen: View {
     private static var lastAutoRefreshAt: Date?
     @AppStorage("machelm.autoRefreshBinariesOnOpen") private var autoRefreshOnOpen = true
-    @State private var inventory = UserConfigExporter.loadBinaryInventory()
+    @State private var inventory: BinaryInventorySnapshot?
     @State private var searchText = ""
     @State private var isRefreshing = false
     @State private var dataWatcher: DirectoryWatcher?
@@ -36,10 +36,10 @@ struct BinariesScreen: View {
         .background(Color(NSColor.windowBackgroundColor))
         .onAppear {
             startWatchingDataDirectory()
-            if inventory == nil || shouldAutoRefreshOnAppear {
-                refreshInventory()
-            } else {
-                inventory = UserConfigExporter.loadBinaryInventory()
+            loadInventory {
+                if inventory == nil || shouldAutoRefreshOnAppear {
+                    refreshInventory()
+                }
             }
         }
         .onDisappear {
@@ -167,6 +167,16 @@ struct BinariesScreen: View {
             DispatchQueue.main.async {
                 inventory = reloadedInventory
                 isRefreshing = false
+            }
+        }
+    }
+
+    private func loadInventory(completion: (() -> Void)? = nil) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            let reloadedInventory = UserConfigExporter.loadBinaryInventory()
+            DispatchQueue.main.async {
+                inventory = reloadedInventory
+                completion?()
             }
         }
     }

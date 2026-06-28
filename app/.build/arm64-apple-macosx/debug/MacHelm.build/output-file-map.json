@@ -44,6 +44,20 @@
     "swift-dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DockScreen.swiftdeps",
     "diagnostics": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/DockScreen.dia"
   },
+  "/Users/danielrajakumar/code/MacHelm/app/Sources/GitHubSyncManager.swift": {
+    "dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/GitHubSyncManager.d",
+    "object": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/GitHubSyncManager.swift.o",
+    "swiftmodule": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/GitHubSyncManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/GitHubSyncManager.swiftdeps",
+    "diagnostics": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/GitHubSyncManager.dia"
+  },
+  "/Users/danielrajakumar/code/MacHelm/app/Sources/GitHubSyncScreen.swift": {
+    "dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/GitHubSyncScreen.d",
+    "object": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/GitHubSyncScreen.swift.o",
+    "swiftmodule": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/GitHubSyncScreen~partial.swiftmodule",
+    "swift-dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/GitHubSyncScreen.swiftdeps",
+    "diagnostics": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/GitHubSyncScreen.dia"
+  },
   "/Users/danielrajakumar/code/MacHelm/app/Sources/HomeScreen.swift": {
     "dependencies": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/HomeScreen.d",
     "object": "/Users/danielrajakumar/code/MacHelm/app/.build/arm64-apple-macosx/debug/MacHelm.build/HomeScreen.swift.o",

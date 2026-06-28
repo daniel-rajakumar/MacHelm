@@ -12,10 +12,10 @@ struct MacSettingsPage<Content: View>: View {
             VStack(alignment: .leading, spacing: 28) {
                 content
             }
-            .frame(maxWidth: 920, alignment: .leading)
-            .padding(.horizontal, 22)
-            .padding(.top, 22)
-            .padding(.bottom, 30)
+            .frame(maxWidth: 640, alignment: .leading)
+            .padding(.horizontal, 28)
+            .padding(.top, 24)
+            .padding(.bottom, 34)
         }
         .background(Color(NSColor.windowBackgroundColor))
     }
@@ -44,14 +44,14 @@ struct MacSettingsIntroCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 18)
-        .padding(.vertical, 18)
+        .padding(.vertical, 16)
         .background(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(Color(NSColor.controlBackgroundColor))
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .stroke(Color.white.opacity(0.04), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(Color.primary.opacity(0.06), lineWidth: 1)
         )
     }
 }
@@ -62,21 +62,22 @@ struct MacSettingsSection<Content: View>: View {
     @ViewBuilder let content: Content
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 7) {
             Text(title)
-                .font(.system(size: 11.5, weight: .semibold))
+                .font(.system(size: 12, weight: .semibold))
                 .foregroundColor(.secondary)
+                .padding(.horizontal, 2)
 
             VStack(alignment: .leading, spacing: 0) {
                 content
             }
             .background(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(Color(NSColor.controlBackgroundColor))
             )
             .overlay(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .stroke(Color.white.opacity(0.04), lineWidth: 1)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(Color.primary.opacity(0.06), lineWidth: 1)
             )
 
             if let footer, !footer.isEmpty {
@@ -99,12 +100,12 @@ struct MacSettingsCard<Content: View>: View {
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(Color(NSColor.controlBackgroundColor))
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .stroke(Color.white.opacity(0.04), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(Color.primary.opacity(0.06), lineWidth: 1)
         )
     }
 }
@@ -173,8 +174,8 @@ struct MacSettingsRow<Leading: View, Trailing: View>: View {
                     }
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 13)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
 
             if showsDivider {
                 MacSettingsDivider()
@@ -188,7 +189,7 @@ struct MacSettingsDivider: View {
 
     var body: some View {
         Divider()
-            .overlay(Color.white.opacity(0.05))
+            .overlay(Color.primary.opacity(0.06))
             .padding(.leading, leading)
     }
 }
@@ -221,46 +222,31 @@ struct MacMetricPill: View {
 struct MacSecondaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .padding(.horizontal, 12)
-            .padding(.vertical, 7)
-            .background(
-                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                    .fill(Color.white.opacity(configuration.isPressed ? 0.1 : 0.06))
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                    .stroke(Color.white.opacity(0.05), lineWidth: 1)
-            )
+            .font(.system(size: 13, weight: .regular))
+            .buttonStyle(.bordered)
+            .controlSize(.regular)
+            .opacity(configuration.isPressed ? 0.82 : 1)
     }
 }
 
 struct MacPrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .foregroundColor(.white)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 7)
-            .background(
-                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                    .fill(Color(red: 0.39, green: 0.76, blue: 0.27).opacity(configuration.isPressed ? 0.85 : 1))
-            )
+            .font(.system(size: 13, weight: .regular))
+            .buttonStyle(.borderedProminent)
+            .controlSize(.regular)
+            .opacity(configuration.isPressed ? 0.82 : 1)
     }
 }
 
 struct MacDestructiveButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .foregroundColor(Color(red: 1, green: 0.45, blue: 0.45))
-            .padding(.horizontal, 10)
-            .padding(.vertical, 7)
-            .background(
-                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                    .fill(Color.red.opacity(configuration.isPressed ? 0.16 : 0.1))
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                    .stroke(Color.red.opacity(0.14), lineWidth: 1)
-            )
+            .font(.system(size: 13, weight: .regular))
+            .foregroundColor(.red)
+            .buttonStyle(.bordered)
+            .controlSize(.regular)
+            .opacity(configuration.isPressed ? 0.82 : 1)
     }
 }
 
@@ -271,7 +257,7 @@ struct SettingsSidebarIcon: View {
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
+            RoundedRectangle(cornerRadius: size * 0.22, style: .continuous)
                 .fill(
                     LinearGradient(
                         colors: [color.opacity(0.9), color.opacity(0.72)],
@@ -281,7 +267,7 @@ struct SettingsSidebarIcon: View {
                 )
 
             Image(systemName: symbol)
-                .font(.system(size: size * 0.5, weight: .semibold))
+                .font(.system(size: size * 0.52, weight: .medium))
                 .foregroundColor(.white)
         }
         .frame(width: size, height: size)
@@ -295,10 +281,10 @@ struct MacSettingsSidebarLabel: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            SettingsSidebarIcon(symbol: symbol, color: color, size: 28)
+            SettingsSidebarIcon(symbol: symbol, color: color, size: 26)
 
             Text(title)
-                .font(.system(size: 15, weight: .medium))
+                .font(.system(size: 13, weight: .regular))
         }
     }
 }
@@ -340,15 +326,15 @@ struct MacInlineSearchField: View {
                 .textFieldStyle(.plain)
                 .font(.system(size: 13, weight: .medium))
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
+        .padding(.horizontal, 9)
+        .padding(.vertical, 7)
         .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Color.white.opacity(0.04))
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(Color(NSColor.controlBackgroundColor))
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .stroke(Color.white.opacity(0.05), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .stroke(Color.primary.opacity(0.06), lineWidth: 1)
         )
     }
 }

@@ -12,6 +12,24 @@
     "source" : "System"
   },
   {
+    "name" : "ab",
+    "path" : "\/usr\/sbin\/ab",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "ac",
+    "path" : "\/usr\/sbin\/ac",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "accton",
+    "path" : "\/usr\/sbin\/accton",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "actool",
     "path" : "\/usr\/bin\/actool",
     "pathEntry" : "\/usr\/bin",
@@ -90,9 +108,46 @@
     "source" : "System"
   },
   {
+    "name" : "amt",
+    "path" : "\/usr\/sbin\/amt",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "apachectl",
+    "path" : "\/usr\/sbin\/apachectl",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "apfs_hfs_convert",
+    "path" : "\/sbin\/apfs_hfs_convert",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/apfs.fs\/Contents\/Resources\/hfs_convert",
+    "source" : "System"
+  },
+  {
+    "name" : "apfs_unlockfv",
+    "path" : "\/sbin\/apfs_unlockfv",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "app-sso",
     "path" : "\/usr\/bin\/app-sso",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "appleh13camerad",
+    "path" : "\/usr\/sbin\/appleh13camerad",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "appleh16camerad",
+    "path" : "\/usr\/sbin\/appleh16camerad",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -105,6 +160,12 @@
     "name" : "apply",
     "path" : "\/usr\/bin\/apply",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "appsleepd",
+    "path" : "\/usr\/sbin\/appsleepd",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -126,6 +187,12 @@
     "source" : "System"
   },
   {
+    "name" : "arp",
+    "path" : "\/usr\/sbin\/arp",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "as",
     "path" : "\/usr\/bin\/as",
     "pathEntry" : "\/usr\/bin",
@@ -135,6 +202,18 @@
     "name" : "asa",
     "path" : "\/usr\/bin\/asa",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "aslmanager",
+    "path" : "\/usr\/sbin\/aslmanager",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "asr",
+    "path" : "\/usr\/sbin\/asr",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -192,6 +271,24 @@
     "source" : "System"
   },
   {
+    "name" : "audit",
+    "path" : "\/usr\/sbin\/audit",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "auditd",
+    "path" : "\/usr\/sbin\/auditd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "auditreduce",
+    "path" : "\/usr\/sbin\/auditreduce",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "automationmodetool",
     "path" : "\/usr\/bin\/automationmodetool",
     "pathEntry" : "\/usr\/bin",
@@ -201,6 +298,12 @@
     "name" : "automator",
     "path" : "\/usr\/bin\/automator",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "automount",
+    "path" : "\/usr\/sbin\/automount",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -226,6 +329,12 @@
     "name" : "avbcapture",
     "path" : "\/usr\/bin\/avbcapture",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "avbdeviced",
+    "path" : "\/usr\/sbin\/avbdeviced",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -367,9 +476,39 @@
     "source" : "System"
   },
   {
+    "name" : "bless",
+    "path" : "\/usr\/sbin\/bless",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "BlueTool",
+    "path" : "\/usr\/sbin\/BlueTool",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "bluetoothaudiod",
+    "path" : "\/usr\/sbin\/bluetoothaudiod",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "bluetoothd",
+    "path" : "\/usr\/sbin\/bluetoothd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "bm4",
     "path" : "\/usr\/bin\/bm4",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "BootCacheControl",
+    "path" : "\/usr\/sbin\/BootCacheControl",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -394,6 +533,18 @@
     "name" : "bspatch",
     "path" : "\/usr\/bin\/bspatch",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "BTLEServer",
+    "path" : "\/usr\/sbin\/BTLEServer",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "BTLEServerAgent",
+    "path" : "\/usr\/sbin\/BTLEServerAgent",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -562,6 +713,24 @@
     "source" : "System"
   },
   {
+    "name" : "cfprefsd",
+    "path" : "\/usr\/sbin\/cfprefsd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "chat",
+    "path" : "\/usr\/sbin\/chat",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "checkgid",
+    "path" : "\/usr\/sbin\/checkgid",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "chflags",
     "path" : "\/usr\/bin\/chflags",
     "pathEntry" : "\/usr\/bin",
@@ -586,15 +755,33 @@
     "source" : "System"
   },
   {
+    "name" : "chown",
+    "path" : "\/usr\/sbin\/chown",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "chpass",
     "path" : "\/usr\/bin\/chpass",
     "pathEntry" : "\/usr\/bin",
     "source" : "System"
   },
   {
+    "name" : "chroot",
+    "path" : "\/usr\/sbin\/chroot",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "chsh",
     "path" : "\/usr\/bin\/chsh",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "ckksctl",
+    "path" : "\/usr\/sbin\/ckksctl",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -712,6 +899,12 @@
     "source" : "System"
   },
   {
+    "name" : "coreaudiod",
+    "path" : "\/usr\/sbin\/coreaudiod",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "corelist",
     "path" : "\/usr\/bin\/corelist",
     "pathEntry" : "\/usr\/bin",
@@ -722,13 +915,6 @@
     "path" : "\/usr\/bin\/corelist5.34",
     "pathEntry" : "\/usr\/bin",
     "source" : "System"
-  },
-  {
-    "name" : "corepack",
-    "path" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin\/corepack",
-    "pathEntry" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin",
-    "resolvedPath" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/lib\/node_modules\/corepack\/dist\/corepack.js",
-    "source" : "Third-Party"
   },
   {
     "name" : "cp",
@@ -797,9 +983,21 @@
     "source" : "System"
   },
   {
+    "name" : "createhomedir",
+    "path" : "\/usr\/sbin\/createhomedir",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "crlrefresh",
     "path" : "\/usr\/bin\/crlrefresh",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "cron",
+    "path" : "\/usr\/sbin\/cron",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -863,6 +1061,45 @@
     "source" : "System"
   },
   {
+    "name" : "cupsaccept",
+    "path" : "\/usr\/sbin\/cupsaccept",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "cupsctl",
+    "path" : "\/usr\/sbin\/cupsctl",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "cupsdisable",
+    "path" : "\/usr\/sbin\/cupsdisable",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/usr\/sbin\/cupsaccept",
+    "source" : "System"
+  },
+  {
+    "name" : "cupsenable",
+    "path" : "\/usr\/sbin\/cupsenable",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/usr\/sbin\/cupsaccept",
+    "source" : "System"
+  },
+  {
+    "name" : "cupsfilter",
+    "path" : "\/usr\/sbin\/cupsfilter",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "cupsreject",
+    "path" : "\/usr\/sbin\/cupsreject",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/usr\/sbin\/cupsaccept",
+    "source" : "System"
+  },
+  {
     "name" : "cupstestppd",
     "path" : "\/usr\/bin\/cupstestppd",
     "pathEntry" : "\/usr\/bin",
@@ -887,6 +1124,13 @@
     "source" : "System"
   },
   {
+    "name" : "cvadmin",
+    "path" : "\/usr\/sbin\/cvadmin",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/acfs.fs\/Contents\/bin\/redirection.sh",
+    "source" : "System"
+  },
+  {
     "name" : "cvaffinity",
     "path" : "\/usr\/bin\/cvaffinity",
     "pathEntry" : "\/usr\/bin",
@@ -901,6 +1145,55 @@
     "source" : "System"
   },
   {
+    "name" : "cvdb",
+    "path" : "\/usr\/sbin\/cvdb",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/acfs.fs\/Contents\/bin\/redirection.sh",
+    "source" : "System"
+  },
+  {
+    "name" : "cvdbset",
+    "path" : "\/usr\/sbin\/cvdbset",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/acfs.fs\/Contents\/bin\/redirection.sh",
+    "source" : "System"
+  },
+  {
+    "name" : "cvfsck",
+    "path" : "\/usr\/sbin\/cvfsck",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/acfs.fs\/Contents\/bin\/redirection.sh",
+    "source" : "System"
+  },
+  {
+    "name" : "cvfsdb",
+    "path" : "\/usr\/sbin\/cvfsdb",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/acfs.fs\/Contents\/bin\/redirection.sh",
+    "source" : "System"
+  },
+  {
+    "name" : "cvfsid",
+    "path" : "\/usr\/sbin\/cvfsid",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/acfs.fs\/Contents\/bin\/redirection.sh",
+    "source" : "System"
+  },
+  {
+    "name" : "cvgather",
+    "path" : "\/usr\/sbin\/cvgather",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/acfs.fs\/Contents\/bin\/redirection.sh",
+    "source" : "System"
+  },
+  {
+    "name" : "cvlabel",
+    "path" : "\/usr\/sbin\/cvlabel",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/acfs.fs\/Contents\/bin\/redirection.sh",
+    "source" : "System"
+  },
+  {
     "name" : "cvmkdir",
     "path" : "\/usr\/bin\/cvmkdir",
     "pathEntry" : "\/usr\/bin",
@@ -911,6 +1204,27 @@
     "name" : "cvmkfile",
     "path" : "\/usr\/bin\/cvmkfile",
     "pathEntry" : "\/usr\/bin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/acfs.fs\/Contents\/bin\/redirection.sh",
+    "source" : "System"
+  },
+  {
+    "name" : "cvmkfs",
+    "path" : "\/usr\/sbin\/cvmkfs",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/acfs.fs\/Contents\/bin\/redirection.sh",
+    "source" : "System"
+  },
+  {
+    "name" : "cvupdatefs",
+    "path" : "\/usr\/sbin\/cvupdatefs",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/acfs.fs\/Contents\/bin\/redirection.sh",
+    "source" : "System"
+  },
+  {
+    "name" : "cvversions",
+    "path" : "\/usr\/sbin\/cvversions",
+    "pathEntry" : "\/usr\/sbin",
     "resolvedPath" : "\/System\/Library\/Filesystems\/acfs.fs\/Contents\/bin\/redirection.sh",
     "source" : "System"
   },
@@ -1059,6 +1373,12 @@
     "source" : "System"
   },
   {
+    "name" : "dbmmanage",
+    "path" : "\/usr\/sbin\/dbmmanage",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "dc",
     "path" : "\/usr\/bin\/dc",
     "pathEntry" : "\/usr\/bin",
@@ -1074,6 +1394,12 @@
     "name" : "dddiagnose",
     "path" : "\/usr\/bin\/dddiagnose",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "ddns-confgen",
+    "path" : "\/usr\/sbin\/ddns-confgen",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -1125,6 +1451,12 @@
     "source" : "System"
   },
   {
+    "name" : "dev_mkdb",
+    "path" : "\/usr\/sbin\/dev_mkdb",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "devicectl",
     "path" : "\/usr\/bin\/devicectl",
     "pathEntry" : "\/usr\/bin",
@@ -1134,6 +1466,12 @@
     "name" : "devmodectl",
     "path" : "\/usr\/bin\/devmodectl",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "DevToolsSecurity",
+    "path" : "\/usr\/sbin\/DevToolsSecurity",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -1173,9 +1511,28 @@
     "source" : "System"
   },
   {
+    "name" : "DirectoryService",
+    "path" : "\/usr\/sbin\/DirectoryService",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/usr\/libexec\/dspluginhelperd",
+    "source" : "System"
+  },
+  {
     "name" : "dirname",
     "path" : "\/usr\/bin\/dirname",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "disklabel",
+    "path" : "\/sbin\/disklabel",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "diskutil",
+    "path" : "\/usr\/sbin\/diskutil",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -1191,6 +1548,12 @@
     "source" : "System"
   },
   {
+    "name" : "distnoted",
+    "path" : "\/usr\/sbin\/distnoted",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "ditto",
     "path" : "\/usr\/bin\/ditto",
     "pathEntry" : "\/usr\/bin",
@@ -1203,9 +1566,27 @@
     "source" : "System"
   },
   {
+    "name" : "dmesg",
+    "path" : "\/sbin\/dmesg",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "dnctl",
+    "path" : "\/usr\/sbin\/dnctl",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "dns-sd",
     "path" : "\/usr\/bin\/dns-sd",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "dot_clean",
+    "path" : "\/usr\/sbin\/dot_clean",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -1224,6 +1605,30 @@
     "name" : "dscl",
     "path" : "\/usr\/bin\/dscl",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "dsconfigad",
+    "path" : "\/usr\/sbin\/dsconfigad",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "dsconfigldap",
+    "path" : "\/usr\/sbin\/dsconfigldap",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "dseditgroup",
+    "path" : "\/usr\/sbin\/dseditgroup",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "dsenableroot",
+    "path" : "\/usr\/sbin\/dsenableroot",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -1257,6 +1662,12 @@
     "source" : "System"
   },
   {
+    "name" : "dtrace",
+    "path" : "\/usr\/sbin\/dtrace",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "dtruss",
     "path" : "\/usr\/bin\/dtruss",
     "pathEntry" : "\/usr\/bin",
@@ -1287,6 +1698,12 @@
     "source" : "System"
   },
   {
+    "name" : "dynamic_pager",
+    "path" : "\/sbin\/dynamic_pager",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "echo",
     "path" : "\/bin\/echo",
     "pathEntry" : "\/bin",
@@ -1296,6 +1713,12 @@
     "name" : "ed",
     "path" : "\/bin\/ed",
     "pathEntry" : "\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "edquota",
+    "path" : "\/usr\/sbin\/edquota",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -1414,6 +1837,12 @@
     "source" : "System"
   },
   {
+    "name" : "fcgistarter",
+    "path" : "\/usr\/sbin\/fcgistarter",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "fddist",
     "path" : "\/usr\/bin\/fddist",
     "pathEntry" : "\/usr\/bin",
@@ -1423,6 +1852,12 @@
     "name" : "fdesetup",
     "path" : "\/usr\/bin\/fdesetup",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "fdisk",
+    "path" : "\/usr\/sbin\/fdisk",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -1438,6 +1873,12 @@
     "source" : "System"
   },
   {
+    "name" : "fibreconfig",
+    "path" : "\/sbin\/fibreconfig",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "file",
     "path" : "\/usr\/bin\/file",
     "pathEntry" : "\/usr\/bin",
@@ -1447,6 +1888,12 @@
     "name" : "filebyproc.d",
     "path" : "\/usr\/bin\/filebyproc.d",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "filecoordinationd",
+    "path" : "\/usr\/sbin\/filecoordinationd",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -1483,6 +1930,12 @@
     "name" : "finger",
     "path" : "\/usr\/bin\/finger",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "firmwarepasswd",
+    "path" : "\/usr\/sbin\/firmwarepasswd",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -1538,6 +1991,89 @@
     "name" : "fs_usage",
     "path" : "\/usr\/bin\/fs_usage",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "fsck",
+    "path" : "\/sbin\/fsck",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "fsck_apfs",
+    "path" : "\/sbin\/fsck_apfs",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/apfs.fs\/Contents\/Resources\/fsck_apfs",
+    "source" : "System"
+  },
+  {
+    "name" : "fsck_cs",
+    "path" : "\/sbin\/fsck_cs",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "fsck_exfat",
+    "path" : "\/sbin\/fsck_exfat",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/exfat.fs\/Contents\/Resources\/fsck_exfat",
+    "source" : "System"
+  },
+  {
+    "name" : "fsck_fskit",
+    "path" : "\/sbin\/fsck_fskit",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "fsck_hfs",
+    "path" : "\/sbin\/fsck_hfs",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/hfs.fs\/Contents\/Resources\/fsck_hfs",
+    "source" : "System"
+  },
+  {
+    "name" : "fsck_msdos",
+    "path" : "\/sbin\/fsck_msdos",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/msdos.fs\/Contents\/Resources\/fsck_msdos",
+    "source" : "System"
+  },
+  {
+    "name" : "fsck_udf",
+    "path" : "\/sbin\/fsck_udf",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/udf.fs\/Contents\/Resources\/fsck_udf",
+    "source" : "System"
+  },
+  {
+    "name" : "fstyp",
+    "path" : "\/sbin\/fstyp",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "fstyp_hfs",
+    "path" : "\/sbin\/fstyp_hfs",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "fstyp_msdos",
+    "path" : "\/sbin\/fstyp_msdos",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "fstyp_ntfs",
+    "path" : "\/sbin\/fstyp_ntfs",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "fstyp_udf",
+    "path" : "\/sbin\/fstyp_udf",
+    "pathEntry" : "\/sbin",
     "source" : "System"
   },
   {
@@ -1685,6 +2221,18 @@
     "source" : "System"
   },
   {
+    "name" : "gpt",
+    "path" : "\/usr\/sbin\/gpt",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "graphicssession",
+    "path" : "\/usr\/sbin\/graphicssession",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "grep",
     "path" : "\/usr\/bin\/grep",
     "pathEntry" : "\/usr\/bin",
@@ -1694,6 +2242,12 @@
     "name" : "groups",
     "path" : "\/usr\/bin\/groups",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "gssd",
+    "path" : "\/usr\/sbin\/gssd",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -1745,6 +2299,12 @@
     "source" : "System"
   },
   {
+    "name" : "halt",
+    "path" : "\/sbin\/halt",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "hash",
     "path" : "\/usr\/bin\/hash",
     "pathEntry" : "\/usr\/bin",
@@ -1754,6 +2314,12 @@
     "name" : "hdid",
     "path" : "\/usr\/bin\/hdid",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "hdik",
+    "path" : "\/usr\/sbin\/hdik",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -1835,6 +2401,24 @@
     "source" : "System"
   },
   {
+    "name" : "htcacheclean",
+    "path" : "\/usr\/sbin\/htcacheclean",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "htdbm",
+    "path" : "\/usr\/sbin\/htdbm",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "htdigest",
+    "path" : "\/usr\/sbin\/htdigest",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "htmltree",
     "path" : "\/usr\/bin\/htmltree",
     "pathEntry" : "\/usr\/bin",
@@ -1844,6 +2428,30 @@
     "name" : "htmltree5.34",
     "path" : "\/usr\/bin\/htmltree5.34",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "htpasswd",
+    "path" : "\/usr\/sbin\/htpasswd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "httpd",
+    "path" : "\/usr\/sbin\/httpd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "httpd-wrapper",
+    "path" : "\/usr\/sbin\/httpd-wrapper",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "httxt2dbm",
+    "path" : "\/usr\/sbin\/httxt2dbm",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -1895,6 +2503,12 @@
     "source" : "System"
   },
   {
+    "name" : "ifconfig",
+    "path" : "\/sbin\/ifconfig",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "imptrace",
     "path" : "\/usr\/bin\/imptrace",
     "pathEntry" : "\/usr\/bin",
@@ -1932,6 +2546,12 @@
     "source" : "System"
   },
   {
+    "name" : "installer",
+    "path" : "\/usr\/sbin\/installer",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "instmodsh",
     "path" : "\/usr\/bin\/instmodsh",
     "pathEntry" : "\/usr\/bin",
@@ -1947,6 +2567,18 @@
     "name" : "IOAccelMemory",
     "path" : "\/usr\/bin\/IOAccelMemory",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "ioalloccount",
+    "path" : "\/usr\/sbin\/ioalloccount",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "ioclasscount",
+    "path" : "\/usr\/sbin\/ioclasscount",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -1980,6 +2612,12 @@
     "source" : "System"
   },
   {
+    "name" : "ioreg",
+    "path" : "\/usr\/sbin\/ioreg",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "IOSDebug",
     "path" : "\/usr\/bin\/IOSDebug",
     "pathEntry" : "\/usr\/bin",
@@ -1989,6 +2627,12 @@
     "name" : "iosnoop",
     "path" : "\/usr\/bin\/iosnoop",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "iostat",
+    "path" : "\/usr\/sbin\/iostat",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -2007,6 +2651,12 @@
     "name" : "ip2cc5.34",
     "path" : "\/usr\/bin\/ip2cc5.34",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "ipconfig",
+    "path" : "\/usr\/sbin\/ipconfig",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -2274,15 +2924,81 @@
     "source" : "System"
   },
   {
+    "name" : "kadmin",
+    "path" : "\/usr\/sbin\/kadmin",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "kadmin.local",
+    "path" : "\/usr\/sbin\/kadmin.local",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "kcc",
     "path" : "\/usr\/bin\/kcc",
     "pathEntry" : "\/usr\/bin",
     "source" : "System"
   },
   {
+    "name" : "kcditto",
+    "path" : "\/usr\/sbin\/kcditto",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "kdcsetup",
+    "path" : "\/usr\/sbin\/kdcsetup",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "kdestroy",
     "path" : "\/usr\/bin\/kdestroy",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "KernelEventAgent",
+    "path" : "\/usr\/sbin\/KernelEventAgent",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "kextcache",
+    "path" : "\/usr\/sbin\/kextcache",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "kextfind",
+    "path" : "\/usr\/sbin\/kextfind",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "kextlibs",
+    "path" : "\/usr\/sbin\/kextlibs",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "kextload",
+    "path" : "\/sbin\/kextload",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "kextstat",
+    "path" : "\/usr\/sbin\/kextstat",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "kextunload",
+    "path" : "\/sbin\/kextunload",
+    "pathEntry" : "\/sbin",
     "source" : "System"
   },
   {
@@ -2341,6 +3057,12 @@
     "source" : "System"
   },
   {
+    "name" : "klist_cdhashes",
+    "path" : "\/usr\/sbin\/klist_cdhashes",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "kmutil",
     "path" : "\/usr\/bin\/kmutil",
     "pathEntry" : "\/usr\/bin",
@@ -2356,6 +3078,12 @@
     "name" : "krb5-config",
     "path" : "\/usr\/bin\/krb5-config",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "krbservicesetup",
+    "path" : "\/usr\/sbin\/krbservicesetup",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -2378,9 +3106,21 @@
     "source" : "System"
   },
   {
+    "name" : "ktutil",
+    "path" : "\/usr\/sbin\/ktutil",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "lam",
     "path" : "\/usr\/bin\/lam",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "languagesetup",
+    "path" : "\/usr\/sbin\/languagesetup",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -2411,6 +3151,12 @@
     "name" : "launchctl",
     "path" : "\/bin\/launchctl",
     "pathEntry" : "\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "launchd",
+    "path" : "\/sbin\/launchd",
+    "pathEntry" : "\/sbin",
     "source" : "System"
   },
   {
@@ -2595,6 +3341,12 @@
     "source" : "System"
   },
   {
+    "name" : "localemanager",
+    "path" : "\/usr\/sbin\/localemanager",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "locate",
     "path" : "\/usr\/bin\/locate",
     "pathEntry" : "\/usr\/bin",
@@ -2637,6 +3389,12 @@
     "source" : "System"
   },
   {
+    "name" : "logresolve",
+    "path" : "\/usr\/sbin\/logresolve",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "look",
     "path" : "\/usr\/bin\/look",
     "pathEntry" : "\/usr\/bin",
@@ -2652,6 +3410,30 @@
     "name" : "lp",
     "path" : "\/usr\/bin\/lp",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "lpadmin",
+    "path" : "\/usr\/sbin\/lpadmin",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "lpc",
+    "path" : "\/usr\/sbin\/lpc",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "lpinfo",
+    "path" : "\/usr\/sbin\/lpinfo",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "lpmove",
+    "path" : "\/usr\/sbin\/lpmove",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -2718,6 +3500,12 @@
     "name" : "lsmp",
     "path" : "\/usr\/bin\/lsmp",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "lsof",
+    "path" : "\/usr\/sbin\/lsof",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -2878,6 +3666,18 @@
     "source" : "System"
   },
   {
+    "name" : "md5",
+    "path" : "\/sbin\/md5",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "md5sum",
+    "path" : "\/sbin\/md5sum",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "mddiagnose",
     "path" : "\/usr\/bin\/mddiagnose",
     "pathEntry" : "\/usr\/bin",
@@ -2899,6 +3699,18 @@
     "name" : "mdls",
     "path" : "\/usr\/bin\/mdls",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "mDNSResponder",
+    "path" : "\/usr\/sbin\/mDNSResponder",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "mDNSResponderHelper",
+    "path" : "\/usr\/sbin\/mDNSResponderHelper",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -2962,9 +3774,33 @@
     "source" : "System"
   },
   {
+    "name" : "mkextunpack",
+    "path" : "\/usr\/sbin\/mkextunpack",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "mkfifo",
     "path" : "\/usr\/bin\/mkfifo",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "mkfile",
+    "path" : "\/usr\/sbin\/mkfile",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "mknod",
+    "path" : "\/sbin\/mknod",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "mkpassdb",
+    "path" : "\/usr\/sbin\/mkpassdb",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -3010,15 +3846,152 @@
     "source" : "System"
   },
   {
+    "name" : "mount",
+    "path" : "\/sbin\/mount",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_9p",
+    "path" : "\/sbin\/mount_9p",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_acfs",
+    "path" : "\/sbin\/mount_acfs",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/acfs.fs\/Contents\/bin\/redirection.sh",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_afp",
+    "path" : "\/sbin\/mount_afp",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_apfs",
+    "path" : "\/sbin\/mount_apfs",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/apfs.fs\/Contents\/Resources\/mount_apfs",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_cd9660",
+    "path" : "\/sbin\/mount_cd9660",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/cd9660.fs\/Contents\/Resources\/mount_cd9660",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_cddafs",
+    "path" : "\/sbin\/mount_cddafs",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/cddafs.fs\/Contents\/Resources\/mount_cddafs",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_devfs",
+    "path" : "\/sbin\/mount_devfs",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_exfat",
+    "path" : "\/sbin\/mount_exfat",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/exfat.fs\/Contents\/Resources\/mount_exfat",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_fdesc",
+    "path" : "\/sbin\/mount_fdesc",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_ftp",
+    "path" : "\/sbin\/mount_ftp",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/ftp.fs\/Contents\/Resources\/mount_ftp",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_hfs",
+    "path" : "\/sbin\/mount_hfs",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/hfs.fs\/Contents\/Resources\/mount_hfs",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_msdos",
+    "path" : "\/sbin\/mount_msdos",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/msdos.fs\/Contents\/Resources\/mount_msdos",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_nfs",
+    "path" : "\/sbin\/mount_nfs",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_smbfs",
+    "path" : "\/sbin\/mount_smbfs",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_tmpfs",
+    "path" : "\/sbin\/mount_tmpfs",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/tmpfs.fs\/Contents\/Resources\/mount_tmpfs",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_udf",
+    "path" : "\/sbin\/mount_udf",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/udf.fs\/Contents\/Resources\/mount_udf",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_virtiofs",
+    "path" : "\/sbin\/mount_virtiofs",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/virtiofs.fs\/Contents\/Resources\/mount_virtiofs",
+    "source" : "System"
+  },
+  {
+    "name" : "mount_webdav",
+    "path" : "\/sbin\/mount_webdav",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "mp2bug",
     "path" : "\/usr\/bin\/mp2bug",
     "pathEntry" : "\/usr\/bin",
     "source" : "System"
   },
   {
+    "name" : "mpioutil",
+    "path" : "\/sbin\/mpioutil",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "mpsgraphtool",
     "path" : "\/usr\/bin\/mpsgraphtool",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "mtree",
+    "path" : "\/usr\/sbin\/mtree",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -3086,6 +4059,12 @@
     "source" : "System"
   },
   {
+    "name" : "ndp",
+    "path" : "\/usr\/sbin\/ndp",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "net-server",
     "path" : "\/usr\/bin\/net-server",
     "pathEntry" : "\/usr\/bin",
@@ -3116,6 +4095,18 @@
     "source" : "System"
   },
   {
+    "name" : "netbiosd",
+    "path" : "\/usr\/sbin\/netbiosd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "netstat",
+    "path" : "\/usr\/sbin\/netstat",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "nettop",
     "path" : "\/usr\/bin\/nettop",
     "pathEntry" : "\/usr\/bin",
@@ -3128,10 +4119,57 @@
     "source" : "System"
   },
   {
+    "name" : "networksetup",
+    "path" : "\/usr\/sbin\/networksetup",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "newaliases",
     "path" : "\/usr\/bin\/newaliases",
     "pathEntry" : "\/usr\/bin",
     "resolvedPath" : "\/usr\/sbin\/sendmail",
+    "source" : "System"
+  },
+  {
+    "name" : "newfs_apfs",
+    "path" : "\/sbin\/newfs_apfs",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/apfs.fs\/Contents\/Resources\/newfs_apfs",
+    "source" : "System"
+  },
+  {
+    "name" : "newfs_exfat",
+    "path" : "\/sbin\/newfs_exfat",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/exfat.fs\/Contents\/Resources\/newfs_exfat",
+    "source" : "System"
+  },
+  {
+    "name" : "newfs_fskit",
+    "path" : "\/sbin\/newfs_fskit",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "newfs_hfs",
+    "path" : "\/sbin\/newfs_hfs",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/hfs.fs\/Contents\/Resources\/newfs_hfs",
+    "source" : "System"
+  },
+  {
+    "name" : "newfs_msdos",
+    "path" : "\/sbin\/newfs_msdos",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/msdos.fs\/Contents\/Resources\/newfs_msdos",
+    "source" : "System"
+  },
+  {
+    "name" : "newfs_udf",
+    "path" : "\/sbin\/newfs_udf",
+    "pathEntry" : "\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/udf.fs\/Contents\/Resources\/newfs_udf",
     "source" : "System"
   },
   {
@@ -3144,6 +4182,30 @@
     "name" : "newproc.d",
     "path" : "\/usr\/bin\/newproc.d",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "newsyslog",
+    "path" : "\/usr\/sbin\/newsyslog",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "nfs4mapid",
+    "path" : "\/usr\/sbin\/nfs4mapid",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "nfsd",
+    "path" : "\/sbin\/nfsd",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "nfsiod",
+    "path" : "\/sbin\/nfsiod",
+    "pathEntry" : "\/sbin",
     "source" : "System"
   },
   {
@@ -3165,6 +4227,12 @@
     "source" : "System"
   },
   {
+    "name" : "nlcontrol",
+    "path" : "\/usr\/sbin\/nlcontrol",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "nm",
     "path" : "\/usr\/bin\/nm",
     "pathEntry" : "\/usr\/bin",
@@ -3177,15 +4245,21 @@
     "source" : "System"
   },
   {
-    "name" : "node",
-    "path" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin\/node",
-    "pathEntry" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin",
-    "source" : "Third-Party"
-  },
-  {
     "name" : "nohup",
     "path" : "\/usr\/bin\/nohup",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "nologin",
+    "path" : "\/sbin\/nologin",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "notifyd",
+    "path" : "\/usr\/sbin\/notifyd",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -3193,20 +4267,6 @@
     "path" : "\/usr\/bin\/notifyutil",
     "pathEntry" : "\/usr\/bin",
     "source" : "System"
-  },
-  {
-    "name" : "npm",
-    "path" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin\/npm",
-    "pathEntry" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin",
-    "resolvedPath" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/lib\/node_modules\/npm\/bin\/npm-cli.js",
-    "source" : "Third-Party"
-  },
-  {
-    "name" : "npx",
-    "path" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin\/npx",
-    "pathEntry" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/bin",
-    "resolvedPath" : "\/Users\/danielrajakumar\/.nvm\/versions\/node\/v22.22.0\/lib\/node_modules\/npm\/bin\/npx-cli.js",
-    "source" : "Third-Party"
   },
   {
     "name" : "nscurl",
@@ -3227,6 +4287,12 @@
     "source" : "System"
   },
   {
+    "name" : "nvram",
+    "path" : "\/usr\/sbin\/nvram",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "objdump",
     "path" : "\/usr\/bin\/objdump",
     "pathEntry" : "\/usr\/bin",
@@ -3236,6 +4302,12 @@
     "name" : "ocspcheck",
     "path" : "\/usr\/bin\/ocspcheck",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "ocspd",
+    "path" : "\/usr\/sbin\/ocspd",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -3302,6 +4374,12 @@
     "name" : "osascript",
     "path" : "\/usr\/bin\/osascript",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "otctl",
+    "path" : "\/usr\/sbin\/otctl",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -3383,6 +4461,12 @@
     "source" : "System"
   },
   {
+    "name" : "PasswordService",
+    "path" : "\/usr\/sbin\/PasswordService",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "paste",
     "path" : "\/usr\/bin\/paste",
     "pathEntry" : "\/usr\/bin",
@@ -3434,6 +4518,12 @@
     "name" : "pcsctest",
     "path" : "\/usr\/bin\/pcsctest",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "pdisk",
+    "path" : "\/usr\/sbin\/pdisk",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -3497,6 +4587,12 @@
     "source" : "System"
   },
   {
+    "name" : "pfctl",
+    "path" : "\/sbin\/pfctl",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "pgrep",
     "path" : "\/usr\/bin\/pgrep",
     "pathEntry" : "\/usr\/bin",
@@ -3527,6 +4623,18 @@
     "source" : "System"
   },
   {
+    "name" : "ping",
+    "path" : "\/sbin\/ping",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "ping6",
+    "path" : "\/sbin\/ping6",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "pip3",
     "path" : "\/usr\/bin\/pip3",
     "pathEntry" : "\/usr\/bin",
@@ -3536,6 +4644,12 @@
     "name" : "pkgbuild",
     "path" : "\/usr\/bin\/pkgbuild",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "pkgutil",
+    "path" : "\/usr\/sbin\/pkgutil",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -3665,6 +4779,78 @@
     "source" : "System"
   },
   {
+    "name" : "postalias",
+    "path" : "\/usr\/sbin\/postalias",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "postcat",
+    "path" : "\/usr\/sbin\/postcat",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "postconf",
+    "path" : "\/usr\/sbin\/postconf",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "postdrop",
+    "path" : "\/usr\/sbin\/postdrop",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "postfix",
+    "path" : "\/usr\/sbin\/postfix",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "postkick",
+    "path" : "\/usr\/sbin\/postkick",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "postlock",
+    "path" : "\/usr\/sbin\/postlock",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "postlog",
+    "path" : "\/usr\/sbin\/postlog",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "postmap",
+    "path" : "\/usr\/sbin\/postmap",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "postmulti",
+    "path" : "\/usr\/sbin\/postmulti",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "postqueue",
+    "path" : "\/usr\/sbin\/postqueue",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "postsuper",
+    "path" : "\/usr\/sbin\/postsuper",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "power_report.sh",
     "path" : "\/usr\/bin\/power_report.sh",
     "pathEntry" : "\/usr\/bin",
@@ -3719,9 +4905,21 @@
     "source" : "System"
   },
   {
+    "name" : "pppd",
+    "path" : "\/usr\/sbin\/pppd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "pr",
     "path" : "\/usr\/bin\/pr",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "praudit",
+    "path" : "\/usr\/sbin\/praudit",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -3833,9 +5031,21 @@
     "source" : "System"
   },
   {
+    "name" : "purge",
+    "path" : "\/usr\/sbin\/purge",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "pwd",
     "path" : "\/bin\/pwd",
     "pathEntry" : "\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "pwd_mkdb",
+    "path" : "\/usr\/sbin\/pwd_mkdb",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -3864,6 +5074,30 @@
     "source" : "System"
   },
   {
+    "name" : "quotacheck",
+    "path" : "\/sbin\/quotacheck",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "quotaoff",
+    "path" : "\/usr\/sbin\/quotaoff",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "quotaon",
+    "path" : "\/usr\/sbin\/quotaon",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "racoon",
+    "path" : "\/usr\/sbin\/racoon",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "rails",
     "path" : "\/usr\/bin\/rails",
     "pathEntry" : "\/usr\/bin",
@@ -3879,6 +5113,12 @@
     "name" : "ranlib",
     "path" : "\/usr\/bin\/ranlib",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "rarpd",
+    "path" : "\/usr\/sbin\/rarpd",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -3912,9 +5152,27 @@
     "source" : "System"
   },
   {
+    "name" : "reboot",
+    "path" : "\/sbin\/reboot",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "renice",
     "path" : "\/usr\/bin\/renice",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "repairHomePermissions",
+    "path" : "\/usr\/sbin\/repairHomePermissions",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "repquota",
+    "path" : "\/usr\/sbin\/repquota",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -3985,9 +5243,45 @@
     "source" : "System"
   },
   {
+    "name" : "rotatelogs",
+    "path" : "\/usr\/sbin\/rotatelogs",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "route",
+    "path" : "\/sbin\/route",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "rpc.lockd",
+    "path" : "\/usr\/sbin\/rpc.lockd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "rpc.statd",
+    "path" : "\/usr\/sbin\/rpc.statd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "rpcbind",
+    "path" : "\/usr\/sbin\/rpcbind",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "rpcgen",
     "path" : "\/usr\/bin\/rpcgen",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "rpcinfo",
+    "path" : "\/usr\/sbin\/rpcinfo",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -4000,6 +5294,12 @@
     "name" : "rsync",
     "path" : "\/usr\/bin\/rsync",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "rtadvd",
+    "path" : "\/usr\/sbin\/rtadvd",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -4041,6 +5341,12 @@
     "source" : "System"
   },
   {
+    "name" : "sa",
+    "path" : "\/usr\/sbin\/sa",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "safaridriver",
     "path" : "\/usr\/bin\/safaridriver",
     "pathEntry" : "\/usr\/bin",
@@ -4078,6 +5384,12 @@
     "source" : "System"
   },
   {
+    "name" : "sc_auth",
+    "path" : "\/usr\/sbin\/sc_auth",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "sc_usage",
     "path" : "\/usr\/bin\/sc_usage",
     "pathEntry" : "\/usr\/bin",
@@ -4108,9 +5420,27 @@
     "source" : "System"
   },
   {
+    "name" : "screencapture",
+    "path" : "\/usr\/sbin\/screencapture",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "script",
     "path" : "\/usr\/bin\/script",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "scselect",
+    "path" : "\/usr\/sbin\/scselect",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "scutil",
+    "path" : "\/usr\/sbin\/scutil",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -4145,6 +5475,12 @@
     "source" : "System"
   },
   {
+    "name" : "securityd",
+    "path" : "\/usr\/sbin\/securityd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "sed",
     "path" : "\/usr\/bin\/sed",
     "pathEntry" : "\/usr\/bin",
@@ -4163,6 +5499,12 @@
     "source" : "System"
   },
   {
+    "name" : "sendmail",
+    "path" : "\/usr\/sbin\/sendmail",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "seq",
     "path" : "\/usr\/bin\/seq",
     "pathEntry" : "\/usr\/bin",
@@ -4175,6 +5517,13 @@
     "source" : "System"
   },
   {
+    "name" : "serverinfo",
+    "path" : "\/usr\/sbin\/serverinfo",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/System\/Library\/PrivateFrameworks\/ServerInformation.framework\/Versions\/A\/Resources\/serverinfo",
+    "source" : "System"
+  },
+  {
     "name" : "servertool",
     "path" : "\/usr\/bin\/servertool",
     "pathEntry" : "\/usr\/bin",
@@ -4184,6 +5533,18 @@
     "name" : "SetFile",
     "path" : "\/usr\/bin\/SetFile",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "setkey",
+    "path" : "\/usr\/sbin\/setkey",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "setquota",
+    "path" : "\/usr\/sbin\/setquota",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -4217,9 +5578,75 @@
     "source" : "System"
   },
   {
+    "name" : "sha1",
+    "path" : "\/sbin\/sha1",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "sha1sum",
+    "path" : "\/sbin\/sha1sum",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "sha224",
+    "path" : "\/sbin\/sha224",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "sha224sum",
+    "path" : "\/sbin\/sha224sum",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "sha256",
+    "path" : "\/sbin\/sha256",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "sha256sum",
+    "path" : "\/sbin\/sha256sum",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "sha384",
+    "path" : "\/sbin\/sha384",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "sha384sum",
+    "path" : "\/sbin\/sha384sum",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "sha512",
+    "path" : "\/sbin\/sha512",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "sha512sum",
+    "path" : "\/sbin\/sha512sum",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "shar",
     "path" : "\/usr\/bin\/shar",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "sharing",
+    "path" : "\/usr\/sbin\/sharing",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -4259,6 +5686,12 @@
     "source" : "System"
   },
   {
+    "name" : "shutdown",
+    "path" : "\/sbin\/shutdown",
+    "pathEntry" : "\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "sigdist.d",
     "path" : "\/usr\/bin\/sigdist.d",
     "pathEntry" : "\/usr\/bin",
@@ -4277,6 +5710,81 @@
     "source" : "System"
   },
   {
+    "name" : "skywalkctl",
+    "path" : "\/usr\/sbin\/skywalkctl",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "slapacl",
+    "path" : "\/usr\/sbin\/slapacl",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/usr\/libexec\/slapd",
+    "source" : "System"
+  },
+  {
+    "name" : "slapadd",
+    "path" : "\/usr\/sbin\/slapadd",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/usr\/libexec\/slapd",
+    "source" : "System"
+  },
+  {
+    "name" : "slapauth",
+    "path" : "\/usr\/sbin\/slapauth",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/usr\/libexec\/slapd",
+    "source" : "System"
+  },
+  {
+    "name" : "slapcat",
+    "path" : "\/usr\/sbin\/slapcat",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/usr\/libexec\/slapd",
+    "source" : "System"
+  },
+  {
+    "name" : "slapconfig",
+    "path" : "\/usr\/sbin\/slapconfig",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "slapdn",
+    "path" : "\/usr\/sbin\/slapdn",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/usr\/libexec\/slapd",
+    "source" : "System"
+  },
+  {
+    "name" : "slapindex",
+    "path" : "\/usr\/sbin\/slapindex",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/usr\/libexec\/slapd",
+    "source" : "System"
+  },
+  {
+    "name" : "slappasswd",
+    "path" : "\/usr\/sbin\/slappasswd",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/usr\/libexec\/slapd",
+    "source" : "System"
+  },
+  {
+    "name" : "slapschema",
+    "path" : "\/usr\/sbin\/slapschema",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/usr\/libexec\/slapd",
+    "source" : "System"
+  },
+  {
+    "name" : "slaptest",
+    "path" : "\/usr\/sbin\/slaptest",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/usr\/libexec\/slapd",
+    "source" : "System"
+  },
+  {
     "name" : "sleep",
     "path" : "\/bin\/sleep",
     "pathEntry" : "\/bin",
@@ -4290,9 +5798,28 @@
     "source" : "System"
   },
   {
+    "name" : "smbd",
+    "path" : "\/usr\/sbin\/smbd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "smbdiagnose",
+    "path" : "\/usr\/sbin\/smbdiagnose",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "smbutil",
     "path" : "\/usr\/bin\/smbutil",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "sndiskmove",
+    "path" : "\/usr\/sbin\/sndiskmove",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/acfs.fs\/Contents\/bin\/redirection.sh",
     "source" : "System"
   },
   {
@@ -4324,6 +5851,12 @@
     "name" : "snmpconf",
     "path" : "\/usr\/bin\/snmpconf",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "snmpd",
+    "path" : "\/usr\/sbin\/snmpd",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -4400,6 +5933,12 @@
     "source" : "System"
   },
   {
+    "name" : "snmptrapd",
+    "path" : "\/usr\/sbin\/snmptrapd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "snmpusm",
     "path" : "\/usr\/bin\/snmpusm",
     "pathEntry" : "\/usr\/bin",
@@ -4418,9 +5957,28 @@
     "source" : "System"
   },
   {
+    "name" : "snquota",
+    "path" : "\/usr\/sbin\/snquota",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/acfs.fs\/Contents\/bin\/redirection.sh",
+    "source" : "System"
+  },
+  {
     "name" : "sntp",
     "path" : "\/usr\/bin\/sntp",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "sntpd",
+    "path" : "\/usr\/sbin\/sntpd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "softwareupdate",
+    "path" : "\/usr\/sbin\/softwareupdate",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -4433,6 +5991,12 @@
     "name" : "sourcekit-lsp",
     "path" : "\/usr\/bin\/sourcekit-lsp",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "spctl",
+    "path" : "\/usr\/sbin\/spctl",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -4460,6 +6024,12 @@
     "source" : "System"
   },
   {
+    "name" : "spindump",
+    "path" : "\/usr\/sbin\/spindump",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "splain",
     "path" : "\/usr\/bin\/splain",
     "pathEntry" : "\/usr\/bin",
@@ -4481,6 +6051,12 @@
     "name" : "SplitForks",
     "path" : "\/usr\/bin\/SplitForks",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "spray",
+    "path" : "\/usr\/sbin\/spray",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -4523,6 +6099,18 @@
     "name" : "ssh-keyscan",
     "path" : "\/usr\/bin\/ssh-keyscan",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "sshd",
+    "path" : "\/usr\/sbin\/sshd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "sso_util",
+    "path" : "\/usr\/sbin\/sso_util",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -4647,6 +6235,12 @@
     "source" : "System"
   },
   {
+    "name" : "sysadminctl",
+    "path" : "\/usr\/sbin\/sysadminctl",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "syscallbypid.d",
     "path" : "\/usr\/bin\/syscallbypid.d",
     "pathEntry" : "\/usr\/bin",
@@ -4665,6 +6259,12 @@
     "source" : "System"
   },
   {
+    "name" : "sysctl",
+    "path" : "\/usr\/sbin\/sysctl",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "sysdiagnose",
     "path" : "\/usr\/bin\/sysdiagnose",
     "pathEntry" : "\/usr\/bin",
@@ -4677,9 +6277,21 @@
     "source" : "System"
   },
   {
+    "name" : "syslogd",
+    "path" : "\/usr\/sbin\/syslogd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "syspolicy_check",
     "path" : "\/usr\/bin\/syspolicy_check",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "system_profiler",
+    "path" : "\/usr\/sbin\/system_profiler",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -4692,6 +6304,30 @@
     "name" : "systemextensionsctl",
     "path" : "\/usr\/bin\/systemextensionsctl",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "systemkeychain",
+    "path" : "\/usr\/sbin\/systemkeychain",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "systemsetup",
+    "path" : "\/usr\/sbin\/systemsetup",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "systemsoundserverd",
+    "path" : "\/usr\/sbin\/systemsoundserverd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "systemstats",
+    "path" : "\/usr\/sbin\/systemstats",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -4738,6 +6374,12 @@
     "source" : "System"
   },
   {
+    "name" : "taskpolicy",
+    "path" : "\/usr\/sbin\/taskpolicy",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "tbtdiagnose",
     "path" : "\/usr\/bin\/tbtdiagnose",
     "pathEntry" : "\/usr\/bin",
@@ -4761,6 +6403,12 @@
     "path" : "\/usr\/bin\/tclsh8.5",
     "pathEntry" : "\/usr\/bin",
     "resolvedPath" : "\/System\/Library\/Frameworks\/Tcl.framework\/Versions\/8.5\/tclsh8.5",
+    "source" : "System"
+  },
+  {
+    "name" : "tcpdump",
+    "path" : "\/usr\/sbin\/tcpdump",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -4969,6 +6617,18 @@
     "source" : "System"
   },
   {
+    "name" : "traceroute",
+    "path" : "\/usr\/sbin\/traceroute",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "traceroute6",
+    "path" : "\/usr\/sbin\/traceroute6",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "traptoemail",
     "path" : "\/usr\/bin\/traptoemail",
     "pathEntry" : "\/usr\/bin",
@@ -5023,6 +6683,13 @@
     "source" : "System"
   },
   {
+    "name" : "tsig-keygen",
+    "path" : "\/usr\/sbin\/tsig-keygen",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/usr\/sbin\/ddns-confgen",
+    "source" : "System"
+  },
+  {
     "name" : "tsort",
     "path" : "\/usr\/bin\/tsort",
     "pathEntry" : "\/usr\/bin",
@@ -5041,6 +6708,12 @@
     "source" : "System"
   },
   {
+    "name" : "uasysdiagnose",
+    "path" : "\/usr\/sbin\/uasysdiagnose",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "ul",
     "path" : "\/usr\/bin\/ul",
     "pathEntry" : "\/usr\/bin",
@@ -5056,6 +6729,12 @@
     "name" : "umask",
     "path" : "\/usr\/bin\/umask",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "umount",
+    "path" : "\/sbin\/umount",
+    "pathEntry" : "\/sbin",
     "source" : "System"
   },
   {
@@ -5113,6 +6792,12 @@
     "source" : "System"
   },
   {
+    "name" : "universalaccessd",
+    "path" : "\/usr\/sbin\/universalaccessd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "unlink",
     "path" : "\/bin\/unlink",
     "pathEntry" : "\/bin",
@@ -5122,6 +6807,12 @@
     "name" : "unpack200",
     "path" : "\/usr\/bin\/unpack200",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "unsetpassword",
+    "path" : "\/usr\/sbin\/unsetpassword",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -5215,6 +6906,12 @@
     "source" : "System"
   },
   {
+    "name" : "usernoted",
+    "path" : "\/usr\/sbin\/usernoted",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "users",
     "path" : "\/usr\/bin\/users",
     "pathEntry" : "\/usr\/bin",
@@ -5224,6 +6921,24 @@
     "name" : "uttype",
     "path" : "\/usr\/bin\/uttype",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "uuchk",
+    "path" : "\/usr\/sbin\/uuchk",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "uucico",
+    "path" : "\/usr\/sbin\/uucico",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "uuconv",
+    "path" : "\/usr\/sbin\/uuconv",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -5269,6 +6984,12 @@
     "source" : "System"
   },
   {
+    "name" : "uusched",
+    "path" : "\/usr\/sbin\/uusched",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "uustat",
     "path" : "\/usr\/bin\/uustat",
     "pathEntry" : "\/usr\/bin",
@@ -5284,6 +7005,12 @@
     "name" : "uux",
     "path" : "\/usr\/bin\/uux",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "uuxqt",
+    "path" : "\/usr\/sbin\/uuxqt",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -5307,6 +7034,12 @@
     "source" : "System"
   },
   {
+    "name" : "vifs",
+    "path" : "\/usr\/sbin\/vifs",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "vim",
     "path" : "\/usr\/bin\/vim",
     "pathEntry" : "\/usr\/bin",
@@ -5326,9 +7059,21 @@
     "source" : "System"
   },
   {
+    "name" : "vipw",
+    "path" : "\/usr\/sbin\/vipw",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "vis",
     "path" : "\/usr\/bin\/vis",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "visudo",
+    "path" : "\/usr\/sbin\/visudo",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -5341,6 +7086,18 @@
     "name" : "vmmap",
     "path" : "\/usr\/bin\/vmmap",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "vpnd",
+    "path" : "\/usr\/sbin\/vpnd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
+    "name" : "vsdbutil",
+    "path" : "\/usr\/sbin\/vsdbutil",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -5386,6 +7143,12 @@
     "source" : "System"
   },
   {
+    "name" : "wfsctl",
+    "path" : "\/usr\/sbin\/wfsctl",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "what",
     "path" : "\/usr\/bin\/what",
     "pathEntry" : "\/usr\/bin",
@@ -5428,6 +7191,12 @@
     "source" : "System"
   },
   {
+    "name" : "WirelessRadioManagerd",
+    "path" : "\/usr\/sbin\/WirelessRadioManagerd",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "wish",
     "path" : "\/usr\/bin\/wish",
     "pathEntry" : "\/usr\/bin",
@@ -5456,6 +7225,12 @@
     "name" : "xargs",
     "path" : "\/usr\/bin\/xargs",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "xartutil",
+    "path" : "\/usr\/sbin\/xartutil",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -5570,6 +7345,19 @@
     "name" : "xprotect",
     "path" : "\/usr\/bin\/xprotect",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "xsanctl",
+    "path" : "\/usr\/sbin\/xsanctl",
+    "pathEntry" : "\/usr\/sbin",
+    "resolvedPath" : "\/System\/Library\/Filesystems\/acfs.fs\/Contents\/bin\/redirection.sh",
+    "source" : "System"
+  },
+  {
+    "name" : "xscertadmin",
+    "path" : "\/usr\/sbin\/xscertadmin",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {
@@ -5712,6 +7500,12 @@
     "source" : "System"
   },
   {
+    "name" : "zdump",
+    "path" : "\/usr\/sbin\/zdump",
+    "pathEntry" : "\/usr\/sbin",
+    "source" : "System"
+  },
+  {
     "name" : "zegrep",
     "path" : "\/usr\/bin\/zegrep",
     "pathEntry" : "\/usr\/bin",
@@ -5733,6 +7527,12 @@
     "name" : "zgrep",
     "path" : "\/usr\/bin\/zgrep",
     "pathEntry" : "\/usr\/bin",
+    "source" : "System"
+  },
+  {
+    "name" : "zic",
+    "path" : "\/usr\/sbin\/zic",
+    "pathEntry" : "\/usr\/sbin",
     "source" : "System"
   },
   {

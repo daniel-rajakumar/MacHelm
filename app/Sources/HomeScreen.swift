@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct HomeScreen: View {
-    @State private var snapshot = UserConfigExporter.loadSnapshot()
-    @State private var toolInventory = UserConfigExporter.loadToolInventory()
-    @State private var binaryInventory = UserConfigExporter.loadBinaryInventory()
+    @State private var snapshot: UserConfigSnapshot?
+    @State private var toolInventory: ToolInventorySnapshot?
+    @State private var binaryInventory: BinaryInventorySnapshot?
     @State private var dataWatcher: DirectoryWatcher?
     @State private var reloadWorkItem: DispatchWorkItem?
 
@@ -176,7 +176,7 @@ struct HomeScreen: View {
             .padding(.vertical, 6)
             .background(
                 Capsule(style: .continuous)
-                    .fill(Color(red: 0.27, green: 0.63, blue: 0.18))
+                    .fill(Color.accentColor)
             )
     }
 
@@ -188,9 +188,17 @@ struct HomeScreen: View {
     }
 
     private func reloadData() {
-        snapshot = UserConfigExporter.loadSnapshot()
-        toolInventory = UserConfigExporter.loadToolInventory()
-        binaryInventory = UserConfigExporter.loadBinaryInventory()
+        DispatchQueue.global(qos: .userInitiated).async {
+            let reloadedSnapshot = UserConfigExporter.loadSnapshot()
+            let reloadedToolInventory = UserConfigExporter.loadToolInventory()
+            let reloadedBinaryInventory = UserConfigExporter.loadBinaryInventory()
+
+            DispatchQueue.main.async {
+                snapshot = reloadedSnapshot
+                toolInventory = reloadedToolInventory
+                binaryInventory = reloadedBinaryInventory
+            }
+        }
     }
 
     private func startWatchingDataDirectory() {
@@ -207,9 +215,7 @@ struct HomeScreen: View {
         reloadWorkItem?.cancel()
 
         let workItem = DispatchWorkItem {
-            DispatchQueue.main.async {
-                reloadData()
-            }
+            reloadData()
         }
 
         reloadWorkItem = workItem
