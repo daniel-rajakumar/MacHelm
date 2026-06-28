@@ -10,7 +10,8 @@ struct HomeScreen: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                screenHeader(title: "Home", subtitle: "Overview of the current MacHelm workspace, inventory state, and repo-backed data.")
+                screenHeader(title: "Home", subtitle: "Manage your Mac apps, settings, windows, and saved MacHelm data from one place.")
+                safetySection
                 overviewSection
                 inventorySection
                 quickActionsSection
@@ -32,11 +33,11 @@ struct HomeScreen: View {
     }
 
     private var overviewSection: some View {
-        MacSettingsSection(title: "Workspace") {
+        MacSettingsSection(title: "Saved Data") {
             VStack(spacing: 0) {
                 MacSettingsRow {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Repo")
+                        Text("MacHelm folder")
                             .font(.headline)
                         Text("/Users/danielrajakumar/code/MacHelm")
                             .font(.system(.subheadline, design: .monospaced))
@@ -49,7 +50,7 @@ struct HomeScreen: View {
 
                 MacSettingsRow {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("User data")
+                        Text("Your saved Mac data")
                             .font(.headline)
                         Text(UserConfigExporter.userDirectoryURL().path)
                             .font(.system(.subheadline, design: .monospaced))
@@ -62,9 +63,9 @@ struct HomeScreen: View {
 
                 MacSettingsRow(showsDivider: false) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Last snapshot")
+                        Text("Last scan")
                             .font(.headline)
-                        Text(snapshot?.generatedAt ?? "No snapshot generated yet")
+                        Text(snapshot?.generatedAt ?? "No scan has been saved yet")
                             .foregroundColor(.secondary)
                     }
                 } trailing: {
@@ -74,14 +75,33 @@ struct HomeScreen: View {
         }
     }
 
+    private var safetySection: some View {
+        MacSettingsCard {
+            HStack(alignment: .top, spacing: 14) {
+                Image(systemName: "checkmark.shield.fill")
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundColor(.green)
+                    .frame(width: 28)
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("You stay in control")
+                        .font(.headline)
+                    Text("MacHelm shows what it finds first. Actions that install, remove, restore, sync, or change services ask before they run.")
+                        .font(.system(size: 13.5))
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+    }
+
     private var inventorySection: some View {
-        MacSettingsSection(title: "Inventories") {
+        MacSettingsSection(title: "What MacHelm Found") {
             VStack(spacing: 0) {
                 MacSettingsRow {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Applications")
                             .font(.headline)
-                        Text("Installed GUI apps discovered by MacHelm.")
+                        Text("Mac apps found in common Applications folders.")
                             .foregroundColor(.secondary)
                     }
                 } trailing: {
@@ -90,9 +110,9 @@ struct HomeScreen: View {
 
                 MacSettingsRow {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Terminal tools")
+                        Text("Command-line tools")
                             .font(.headline)
-                        Text("Commands visible from the current shell PATH.")
+                        Text("Advanced tools available in Terminal.")
                             .foregroundColor(.secondary)
                     }
                 } trailing: {
@@ -101,9 +121,9 @@ struct HomeScreen: View {
 
                 MacSettingsRow {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Filesystem binaries")
+                        Text("Advanced executables")
                             .font(.headline)
-                        Text("Executables discovered under configured scan roots.")
+                        Text("Executable files found in folders MacHelm scans.")
                             .foregroundColor(.secondary)
                     }
                 } trailing: {
@@ -112,9 +132,9 @@ struct HomeScreen: View {
 
                 MacSettingsRow(showsDivider: false) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Deleted apps")
+                        Text("Apps removed with MacHelm")
                             .font(.headline)
-                        Text("Items currently tracked in the deleted-apps state file.")
+                        Text("Apps MacHelm can remember for restore or review.")
                             .foregroundColor(.secondary)
                     }
                 } trailing: {
@@ -131,7 +151,7 @@ struct HomeScreen: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Open user data folder")
                             .font(.headline)
-                        Text("Reveal the repo-backed user directory in Finder.")
+                        Text("Reveal the folder where MacHelm saves this Mac's scan data.")
                             .foregroundColor(.secondary)
                     }
                 } trailing: {
@@ -145,7 +165,7 @@ struct HomeScreen: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Reload overview")
                             .font(.headline)
-                        Text("Refresh the Home dashboard from the current data files.")
+                        Text("Refresh this page from the latest saved MacHelm data.")
                             .foregroundColor(.secondary)
                     }
                 } trailing: {

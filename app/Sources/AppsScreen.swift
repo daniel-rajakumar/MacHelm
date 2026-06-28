@@ -250,7 +250,7 @@ struct AppsScreen: View {
     private var baseContent: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                screenHeader(title: "Apps", subtitle: "Applications discovered across system, user, and managed locations.")
+                screenHeader(title: "Apps", subtitle: "Review apps on this Mac, see where they came from, and choose what MacHelm should manage.")
                 controlsSection
                 contentSection
             }
@@ -307,7 +307,7 @@ struct AppsScreen: View {
                 MacSettingsEmptyState(
                     symbol: "app.badge",
                     title: "Scanning applications",
-                    message: "MacHelm is refreshing the installed app inventory."
+                    message: "MacHelm is looking through common Applications folders."
                 )
             }
         } else if model.apps.isEmpty {
@@ -315,7 +315,7 @@ struct AppsScreen: View {
                 MacSettingsEmptyState(
                     symbol: "app.dashed",
                     title: "No applications found",
-                    message: "MacHelm did not find any apps in the configured scan paths."
+                    message: "MacHelm did not find any apps in the folders it scans."
                 )
             }
         } else if !searchText.isEmpty {
@@ -333,7 +333,7 @@ struct AppsScreen: View {
                         MacSettingsEmptyState(
                             symbol: "magnifyingglass",
                             title: "No apps match your search",
-                            message: "Try a different name, path, or source filter."
+                            message: "Try a different app name or category."
                         )
                     }
                 }
@@ -344,7 +344,7 @@ struct AppsScreen: View {
                     MacSettingsEmptyState(
                         symbol: "trash",
                         title: "No deleted apps",
-                        message: "Removed apps will appear here after you delete them from MacHelm."
+                        message: "Apps removed with MacHelm will appear here."
                     )
                 }
             } else {
@@ -355,7 +355,7 @@ struct AppsScreen: View {
                 MacSettingsEmptyState(
                     symbol: "square.grid.2x2",
                     title: "No apps in this category",
-                    message: "Switch filters or refresh the inventory to repopulate this section."
+                    message: "Switch categories or refresh the app list."
                 )
             }
         } else {
@@ -364,11 +364,11 @@ struct AppsScreen: View {
     }
 
     private var controlsSection: some View {
-        MacSettingsSection(title: "Inventory") {
+        MacSettingsSection(title: "App List") {
             VStack(spacing: 0) {
                 MacSettingsRow {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Search & Refresh")
+                        Text("Search apps")
                             .font(.headline)
                         MacInlineSearchField(prompt: "Search apps...", text: $searchText)
                     }
@@ -568,6 +568,7 @@ struct AppListRow: View {
     @ObservedObject var stateManager: AppStateManager
     
     @State private var isHovered = false
+    @State private var isConfirmingDelete = false
     
     var body: some View {
         ViewThatFits(in: .horizontal) {
@@ -582,6 +583,16 @@ struct AppListRow: View {
         }
         .onTapGesture {
             NSWorkspace.shared.open(URL(fileURLWithPath: app.path))
+        }
+        .alert("Remove \(app.name)?", isPresented: $isConfirmingDelete) {
+            Button("Remove", role: .destructive) {
+                withAnimation {
+                    stateManager.deleteApp(app: app)
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text(deleteConfirmationMessage)
         }
     }
 
@@ -678,9 +689,7 @@ struct AppListRow: View {
                 }
 
                 Button {
-                    withAnimation {
-                        stateManager.deleteApp(app: app)
-                    }
+                    isConfirmingDelete = true
                 } label: {
                     Image(systemName: "trash")
                         .font(.system(size: 12, weight: .semibold))
@@ -688,9 +697,7 @@ struct AppListRow: View {
                 .buttonStyle(MacDestructiveButtonStyle())
             } else if managementState.isManaged {
                 Button {
-                    withAnimation {
-                        stateManager.deleteApp(app: app)
-                    }
+                    isConfirmingDelete = true
                 } label: {
                     Image(systemName: "trash")
                         .font(.system(size: 12, weight: .semibold))
@@ -720,6 +727,18 @@ struct AppListRow: View {
         case "System": return .primary
         default: return .secondary
         }
+    }
+
+    private var deleteConfirmationMessage: String {
+        if app.installSource == "Homebrew" {
+            return "MacHelm will ask Homebrew to uninstall this app and remember it in Deleted Apps."
+        }
+
+        if app.installSource == "Others" {
+            return "MacHelm will move this app to the Trash and remember it in Deleted Apps."
+        }
+
+        return "MacHelm will mark this app as removed in its saved data."
     }
 }
 
@@ -776,6 +795,7 @@ private final class AppIconCache {
 struct DeletedAppListRow: View {
     let app: DeletedApp
     @ObservedObject var stateManager: AppStateManager
+    @State private var isConfirmingRestore = false
     
     var body: some View {
         HStack(spacing: 16) {
@@ -815,9 +835,7 @@ struct DeletedAppListRow: View {
                 .padding(.trailing, 8)
             } else {
                 Button("Restore") {
-                    withAnimation {
-                        stateManager.restoreApp(deletedApp: app)
-                    }
+                    isConfirmingRestore = true
                 }
                 .buttonStyle(MacPrimaryButtonStyle())
             }
@@ -827,6 +845,16 @@ struct DeletedAppListRow: View {
         .contentShape(Rectangle())
         .listRowBackground(Color(NSColor.controlBackgroundColor))
         .listRowSeparator(.hidden)
+        .alert("Restore \(app.name)?", isPresented: $isConfirmingRestore) {
+            Button("Restore") {
+                withAnimation {
+                    stateManager.restoreApp(deletedApp: app)
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text(restoreConfirmationMessage)
+        }
     }
     
     private func getIconForSource(_ source: String) -> String {
@@ -858,6 +886,14 @@ struct DeletedAppListRow: View {
         default:
             return .detected("Detected on disk only")
         }
+    }
+
+    private var restoreConfirmationMessage: String {
+        if app.installSource == "Homebrew" {
+            return "MacHelm will ask Homebrew to install this app again."
+        }
+
+        return "MacHelm will remove this app from the Deleted Apps list. If the app was moved to Trash, restore it from Trash as well."
     }
 }
 

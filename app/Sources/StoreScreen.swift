@@ -7,7 +7,7 @@ struct StoreScreen: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                screenHeader(title: "Store", subtitle: "Install and manage Homebrew casks from a repo-backed catalog.")
+                screenHeader(title: "Store", subtitle: "Find Mac apps from Homebrew and install or remove them with confirmation.")
                 controlsSection
                 contentSection
             }
@@ -29,7 +29,7 @@ struct StoreScreen: View {
                         Text("Search Homebrew")
                             .font(.headline)
                         MacInlineSearchField(
-                            prompt: "Search Homebrew (e.g. spotify, vscode...)",
+                            prompt: "Search apps (e.g. Spotify, VS Code...)",
                             text: $storeManager.searchText
                         )
                     }
@@ -48,7 +48,7 @@ struct StoreScreen: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Source")
                             .font(.headline)
-                        Text("Homebrew catalog")
+                        Text("Homebrew app catalog")
                             .foregroundColor(.secondary)
                     }
                 } trailing: {
@@ -124,6 +124,8 @@ struct StoreAppRow: View {
     @ObservedObject var stateManager: AppStateManager
 
     @State private var isHovered = false
+    @State private var isConfirmingInstall = false
+    @State private var isConfirmingRemove = false
 
     var body: some View {
         HStack(spacing: 16) {
@@ -204,16 +206,12 @@ struct StoreAppRow: View {
                     }
                     .padding(.trailing, 8)
                     Button("Remove") {
-                        withAnimation {
-                            stateManager.uninstallHomebrewCask(token: cask.token)
-                        }
+                        isConfirmingRemove = true
                     }
                     .buttonStyle(MacSecondaryButtonStyle())
                 } else {
                     Button("Install") {
-                        withAnimation {
-                            stateManager.installHomebrewCask(token: cask.token)
-                        }
+                        isConfirmingInstall = true
                     }
                     .buttonStyle(MacPrimaryButtonStyle())
                 }
@@ -227,5 +225,29 @@ struct StoreAppRow: View {
                 isHovered = hovering
             }
         }
+        .alert("Install \(displayName)?", isPresented: $isConfirmingInstall) {
+            Button("Install") {
+                withAnimation {
+                    stateManager.installHomebrewCask(token: cask.token)
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("MacHelm will ask Homebrew to download and install this app on your Mac.")
+        }
+        .alert("Remove \(displayName)?", isPresented: $isConfirmingRemove) {
+            Button("Remove", role: .destructive) {
+                withAnimation {
+                    stateManager.uninstallHomebrewCask(token: cask.token)
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("MacHelm will ask Homebrew to uninstall this app. You can install it again later from the Store.")
+        }
+    }
+
+    private var displayName: String {
+        cask.name.first ?? cask.token
     }
 }

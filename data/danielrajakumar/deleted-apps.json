@@ -1,3 +1,12 @@
 [
-
+  {
+    "installSource" : "Homebrew",
+    "name" : "Android Studio",
+    "path" : "\/Applications\/Android Studio.app"
+  },
+  {
+    "installSource" : "Homebrew",
+    "name" : "DockDoor",
+    "path" : "\/Applications\/DockDoor.app"
+  }
 ]

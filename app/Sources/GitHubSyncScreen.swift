@@ -2,6 +2,7 @@ import SwiftUI
 
 struct GitHubSyncScreen: View {
     @ObservedObject var syncManager: GitHubSyncManager
+    @State private var isConfirmingPull = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
@@ -210,7 +211,7 @@ struct GitHubSyncScreen: View {
                         icon: "arrow.down.circle",
                         accessibilityLabel: "Pull MacHelm config from GitHub",
                         accessibilityHint: "Downloads your MacHelm configuration from your private GitHub Gist and applies it to this Mac.",
-                        action: syncManager.pullConfig
+                        action: { isConfirmingPull = true }
                     )
                 }
                 .accessibilityElement(children: .combine)
@@ -227,6 +228,14 @@ struct GitHubSyncScreen: View {
                     syncStatusBadge
                 }
             }
+        }
+        .alert("Apply GitHub backup to this Mac?", isPresented: $isConfirmingPull) {
+            Button("Apply Backup") {
+                syncManager.pullConfig()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("MacHelm will download your saved GitHub configuration and apply it to this Mac. This may replace current MacHelm settings.")
         }
     }
 
